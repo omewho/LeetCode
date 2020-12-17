@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int minPathSum(vector<vector<int>>& grid) {
+        int M = grid.size(), N = grid[0].size();
+        const int INF = 65535;
+        //printf("%d %d\n", M, N);
+        int dp[N + 1];
+        dp[0] = 0;
+        for(int col = 1; col < N; col++) {
+            dp[col] = INF;
+        }
+
+        for(int row = 0; row < M; row++) {
+            dp[0] += grid[row][0];
+            for(int col = 1; col < N; col++) {
+                dp[col] = grid[row][col] + min(dp[col], dp[col - 1]);
+            }
+        }
+
+        return dp[N - 1];
+    }
+};
