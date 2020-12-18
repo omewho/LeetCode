@@ -1,0 +1,39 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* createTree(vector<int>& preorder, vector<int>& inorder, int preLeft, int inLeft, int num) {
+    if(num) {
+        //printf("preLeft is %d, inLeft is %d, n is %d\n", preLeft, inLeft, num);
+        TreeNode *t = new TreeNode(preorder[preLeft]);
+
+        int root_pos = -1, left_num, right_num;
+        for(int i = inLeft; i < inLeft + num; i++) {
+            if(inorder[i] == preorder[preLeft]) root_pos = i;
+        }
+        left_num = root_pos - inLeft;
+        right_num = num - left_num - 1;
+
+        t->left = createTree(preorder, inorder, preLeft + 1, inLeft, left_num);
+        t->right = createTree(preorder, inorder, preLeft + 1 + left_num, root_pos + 1, right_num);
+        return t;
+    }
+    return nullptr;
+
+ }
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        
+        int n = preorder.size();
+        printf("%d\n", n);
+
+        return createTree(preorder, inorder, 0, 0, n);
+        //return nullptr;
+    }
+};
