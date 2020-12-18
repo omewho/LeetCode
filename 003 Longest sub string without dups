@@ -1,0 +1,39 @@
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int len = s.length();
+        //printf("%d\n", len);
+        if(!len) return 0;
+
+        int next[150];
+        for(int i = 0; i < len; i++) {
+            next[s[i]] = -1;
+        }
+
+        int left = 0, maxLen = 0, right;
+        for(right = 0; right < len; right++) {
+
+            if(next[s[right]] < left) {
+                next[s[right]] = right + 1;
+            }
+            else if(next[s[right]] > left) {
+                maxLen = max(maxLen, right - left);
+                //printf("left is %d, right is %d, maxLen is %d\n", left, right, maxLen);
+                
+                left = next[s[right]];
+                next[s[right]] = right + 1;
+                printf("now left is %d, right is %d\n", left, right);
+            }
+
+        }
+        maxLen = max(maxLen, right - left);
+        
+        // for(int i = 0; i < len; i++) {
+        //     if(i) printf(" ");
+        //     printf("%d", dp[i]);
+        // }
+        // printf("\n");
+
+        return maxLen;
+    }
+};
