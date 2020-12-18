@@ -1,0 +1,21 @@
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        vector<int> vans;
+        int n = nums.size(), found = 0;
+
+        for(int i = 0; i < n - 1; i++) {
+            for(int j = i + 1; j < n; j++) {
+                if(nums[i] + nums[j] == target) {
+                    vans.push_back(i);
+                    vans.push_back(j);
+                    //return vans;
+                    found = 1;
+                    break;
+                }
+            }
+            if(found) break;
+        }
+        return vans;
+    }
+};
