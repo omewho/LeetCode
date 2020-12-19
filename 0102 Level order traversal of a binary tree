@@ -1,0 +1,44 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    typedef TreeNode* pTN;
+    #define MAX 2000
+
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int> > vans;
+
+        if(!root) return vans;
+
+
+
+        TreeNode* Queue[MAX];
+        int front = 0, rear = 0;
+        
+        Queue[rear++] = root;
+        
+        while( front != rear) {
+
+            int rear_alias = rear;
+            vector<int> lvlvec;
+            while(front != rear_alias) {
+                //printf("%d, %d\n", alias, rear_alias);
+                pTN cur = Queue[front++];
+                lvlvec.push_back(cur->val);
+                if(cur->left) Queue[rear++] = cur->left;
+                if(cur->right) Queue[rear++] = cur->right;
+            }
+            vans.push_back(lvlvec);
+
+        }
+        return vans;
+
+    }
+};
