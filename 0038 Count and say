@@ -1,0 +1,32 @@
+class Solution {
+public:
+
+    string helper(string s) {
+        string res = "";
+        int i = 0, j = 0, len = s.length();
+        printf("len is %d\n", len);
+        while(j < len) {
+
+            while( j < len && s[j] == s[i]) j++;
+            //printf("si is %c, sj is %c\n", s[i], s[j]);
+            //res = res + to_string(j - i) + to_string(s[i]);
+            res = res + to_string(j - i) + s[i];
+
+            i = j;
+
+        }
+        return res;
+    }
+    string countAndSay(int n) {
+        string res = "";
+        if(n == 1) res = "1";
+        else {
+            res = helper(countAndSay(n - 1));
+        }
+        // string s = "3322251";
+        // res = helper(s);
+        // printf("%s\n", res.c_str());
+
+        return res;
+    }
+};
