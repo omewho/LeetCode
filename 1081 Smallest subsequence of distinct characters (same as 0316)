@@ -1,0 +1,54 @@
+
+char * smallestSubsequence(char * s){
+    //printf("%d\n", strlen(s));
+
+    int inStack[26] = {0}, len = strlen(s);
+    int last[26];
+    for(int i = 0; i < 26; i++) last[i] = -1;
+
+    for(int i = 0; i < len; i++) {
+
+        last[s[i] - 'a'] = i;
+    }
+
+    // int i = 0;
+    // for(int j = 0; j < len; j++) {
+    //     if( last[s[j] - 'a'] ) {
+    //         if(i ) printf(" ");
+    //         printf("%d", last[s[j] - 'a']);
+    //     }
+        
+    // }
+    // printf("\n");
+
+    char *res = (char *)malloc(27 * sizeof(char)), stack[10001];
+    int idx = -1;
+    
+    for(int j = 0; j < len; j++) {
+        // if(idx < 0) stack[++idx] = s[j];
+        // else {
+        //     if(s[j] > stack[idx] && inStack[s[j] - 'a']) stack[++idx] = s[j];
+        //     else if( s[j] < stack[idx] ){
+        //         if(last[s[j] - 'a'] > j) idx--;
+        //     }
+        // }
+        if( !inStack[s[j] - 'a'] ) {
+            while( idx >= 0 && stack[idx] > s[j] ) {
+                if( last[stack[idx] - 'a'] > j ) {
+                    inStack[stack[idx] - 'a'] = 0;
+                    idx--;
+                }
+                else break;
+            }
+            inStack[s[j] - 'a'] = 1;
+            stack[++idx] = s[j];
+            printf("%s\n", stack);
+
+        }
+    }
+    stack[++idx] = '\0';
+    printf("%s\n", stack);
+    strcpy(res, stack);
+
+    return res;
+}
