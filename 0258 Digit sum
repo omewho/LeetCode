@@ -1,0 +1,13 @@
+class Solution {
+public:
+    int addDigits(int num) {
+        if(num < 10) return num;
+
+        int digit = num, sum = 0;
+        while(digit) {
+            sum += digit % 10;
+            digit /= 10;
+        }
+        return addDigits(sum);
+    }
+};
