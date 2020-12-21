@@ -1,0 +1,59 @@
+void printArr(int *arr, int n) {
+    for(int i = 0; i < n; i++) {
+        if(i) printf(" ");
+        printf("%d", arr[i]);
+    }
+    printf("\n");
+}
+
+//typedef enum{false, true} bool;
+
+int longestValidParentheses(char * s){
+    
+    int len = strlen(s);
+    if(!len) return 0;
+    printf("%d\n", len);
+    int isMatched[len];
+    for(int i = 0; i < len; i++) {
+        isMatched[i] = 0;
+    }
+    printArr(isMatched, len);
+
+
+
+    char *stack = (char *)malloc( len * sizeof(char));
+    int prev[len];
+    int top = -1;
+
+    int max = 0, cur = 0;
+
+    for(int i = 0; i < len; i++) {
+        if(s[i] == '(') {
+            prev[++top] = i;
+            //stack
+        }
+
+        else if( s[i] == ')' && top > -1) {
+            isMatched[prev[top]] = isMatched[i] = 1;
+            top--;
+        }
+    }
+
+    printArr(isMatched, len);
+    int p = 0, q = 0;
+    for(int i = 0; i < len; i++) {
+        if(isMatched[i]) {
+            cur++;
+            printf("%d, cur is %d\n", i, cur);
+            //if()
+        }
+        else {
+            if(cur > max) max = cur;
+            cur = 0;
+        }
+        if(max < cur) max = cur;
+    }
+    printf("%d\n", max);
+
+    return max;
+}
