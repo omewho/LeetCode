@@ -1,0 +1,24 @@
+class Solution {
+public:
+    
+    char nextGreatestLetter(vector<char>& letters, char target) {
+        int n = letters.size();
+        char ch, ans;
+        printf("%d\n", 'z' - 'a');
+        //printf("%c\n", ch);
+
+        if(target >= letters[n - 1]) ans = letters[0];
+        else {
+            ch = (target - 'a' + 1) % ('z' - 'a' + 1)  + 'a';
+            printf("%c\n", ch);
+            for(int i = 0; i < n; i++) {
+                if(letters[i] >= ch) {
+                   ans = letters[i];
+                    printf("%c %d\n", letters[i], i);
+                    break; 
+                }
+            }
+        }
+        return ans;
+    }
+};
