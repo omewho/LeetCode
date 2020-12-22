@@ -1,0 +1,49 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+const int N = 200;
+int* postorderTraversal(struct TreeNode* root, int* returnSize){
+
+    int * ans = NULL;
+    *returnSize = 0;
+
+    if(root){
+        ans = (int *)malloc(sizeof(struct TreeNode) * N);
+        struct TreeNode* stack[N], *cur = root, *prev = NULL;
+        int top = -1;
+
+        while(cur || top > -1) {
+
+            while(cur) {
+                stack[++top] = cur;
+                cur = cur->left;
+            }
+            cur = stack[top--];
+
+            if( !(cur->right) || cur->right == prev) { // this is a leaf node or this node is being vistied for a second time
+
+                ans[(*returnSize)++] = cur->val;
+                prev = cur;  // traverse back to upper node;
+                cur = NULL;
+            }
+            else {
+                stack[++top] = cur;
+                cur = cur->right;
+            }
+
+        }
+ 
+    }
+
+    return ans;
+}
