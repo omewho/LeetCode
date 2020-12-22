@@ -20,24 +20,26 @@ int* postorderTraversal(struct TreeNode* root, int* returnSize){
 
     *returnSize = 0;
 
-    if(root) stack[++top] = root;
+    if(root) { 
+        stack[++top] = root;
 
-    while(top > -1) {
+        while(top > -1) {
 
-        cur = stack[top--];
-        if( cur ) {
-            
-            stack[++top] = cur;
-            stack[++top] = NULL;
-            
-            if(cur->right) stack[++top] = cur->right;
-            if(cur->left) stack[++top] = cur->left;
-
-        }
-
-        else {
             cur = stack[top--];
-            ans[(*returnSize)++] = cur->val;
+            if( cur ) {
+
+                stack[++top] = cur;
+                stack[++top] = NULL;
+
+                if(cur->right) stack[++top] = cur->right;
+                if(cur->left) stack[++top] = cur->left;
+
+            }
+
+            else {
+                cur = stack[top--];
+                ans[(*returnSize)++] = cur->val;
+            }
         }
     }
 
