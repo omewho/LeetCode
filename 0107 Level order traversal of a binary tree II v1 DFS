@@ -1,0 +1,39 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+
+    int getDepth(TreeNode* root) {
+
+        if(!root) return 0;
+
+        return max(getDepth(root->left), getDepth(root->right)) + 1;
+    }
+
+    void dfs( TreeNode* root, vector< vector<int> >& ans, int depth ) {
+
+        if(root) {
+            ans[depth - 1].push_back(root->val);
+            dfs(root->left, ans, depth - 1);
+            dfs(root->right, ans, depth - 1);
+        }
+    }
+
+    vector<vector<int>> levelOrderBottom(TreeNode* root) {
+        
+        int n = getDepth(root);
+        vector<vector<int>> ans(n, vector<int>() );
+        //if(!root) return ans;
+
+        printf("%d\n", getDepth(root));
+        dfs(root, ans, n);
+        return ans;
+    }
+};
