@@ -13,7 +13,10 @@ int countCharacters(char ** words, int wordsSize, char * chars){
         }
 
         for(int j = 0; j < length; j++) {
-            if(count[words[i][j] - 'a'] > dict[words[i][j] - 'a']) learned = 0;
+            if(count[words[i][j] - 'a'] > dict[words[i][j] - 'a']) {
+                learned = 0;
+                break;
+            }
         }
         if(learned) max += length;
     }
