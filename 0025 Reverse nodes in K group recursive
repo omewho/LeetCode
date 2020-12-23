@@ -60,7 +60,7 @@ struct ListNode* reverseKGroup(struct ListNode* head, int k){
     if(ttl != k) return head;
     //printf("I am happy.\n");
     prev = head;
-    head = myKReverse(prev, k);
+    head = myKReverse(prev, k); // Here prev and head can both be the parameter.
 
     prev->next = reverseKGroup(prev->next, k);
     //printf("I am here.\n");
