@@ -1,0 +1,22 @@
+int countCharacters(char ** words, int wordsSize, char * chars){
+    int dict[26] = {0};
+    for(int i = 0; i < strlen(chars); i++) {
+        dict[chars[i] - 'a']++;
+    }
+    int max = 0;
+
+
+    for(int i = 0; i < wordsSize; i++) {
+        int count[26] = {0}, length = strlen(words[i]), learned = 1;
+        for(int j = 0; j < length; j++) {
+            count[words[i][j] - 'a']++;
+        }
+
+        for(int j = 0; j < length; j++) {
+            if(count[words[i][j] - 'a'] > dict[words[i][j] - 'a']) learned = 0;
+        }
+        if(learned) max += length;
+    }
+
+    return max;
+}
