@@ -1,0 +1,41 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+
+const int N = 10000;
+
+int maxLevelSum(struct TreeNode* root){
+
+    struct TreeNode* Queue[N];
+    int front = 0, rear = 0, alias, lvlmax, thismax, lvl = 1, lvlnum;
+    struct TreeNode* cur;
+
+    Queue[rear++] = root;
+    while( front != rear ) {
+        thismax = 0;
+        alias = rear;
+        while( front != alias ) {
+            
+            cur = Queue[front++];
+            thismax += cur->val;
+            if(cur->left) Queue[rear++] = cur->left;
+            if(cur->right) Queue[rear++] = cur->right;
+        }
+        if(lvl == 1) {
+            lvlmax = thismax;
+            lvlnum = lvl;
+        }
+        else if(thismax > lvlmax) {
+            lvlmax = thismax;
+            lvlnum = lvl;
+        }
+        lvl++;
+
+    }
+    return lvlnum;
+}
