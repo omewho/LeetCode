@@ -1,0 +1,68 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+typedef struct ListNode* List;
+
+void printList(List dummy_head) {
+
+    List head = dummy_head->next;
+    int i = 0;
+    while(head) {
+        if(i) printf(" ");
+        printf("%d", head->val);
+        i++;
+    }
+    printf("\n");
+}
+
+void myKReverse(List head, int rev_times, int k) {
+
+}
+
+struct ListNode* reverseKGroup(struct ListNode* head, int k){
+
+    if( k <= 1 ) return head;
+
+    int ttl = 0;
+    List prev = head;
+    while(prev) {
+        ttl++;
+        prev = prev->next;
+    }
+
+    int rev_times = ttl / k;
+    if( !rev_times) return head;
+
+    List cur, temp, prev_alias, dummy_head = (List)malloc(sizeof(struct ListNode));
+    dummy_head->next = head;
+    List dummy_head_alias = dummy_head;
+
+    for(int i = 0; i < rev_times; i++) {
+
+        prev = prev_alias = dummy_head->next, cur = prev->next;
+        printf("i is %d now.\n", i);
+        int cnt = 0;
+        while( cnt < k - 1) {
+            temp = cur->next;
+            //printf("prev is %d, cur is %d, temp is %d\n", prev->val, cur->val, temp->val);
+            cur->next = prev;
+            prev = cur;
+            cur = temp;
+            //printf("prev is %d, cur is %d\n", prev->val, cur->val);
+            cnt++;
+        }
+        printf("count is %d\n", cnt);
+        dummy_head->next = prev;
+        printf("dh->next is %d.\n", dummy_head->next->val);
+        prev_alias->next = cur;
+        
+        dummy_head = prev_alias;
+        //printList(dummy_head_alias);
+
+    }
+    return dummy_head_alias->next;
+}
