@@ -1,0 +1,58 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+
+typedef struct ListNode* List;
+void printList(List head) {
+
+    List l = head->next;
+    int i = 0;
+    while(l) {
+        if(i) printf(" ");
+        printf("%d", l->val);
+        l = l->next;
+        i++;
+    }
+    printf("\n");
+}
+
+struct ListNode* mergeTwoLists(struct ListNode* l1, struct ListNode* l2){
+    List dummy_head = (List)malloc(sizeof(struct ListNode));
+    dummy_head->next = NULL;
+    List head = dummy_head;
+    
+    while(l1 && l2) {
+        if(l1->val < l2->val) {
+            head->next = l1;
+            l1 = l1->next;
+            printf("head->next->val is %d\n", head->next->val);
+        }
+        else {
+            head->next = l2;
+            l2 = l2->next;
+        }
+        head = head->next;
+    }
+
+    // while(l1) {
+    //     head->next = l1;
+    //     l1 = l1->next;
+    //     head = head->next;
+    // }
+    // while(l2) {
+    //     head->next = l2;
+    //     l2 = l2->next;
+    //     head = head->next;
+    // }
+    if(l1) head->next = l1;
+    if(l2) head->next = l2;
+    //printList(dummy_head);
+    List t = dummy_head, ans = t->next;
+    //free(t);
+    return ans;
+
+}
