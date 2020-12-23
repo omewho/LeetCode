@@ -1,0 +1,42 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+
+public:
+    typedef struct TreeNode* Tree;
+
+    int lvlsum[10001] = {0}, maxlayer = -1;
+
+    void dfs(Tree t, int lvlnum) {
+        if(t) {
+            lvlsum[lvlnum] += t->val;
+            if(maxlayer < lvlnum) maxlayer = lvlnum;
+            dfs(t->left, lvlnum + 1);
+            dfs(t->right, lvlnum + 1);
+        }
+    }
+    int maxLevelSum(TreeNode* root) {
+
+        dfs(root, 1);
+        printf("maxlayer = %d\n", maxlayer);
+        
+        int max = INT_MIN, ans;
+        for(int i = 1; i < maxlayer + 1; i++) {
+            if( max < lvlsum[i] ) {
+                max = lvlsum[i];
+                ans = i;
+            }
+        }
+
+        return ans;
+    }
+};
