@@ -1,0 +1,43 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+
+typedef struct ListNode* List;
+
+List rtn(List lhead) {
+    List temp = lhead, ans = temp->next;
+    free(temp);
+    return ans;
+}
+
+// List K_Reverse(List dummy_head, int K) {
+
+//     List prev = dummy_head->next, cur, temp;
+
+//     return dummy_head;
+// }
+
+struct ListNode* swapPairs(struct ListNode* head){
+    List dummy_head = (List)malloc(sizeof(struct ListNode));
+    dummy_head->next = head;
+    List prev = dummy_head, cur, nxt; 
+
+    while(prev->next && prev->next->next) {
+        cur = prev->next;
+        nxt = cur->next;
+
+        //List temp = nxt->next;
+        cur->next = nxt->next;
+        nxt->next = cur;
+        prev->next = nxt;
+
+        prev = cur;
+    }
+
+    return rtn(dummy_head);
+
+}
