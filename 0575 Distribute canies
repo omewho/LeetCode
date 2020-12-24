@@ -1,0 +1,11 @@
+class Solution(object):
+    def distributeCandies(self, candyType):
+        """
+        :type candyType: List[int]
+        :rtype: int
+        """
+        ttl = len(candyType) // 2
+        num = len( set(candyType))
+        if num < ttl:
+            ttl = num
+        return ttl
