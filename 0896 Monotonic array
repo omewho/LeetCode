@@ -1,0 +1,27 @@
+typedef enum{desc, asc} monostatus;
+
+bool isMonotonic(int* A, int ASize){
+    
+
+    int i = 1;
+    for(; i < ASize; i++) {
+        if(A[i] != A[0]) break;
+    }
+
+    if( i == ASize) return true;
+    printf("%d\n", i);
+    if( A[i] > A[0] ) {
+        for(; i < ASize - 1; i++) {
+            if( A[i + 1] < A[i]) return false;
+            
+        }
+    }
+
+    else {
+        for(; i < ASize - 1; i++) {
+            if( A[i + 1] > A[i]) return false;
+        }
+    }
+    return true;
+
+}
