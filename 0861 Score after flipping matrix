@@ -1,0 +1,18 @@
+int matrixScore(int** A, int ASize, int* AColSize){
+    int m = ASize, n = AColSize[0], ans = m * ( 1 << (n - 1) );
+    
+    int colsum, colones;
+    for(int col = 1; col < n; col++ ) {
+
+        colones = 0;
+        for(int row = 0; row < m; row++){
+            if(A[row][0]) colones += A[row][col];
+            else colones += ( 1 - A[row][col] );
+        }
+        colsum = fmax(colones, m - colones);
+        printf("colsum = %d\n", colsum);
+        ans +=  (1 << ( n - 1 - col)) * colsum;
+    }
+
+    return ans;
+}
