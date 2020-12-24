@@ -1,0 +1,112 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+typedef struct ListNode* List;
+
+int count(List head) {
+
+    int ans = 0;
+    while(head) {
+        ans++;
+        head = head->next;
+    }
+    return ans;
+}
+
+void split(List head, List dummy1, List dummy2) {
+
+    int n = count(head);
+    if(n < 2) return;
+    dummy1->next = head;
+
+    List l = head;
+    int times = n / 2;
+    printf("%d %d\n", n, times);
+    
+    for(int i = 0; i < times - 1; i++) {
+        l = l->next;
+        printf("l is %d\n", l->val);
+    }
+    if( n % 2 == 1) l = l->next;
+    dummy2->next = l->next;
+    l->next = NULL;
+
+    // while(head) {
+    //     dummy1->next = head;
+    //     head = head->next;
+    //     dummy2->next = head;
+        
+    //     dummy1 = dummy1->next;
+    //     dummy2 = dummy2->next;
+    //     if(head) head = head->next;
+    // }
+}
+
+List reverseList(List dummy) {
+
+    List head = dummy->next, cur = head, t;
+    if(!head) return NULL;
+    while(head->next) {
+        t = head->next->next;
+        head->next->next = cur;
+
+        cur = head->next;
+        head->next = t;
+    }
+    dummy->next = cur;
+    return dummy;
+}
+
+void printList(List dummy) {
+
+    List head = dummy->next;
+    int i = 0;
+    while(head) {
+        if(i) printf(" ");
+        printf("%d", head->val);
+        i++;
+        head = head->next;
+    }
+    printf("\n");
+}
+
+void merge(List dummy1, List dummy2) {
+
+    List tail1 = dummy1->next, tail2 = dummy2->next, temp1, temp2;
+
+    while(tail1 && tail2) {
+        temp1 = tail1->next;
+        temp2 = tail2->next;
+
+        tail1->next =  tail2;
+        tail1 = temp1;
+
+        tail2->next = tail1;
+        tail2 = temp2;
+
+    }
+    
+}
+
+void reorderList(struct ListNode* head){
+    if(!head) return;
+
+    List dummy1 = (List)malloc(sizeof(struct ListNode));
+    dummy1->next = NULL;
+    List dummy2 = (List)malloc(sizeof(struct ListNode));
+    dummy2->next = NULL;
+
+    split(head, dummy1, dummy2);
+
+    if(dummy2->next == NULL) return;
+    //printList(dummy1);
+    dummy2 = reverseList(dummy2);
+    printf("tail2 is:\n");
+    //printList(dummy2);
+
+    merge(dummy1, dummy2);
+}
