@@ -1,0 +1,13 @@
+int distributeCandies(int* candyType, int candyTypeSize){
+    int seen[200000 + 1] = {0};
+    int types = 0;
+
+    for(int i = 0; i < candyTypeSize; i++) {
+
+        if(seen[candyType[i] + 100000] == 0) types++;
+        seen[candyType[i] + 100000]++;
+    }
+
+    if(types < candyTypeSize / 2) return types;
+    return candyTypeSize / 2;
+}
