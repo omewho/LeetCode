@@ -1,0 +1,22 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+typedef struct TreeNode* Tree;
+
+int minDepth(struct TreeNode* root){
+    if(!root) return 0;
+    
+    if( !(root->left) && !(root->right)) return 1;
+
+    int leftDepth, rightDepth;
+    if( root->left ) leftDepth = minDepth(root->left) + 1;
+    if( root->right ) rightDepth = minDepth(root->right) + 1;
+
+    if( leftDepth < rightDepth ) return leftDepth;
+    return rightDepth;
+}
