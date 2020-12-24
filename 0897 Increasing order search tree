@@ -1,0 +1,54 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+const int N = 100;
+typedef struct TreeNode* Tree;
+
+// void printTree(Tree *TreeArr, int n) {
+//     for(int i = 0; i < n; i++) {
+//         if(i) printf(" ");
+//         printf("%d", TreeArr[i]->val);
+//     }
+//     printf("\n");
+// }
+
+struct TreeNode* increasingBST(struct TreeNode* root){
+    
+    Tree Stack[N], inorder[N];
+    int idx = 0, top = -1;
+    Stack[++top] = root;
+
+    Tree t = root;
+    while( top > -1) {
+        //printf("%d\n", top);
+        t = Stack[top--];
+        if(t) {
+            if(t->right) Stack[++top] = t->right;
+            Stack[++top] = t;
+            Stack[++top] = NULL;
+            if(t->left) Stack[++top] = t->left;
+        }
+
+        else {
+            t = Stack[top--];
+            inorder[idx++] = t;
+            printf("%d", t->val);
+        }
+    }
+
+   // printTree(inorder, idx);
+   inorder[idx - 1]->right = NULL;
+   inorder[idx - 1]->left = NULL;
+    for(int i = idx - 2; i > -1; i--) {
+        Tree t = inorder[i], tright = inorder[i + 1];
+        t->left = NULL;
+        t->right = tright;
+    }
+
+    return inorder[0];
+}
