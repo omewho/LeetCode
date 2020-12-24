@@ -1,0 +1,30 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+typedef struct ListNode* List;
+void printList(List head) {
+    while(head) {
+        printf("%d", head->val);
+        head = head->next;
+    }
+    printf("\n");
+}
+
+struct ListNode* middleNode(struct ListNode* head){
+    List slow = head, fast = head;
+
+    while(fast) {
+
+        fast = fast->next;
+        if(fast) {
+            fast = fast->next;
+            slow = slow->next;
+        }
+    }
+
+    return slow;
+}
