@@ -1,0 +1,29 @@
+int isLeap(int year) {
+
+    if(year % 100 != 0 && year % 4 == 0) return 1;
+    if(year % 400 == 0) return 1;
+    return 0;
+}
+
+int dayOfYear(char * date){
+
+    int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    int d = 0;
+    char year[5];
+    strncpy(year, date, 4);
+    year[4] = '\0';
+    int y = atoi(year);
+    if(isLeap(y))  days[1]++;
+    printf("feb days is %d\n", days[1]);
+
+    int month = (date[5] - '0') * 10 + (date[6] - '0');
+    int i = 0;
+    while(i < month - 1) {
+        d += days[i];
+        i++;
+    }
+    printf("%d is leap? %d\n", y, isLeap(y));
+    d += (date[8] - '0') * 10 + date[9] - '0';
+
+    return d;
+}
