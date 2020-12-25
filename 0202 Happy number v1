@@ -1,0 +1,28 @@
+int getNext(int n) {
+
+    int ans = 0;
+    while(n) {
+        int digit = n % 10;
+        ans += digit * digit;
+        n /= 10;
+    }
+
+    return ans;
+}
+
+bool isHappy(int n){
+
+    int ans = false, slow = n, temp = slow;
+    while (true) {
+
+        slow = getNext(slow);
+        temp = getNext(temp);
+        temp = getNext(temp);
+
+        if(temp == 1) ans = true;
+        if(temp == slow) break;
+        
+    }
+
+    return ans;
+}
