@@ -1,0 +1,33 @@
+int getNext(int n) {
+
+    int ans = 0;
+    while(n) {
+        int digit = n % 10;
+        ans += digit * digit;
+        n /= 10;
+    }
+
+    return ans;
+}
+
+bool isHappy(int n){
+
+    int ans = false, freq[100000] = {0};
+    while (true) {
+
+        int temp = getNext(n);
+        if( freq[temp] == 2 ) break;
+        freq[temp]++;
+        printf("temp is %d, freq[%d] is %d.\n", temp, temp, freq[temp]);
+        
+        
+        if( n == 1){
+            ans = true;
+            break;
+        } 
+        n = temp;
+    }
+
+    return ans;
+
+}
