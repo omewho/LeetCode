@@ -1,0 +1,56 @@
+class Solution {
+public:
+
+    void printMatrix(vector<vector<int>>& matrix) {
+        int m = matrix.size(), n = matrix[0].size();
+        for(int row = 0; row < m; row++) {
+            for(int col = 0; col < n; col++) {
+                if(col) printf(" ");
+                printf("%d", matrix[row][col]);
+            }
+            printf("\n");
+        }
+        printf("\n");
+    }
+
+    int maximalRectangle(vector<vector<char>>& matrix) {
+        int m = matrix.size();
+        if( !m ) return 0;
+
+        int n = matrix[0].size();
+
+        vector< vector<int>> left(m, vector<int>(n, 0));
+        printMatrix(left);
+
+        for(int row = 0; row < m; row++) {
+            for(int col = 0; col < n; col++) {
+                if(matrix[row][col] == '1') {
+                    if(!col) left[row][col] = 1;
+                    else left[row][col] = left[row][col - 1] + 1;
+                }
+            }
+        }
+
+        printMatrix(left);
+
+        int max_area = 0;
+        for(int row = 0; row < m; row++) {
+            for(int col = 0; col < n; col++) {
+                //if(matrix[row][col] == '0') continue;
+                if(matrix[row][col] == '1') {
+                    int width = left[row][col], cur_area;
+                    cur_area = width;
+
+                    for(int k = row - 1; k >= 0; k--) {
+                        width = min(width, left[k][col]);
+                        cur_area = max(cur_area, width * (row - k + 1));  
+                    }
+                    max_area = max(max_area, cur_area);
+                }
+
+            }
+        }
+
+        return max_area;
+    }
+};
