@@ -1,0 +1,23 @@
+class Solution {
+public:
+
+    bool isIsomorphic(string s, string t) {
+        map<char, char> s2tmap;
+        map<char, char> t2smap;
+
+        int len = s.size();
+        printf("%d\n", len);
+
+        for(int i = 0; i < len; i++) {
+            char sch = s[i], tch = t[i];
+            if((s2tmap.find(sch) != s2tmap.end() && s2tmap[sch] != t[i]) \
+            || (t2smap.find(tch) != t2smap.end() && t2smap[tch] != sch)) return false;
+
+            s2tmap[sch] = tch;
+            t2smap[tch] = sch;
+
+        }
+
+        return true;
+    }
+};
