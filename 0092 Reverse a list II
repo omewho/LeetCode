@@ -1,0 +1,65 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+typedef struct ListNode* List;
+
+void printList(List dummy) {
+
+    List head = dummy;
+
+    int i = 0;
+    while(head) {
+        if(i) printf(" ");
+        printf("%d", head->val);
+        head = head->next;
+        i++;
+    }
+    printf("\n");
+}
+
+struct ListNode* reverseBetween(struct ListNode* head, int m, int n){
+
+    List dummy_alias = (List)malloc(sizeof(struct ListNode));
+    dummy_alias->next = head;
+
+
+    List dummy = dummy_alias, prev, cur, temp, prev_alias;
+    prev = dummy->next;
+
+    int i = 0;
+    while(i < m - 1) {
+        dummy = prev;
+        prev = prev->next;
+        i++;
+    }
+    prev_alias = prev;
+    //printList(dummy);
+    //printList(prev);
+
+    cur = prev->next;
+    //printList(cur);
+    while(i < n - 1) {
+        printf("prev is %d, curcur is now %d\n", prev->val, cur->val);
+        temp = cur->next;
+
+        cur->next = prev;
+        prev = cur;
+        cur = temp;
+        //printf("cur is now %d\n", cur->val);
+        i++;
+    }
+    prev_alias->next = cur;
+    //printList(dummy);
+    //dummy->next->next = prev;
+    dummy->next = prev;
+
+    //printf("i is %d\n", i);
+
+    return dummy_alias->next;
+
+}
+
