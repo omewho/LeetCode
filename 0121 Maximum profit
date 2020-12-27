@@ -1,0 +1,21 @@
+int maxProfit(int* prices, int pricesSize){
+    
+    
+
+    if(pricesSize < 2) return 0;
+    
+    int dp[pricesSize];
+    
+    int min = prices[0], max = prices[0], rtn = 0;
+    for(int i = 0; i < pricesSize; i++) {
+        if(min > prices[i]) {
+            min = prices[i];
+            max = prices[i];
+        }
+        if(max < prices[i]) max = prices[i];
+        dp[i] = max - min;
+        rtn = fmax(rtn, dp[i]);
+    }
+
+    return rtn;
+}
