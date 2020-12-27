@@ -1,0 +1,20 @@
+class Solution:
+    def reverseVowels(self, s: str) -> str:
+        strlist = list(s);
+        vowels = ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U']
+        n = len(strlist);
+
+        p = 0;
+        q = n - 1;
+
+        while ( p < q):
+            if strlist[p] in vowels and strlist[q] in vowels:
+                strlist[p], strlist[q] = strlist[q], strlist[p]
+                p += 1
+                q -= 1
+            elif strlist[p] not in vowels:
+                p += 1
+            elif strlist[q] not in vowels:
+                q -= 1
+        
+        return "".join(strlist)
