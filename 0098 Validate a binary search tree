@@ -1,0 +1,33 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+typedef struct TreeNode* Tree;
+int N = 1000;
+
+bool isValidBST(struct TreeNode* root){
+
+    Tree stack[N];
+    int top = -1;
+
+    Tree cur = root, pre = NULL;
+
+    while( cur || top > -1) {
+        while(cur) {
+            stack[++top] = cur;
+            cur = cur->left;
+        }
+
+        cur = stack[top--];
+        //printf("%d\n", cur->val);
+        if(pre != NULL && pre->val >= cur->val) return false;
+        pre = cur;
+        cur = cur->right;
+    }
+
+    return true;
+}
