@@ -1,0 +1,24 @@
+class Solution {
+public:
+    int minPatches(vector<int>& nums, int n) {
+        int size = nums.size(), rtn = 0, index = 0;
+        long long curr = 1;
+
+
+        while(curr <= n) {
+            if( index < size && nums[index] <= curr ) {
+
+                curr += nums[index]; // range expanded to curr + nums[index] - 1;
+                index++;
+            }
+            else {
+
+                rtn++;
+                curr *= 2;
+            }
+        }
+
+        return rtn;
+    }
+
+};
