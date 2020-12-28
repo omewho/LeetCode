@@ -1,0 +1,12 @@
+int maxProfit(int* prices, int pricesSize){
+    int t_i10 = 0, t_i11 = INT_MIN;
+
+    for(int i = 0; i < pricesSize; i++) {
+        t_i10 = fmax(t_i10, t_i11 + prices[i]);
+        //printf("t_i10 is %d\n", t_i10);
+        t_i11 = fmax(t_i11, -prices[i]);
+        //printf("t_i11 is %d\n", t_i11);
+    }
+
+    return t_i10;
+}
