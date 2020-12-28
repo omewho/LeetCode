@@ -1,0 +1,18 @@
+int minPatches(int* nums, int numsSize, int n){
+    int rtn = 0, idx = 0;
+    long long curr = 1;
+
+    while( curr <= n ) {
+        if( idx < numsSize && nums[idx] <= curr ) {
+            curr += nums[idx];
+            idx++;
+        }
+        else {
+
+            rtn++;
+            curr *= 2;
+            //printf("curr is %d\n", curr);
+        }
+    }
+    return rtn;
+}
