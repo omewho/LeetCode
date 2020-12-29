@@ -1,0 +1,31 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+typedef struct TreeNode* Tree;
+
+void dfs(Tree root, int prevsum, int* ttlsum) {
+    int this_sum = prevsum * 2;
+    if(root) {
+        this_sum += root->val;
+
+        if(!(root->left) && !(root->right)) *ttlsum += this_sum;
+
+        else{
+            dfs(root->left, this_sum, ttlsum);
+            dfs(root->right, this_sum, ttlsum);
+        }
+    }
+
+}
+
+int sumRootToLeaf(struct TreeNode* root){
+    int ttlsum = 0;
+    dfs(root, 0, &ttlsum);
+
+    return ttlsum;
+}
