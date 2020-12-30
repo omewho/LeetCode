@@ -1,0 +1,31 @@
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* shortestToChar(char * S, char C, int* returnSize){
+    int len = strlen(S);
+    *returnSize = len;
+
+    int * ans = (int *)malloc(sizeof(int) * len);
+
+    int Queue[len + 1], front = 0, rear = 0, left = -10001, right;
+    for(int i = 0; i < len; i++) {
+        
+        if(S[i] == C) Queue[rear++] = i;
+    }
+    Queue[rear++] = 10001;
+
+    for(int i = 0; i < len; i++) {
+        right = Queue[front];
+        //printf("right is %d\n", right);
+        if( i < right ) {
+            ans[i] = fmin(i - left, right - i);
+            //printf("i is %d, left is %d, right is %d\n", i, left, right);
+        }
+        else if (i == right) {
+            left = right, right = Queue[front++];
+            ans[i] = 0;
+        }
+    }
+
+    return ans;
+}
