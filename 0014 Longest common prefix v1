@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+// 347. Top K Frequent Elements
+// https://leetcode.com/problems/top-k-frequent-elements/description/
+// 时间复杂度: O(nlogk)
+// 空间复杂度: O(n + k)
+class Solution {
+public:
+    string longestCommonPrefix(vector<string>& strs) {
+    	string res = "";
+    	int rowSize = strs.size();
+		if(!rowSize)return res;
+        
+        int len = strs[0].length();
+
+        for(int row = 1; row < rowSize; row++) {
+            int currlen = strs[row].length();
+            if(currlen < len) {
+                //idx = row;
+                len = currlen;
+            }
+        }
+		
+		int colSize = strs[0].size();
+		for(int col = 0; col < len; col++) {
+			char ch = strs[0][col];
+			bool allSame = true;
+			for(int row = 0; row < rowSize; row++) {
+				if(strs[row][col] != ch) {
+					allSame = false;
+					break;
+				}	
+			}
+			if(allSame) res += ch;
+			else break;
+		}
+		
+		return res;
+    }
+};
+
+int main() {
+
+    vector<string> strs = {"flower","flow","flight"};
+
+    string res = Solution().longestCommonPrefix(strs);
+    printf("%s\n", res.c_str());
+
+    return 0;
+}
