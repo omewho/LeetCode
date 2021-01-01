@@ -1,0 +1,25 @@
+int countPrimes(int n){
+
+    if(n == 0) return 0;
+    int isNotPrime[n + 1], ans = 0;
+
+    for(int i = 0; i < n + 1; i++) isNotPrime[i] = 0;
+
+    isNotPrime[0] = isNotPrime[1] = 1;
+    for(int i = 2; i * i < n; i++) {
+        for(int j = i ; j * i < n; j++) {
+            isNotPrime[i * j] = 1;
+        }
+    }
+
+    int sum = 0;
+
+    for(int i = 0; i < n; i++) {
+        if(!isNotPrime[i]) {
+           printf("%d\n", i); 
+            sum++;
+        }  
+    }
+
+    return sum;
+}
