@@ -1,0 +1,21 @@
+class Solution {
+public:
+    int largestRectangleArea(vector<int>& heights) {
+        int n = heights.size();
+        int max_area = 0, curr_height, left, right;
+        //if(*max_element(heights.begin(), heights.end()) == 1) return n;
+
+        for(int i = 0; i < n; i++) {
+            curr_height = heights[i];
+
+            left = right = i;
+            while(left - 1 >= 0 && heights[left - 1] >= curr_height) left--;
+            while(right + 1 < n && heights[right + 1] >= curr_height) right++;
+            max_area = max(max_area, (right - left + 1) * curr_height);
+            // printf("i is %d, left is %d, right is %d, maxarea = %d\n", i, left, right, max_area);
+            // printf("height is %d.\n", curr_height);
+        }
+        
+        return max_area;
+    }
+};
