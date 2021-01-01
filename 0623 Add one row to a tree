@@ -1,0 +1,44 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+void dfs(TreeNode* root, int v, int d, int curr_d) {
+
+    if(curr_d == d - 1 && root) {
+        
+        TreeNode* newNode = new TreeNode(v);
+        newNode->left = root->left;
+        root->left = newNode;
+
+        newNode = new TreeNode(v);
+        newNode->right = root->right;
+        root->right = newNode;
+
+        return;
+
+    }
+
+    else if(root) {
+        dfs(root->left, v, d, curr_d + 1);
+        dfs(root->right, v, d, curr_d + 1);
+    }
+}
+
+
+class Solution {
+public:
+    TreeNode* addOneRow(TreeNode* root, int v, int d) {
+        if(d == 1) {
+            TreeNode* newroot = new TreeNode(v, root, NULL);
+            //newrort
+            return newroot;
+        } 
+        dfs(root, v, d, 1);
+        return root;
+    }
+};
