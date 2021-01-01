@@ -1,0 +1,42 @@
+typedef struct {
+    int Size;
+    int *Arr;
+} NumArray;
+
+
+NumArray* numArrayCreate(int* nums, int numsSize) {
+    NumArray* res = (NumArray*)malloc(sizeof(NumArray));
+    res->Size = numsSize;
+    res->Arr = (int *)malloc(sizeof(int) * res->Size);
+    for(int i = 0; i < res->Size; i++) {
+        res->Arr[i] = nums[i];
+    }
+    return res;
+}
+
+void numArrayUpdate(NumArray* obj, int i, int val) {
+    obj->Arr[i] = val;
+}
+
+int numArraySumRange(NumArray* obj, int i, int j) {
+    int res = 0;
+    for(int idx = i; idx <= j; idx++){
+        res += obj->Arr[idx];
+    }
+    return res;
+}
+
+void numArrayFree(NumArray* obj) {
+    obj->Size = 0;
+    free(obj->Arr);
+}
+
+/**
+ * Your NumArray struct will be instantiated and called as such:
+ * NumArray* obj = numArrayCreate(nums, numsSize);
+ * numArrayUpdate(obj, i, val);
+ 
+ * int param_2 = numArraySumRange(obj, i, j);
+ 
+ * numArrayFree(obj);
+*/
