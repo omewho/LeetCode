@@ -1,0 +1,41 @@
+int uniquePathsWithObstacles(int** obstacleGrid, int obstacleGridSize, int* obstacleGridColSize){
+    int rowSize = obstacleGridSize, colSize = obstacleGridColSize[0];
+    int dp[rowSize][colSize];
+    
+    for(int col = 0; col < colSize; col++) {
+
+        // if(obpos == -1) {
+        //     if(obstacleGrid[0][col] == 0) dp[0][col] = dp[0][col - 1];
+        //     else {
+        //         obpos = col;
+        //         dp[0][col] = 0;
+        //     }
+        // }
+        // else dp
+
+        if(!obstacleGrid[0][col]) {
+            if(col > 0) dp[0][col] = dp[0][col - 1];
+            else dp[0][col] = 1;
+        }
+        else dp[0][col] = 0;
+    }        
+    for(int row = 1; row < rowSize; row++) {
+        if(!obstacleGrid[row][0]) dp[row][0] = dp[row - 1][0];
+        else dp[row][0] = 0;
+
+        for(int col = 1; col < colSize; col++) {
+            if(!obstacleGrid[row][col]) dp[row][col] = dp[row - 1][col] + dp[row][col - 1];
+            else dp[row][col] = 0;
+        }
+    }
+
+    // for(int row = 0; row < rowSize; row++) {
+    //     for(int col = 0; col < colSize; col++) {
+    //         if(col)printf(" ");
+    //         printf("%d", dp[row][col]);
+    //     }
+    //     printf("\n");
+    // }
+
+    return dp[rowSize - 1][colSize - 1];
+}
