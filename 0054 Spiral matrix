@@ -1,0 +1,99 @@
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* spiralOrder(int** matrix, int matrixSize, int* matrixColSize, int* returnSize){
+    int rowSize = matrixSize;
+    printf("rowSize is %d\n", rowSize);
+    int colSize = matrixColSize[0];
+    printf("colSize is %d\n", colSize);
+    *returnSize = matrixSize * colSize;
+
+    int *res = (int *)malloc(sizeof(int) * (*returnSize));
+
+    int idx = 0;
+
+    int visited[rowSize][colSize];
+    for(int i = 0; i < rowSize; i++) {
+        for(int j = 0; j < colSize; j++) {
+            visited[i][j] = 0;
+        }
+    }
+    int cur_row = 0, cur_col = 0;
+
+    while(idx < *returnSize) {
+        printf("Going to the left. cur_row is %d, cur_col is %d\n", cur_row, cur_col);
+        for(int col = cur_col; col < colSize; col++) {
+            if(visited[cur_row][col]) {
+                //cur_col--;
+                //cur
+                cur_col = col - 1;
+                break;
+            }
+            else {
+                res[idx++] = matrix[cur_row][col];
+                printf("res[%d] = %d\n", idx - 1, res[idx - 1]);
+                visited[cur_row][col] = 1;
+                cur_col = col;
+            }
+        }
+        cur_row++;//cur_col = --col;
+        //cur_col--;
+        printf("Going down, cur_row is %d, cur_col is %d\n", cur_row, cur_col);
+        
+        for(int row = cur_row; row < rowSize && idx < *returnSize; row++) {
+            printf("row is %d\n", row);
+            if(visited[row][cur_col]) {
+                printf("i am here \n");
+                cur_row = row - 1;
+                break;
+            }
+            else {
+                res[idx++] = matrix[row][cur_col];
+                printf("res[%d] = %d\n", idx - 1, res[idx - 1]);
+                visited[row][cur_col] = 1;
+                cur_row = row;
+            }
+        }
+        //printf("cur_row is %d, cur_col is %d\n", cur_row, cur_col);
+        cur_col--;
+
+        printf("Going backwards, cur_row is %d, cur_col is %d\n", cur_row, cur_col);
+        for(int col = cur_col; col >= 0 && idx < *returnSize; col--) {
+            if(visited[cur_row][col]) {
+                cur_col = col + 1;
+                break;
+            }
+            else {
+                res[idx++] = matrix[cur_row][col];
+                printf("res[%d] = %d\n", idx - 1, res[idx - 1]);
+                visited[cur_row][col] = 1;
+                cur_col = col;
+            }
+        }
+        cur_row--;
+        //cur_col++;
+        printf("going up, cur_row is %d, cur_col is %d\n", cur_row, cur_col);
+
+        for(int row = cur_row; row >= 0 && idx < *returnSize; row--) {
+            if(visited[row][cur_col]) {
+                cur_row = row;
+                break;
+            }
+            else {
+                res[idx++] = matrix[row][cur_col];
+                printf("res[%d] = %d\n", idx - 1, res[idx - 1]);
+                visited[row][cur_col] = 1;
+                cur_row = row;
+            }
+        }
+        cur_row++;
+        cur_col++;
+        printf("\ncur_row is %d, cur_col is %d\n", cur_row, cur_col);
+
+    }
+    //go left
+
+    //go down
+
+    return res;
+}
