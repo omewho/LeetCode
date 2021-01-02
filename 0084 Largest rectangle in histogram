@@ -1,0 +1,36 @@
+int largestRectangleArea(int* heights, int heightsSize){
+    int n = heightsSize;
+    int alias[n + 2];
+    alias[0] = alias[n + 1] = 0;
+    for(int i = 1; i < n + 1; i++) {
+        alias[i] = heights[i - 1];
+    }
+    for(int i = 0; i < n + 2; i++) printf("%d ", alias[i]);
+    printf("\n");
+
+    int monostack[n + 2], top = -1;
+    monostack[++top] = 0;
+
+    int cur_area, max_area = 0, left, right, cur_height;
+    for(int i = 1; i < n + 2; i++) {
+        
+        right = i;
+        while(top > -1 && alias[monostack[top]] > alias[i]) {
+            left = monostack[top - 1];
+            cur_height = alias[monostack[top]];
+            cur_area = cur_height * (right - left - 1);
+            max_area = fmax(max_area, cur_area);
+
+            printf("i is %d, cur_height is %d\n", i, cur_height);
+            printf("right is %d, left is %d, cur_area is %d, max_area is %d\n", \
+            right, left, cur_area, max_area);
+            top--;
+        }
+
+        monostack[++top] = i;
+        
+
+    }
+    return max_area;
+    
+}
