@@ -1,0 +1,69 @@
+
+void reverseStr(char *str) {
+    int len = strlen(str);
+
+    char ch;
+    for(int i = 0; i < len / 2; i++) {
+        ch = str[i];
+        str[i] = str[len - 1 - i];
+        str[len - 1 - i] = ch;
+    }
+}
+
+
+char * addBinary(char * a, char * b){
+    int len = fmax(strlen(a), strlen(b));
+    char *res = (char*)malloc(sizeof(char) * (len + 10));
+
+    reverseStr(a);
+    //printf("%s\n", a);
+    reverseStr(b);
+    //printf("%s\n", b);
+
+    int i = 0, sum = 0, carry = 0;
+
+    while(a[i] && b[i]) {
+        sum = a[i] - '0' + b[i] - '0' + carry;
+        //printf("sum is %d\n", sum);
+        res[i] = sum % 2 + '0';
+        //printf("%c\n", res[i]);
+        carry = sum / 2;
+        //printf("carry is %d\n", carry);
+        i++;
+    }
+
+    int tempa = i, tempb= i;
+
+    while(a[tempa]) {
+        printf("a \n");
+        sum = a[tempa] - '0' + carry;
+        res[i] = sum % 2 + '0';
+        carry = sum / 2;
+        //printf("carry a is now %d.\n", carry);
+        i++;
+        tempa++;
+    }
+
+    while(b[tempb]) {
+        //printf("b \n");
+        sum = b[tempb] - '0' + carry;
+        res[i] = sum % 2 + '0';
+        carry = sum / 2;
+        i++;
+        tempb++;
+    }
+    //printf("carry now is %d\n", carry);
+    while(carry) {
+        //printf("carry\n");
+        res[i++] = carry % 2 + '0';;
+        carry /= 2;
+        //printf("carry is %d.\n", carry);
+    }
+
+    res[i] = '\0';
+    //printf("i am here.\n");
+
+    reverseStr(res);
+
+    return res;
+}
