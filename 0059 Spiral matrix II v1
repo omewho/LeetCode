@@ -1,0 +1,40 @@
+class Solution {
+public:
+    vector<vector<int>> generateMatrix(int n) {
+        vector<vector<int>> ans(n, vector<int> (n));
+
+        int num = 1, top = 0, bottom = n - 1, left = 0, right = n - 1;
+        while(num <= n * n) {
+            
+            printf("Going to the right\n");
+            for(int col = left; col <= right; col++) {
+                ans[top][col] = num++;
+                printf("ans[%d][%d] = %d\n", top, col, num - 1);
+            }
+            top++;
+
+            printf("Go down\n");
+            for(int row = top; row <= bottom; row++) {
+                ans[row][right] = num++;
+                printf("ans[%d][%d] = %d\n", row, right, num - 1);
+            }
+            right--;
+
+            printf("Going backwards\n");
+            for(int col = right; col >= left; col--) {
+                ans[bottom][col] = num++;
+                printf("ans[%d][%d] = %d\n",bottom, col, num - 1);
+            }
+            bottom--;
+
+            printf("Going up\n");
+            for(int row = bottom; row >= top; row--) {
+                ans[row][left] = num++;
+                printf("ans[%d][%d] = %d\n", row, left, num - 1);
+            }
+            left++;
+        }
+
+        return ans;
+    }
+};
