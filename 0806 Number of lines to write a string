@@ -1,0 +1,26 @@
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* numberOfLines(int* widths, int widthsSize, char * s, int* returnSize){
+    *returnSize = 2;
+
+    int* ans = (int*)malloc(sizeof(int) * (*returnSize));
+
+    int i = -1, row = 1, n = strlen(s), space = 0, idx = -1, this_space;
+
+    while(i < n - 1) {
+        
+        space += widths[s[i + 1] - 'a'];
+        if(space > 100) {
+            row++;
+            space = widths[s[i + 1] - 'a'];
+        }
+        printf("i = %d, space = %d\n", i, space);
+        
+        i++;
+
+    }
+    ans[0] = row, ans[1] = space;
+
+    return ans;
+}
