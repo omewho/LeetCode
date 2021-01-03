@@ -1,0 +1,55 @@
+class Solution {
+public:
+    vector<vector<int>> generateMatrix(int n) {
+
+        int num = 1;
+        vector<vector<int>> ans(n, vector<int> (n, 0));
+        int top = 0, bottom = n - 1, left = 0, right =  n - 1, row, col;
+        while(top <= bottom && left <= right) {
+
+            row = top, col = left;
+            //printf("row is %d, col is %d\n", row, col);
+            while(col <= right ) {
+                ans[row][col] = num++;
+                //printf("ans[%d][%d] = %d\n", row, col, num - 1);
+                col++;
+            }
+            //right--;
+            col--;
+            top++;
+
+            row = top;
+            while(row <= bottom) {
+                ans[row][col] = num++;
+                //printf("ans[%d][%d] = %d\n", row, col, num - 1);
+                row++;
+            }
+            right--;
+            row--;
+            //printf("right is %d, row is %d\n", right, row);
+
+            col = right;
+            while(col >= left) {
+                ans[row][col] = num++;
+                //printf("ans[%d][%d] = %d\n", row, col, num - 1);
+                col--;
+            }
+            bottom--;
+            col++;
+
+            row = bottom;
+            //printf("row is %d, col is %d\n", row, col);
+            while(row >= top) {
+                ans[row][col] = num++;
+                //printf("ans[%d][%d] = %d\n", row, col, num - 1);
+                row--;
+            }
+            left++;
+            //row++;
+
+        }
+
+
+        return ans;
+    }
+};
