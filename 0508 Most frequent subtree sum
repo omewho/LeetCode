@@ -1,0 +1,52 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int treeSum(TreeNode* root) {
+
+        if(!root) return 0;
+
+        int sum = 0;
+        sum += root->val;
+        if(root->left) sum += treeSum(root->left);
+        if(root->right) sum += treeSum(root->right);
+        return sum;
+    }
+
+    void traverse(TreeNode* root, vector<int>& sums) {
+        if(root) {
+            
+            if(root->left) traverse(root->left, sums);
+            if(root->right) traverse(root->right, sums);
+            int this_sum = treeSum(root);
+            sums.push_back(this_sum);
+        }
+    }
+    vector<int> findFrequentTreeSum(TreeNode* root) {
+        vector<int> sums, ans;
+        map<int, int> freq;
+        
+        traverse(root, sums);
+
+        int max_freq = 0;
+        for(int i = 0; i < sums.size(); i++) {
+            freq[sums[i]]++;
+            if(freq[sums[i]] > max_freq) {
+                max_freq = freq[sums[i]];
+                //printf("sums[%d] = %d\n", i, sums[i]);
+                ans.clear();
+                ans.push_back(sums[i]);
+            }
+            else if(freq[sums[i]] == max_freq) ans.push_back(sums[i]);
+        }
+
+        return ans;
+    }
+};
