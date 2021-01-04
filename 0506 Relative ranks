@@ -1,0 +1,36 @@
+class Solution {
+public:
+    static bool cmp(const pair<int, int>&lhs, const pair<int, int>&rhs) {
+        return lhs.first > rhs.first;
+    }
+
+    vector<string> findRelativeRanks(vector<int>& nums) {
+        vector<pair<int, int>> scoreindex;
+        vector<string> ans;
+
+        for(int i = 0; i < nums.size(); i++) {
+            scoreindex.push_back(pair(nums[i], i));
+        }
+
+        // for(int i = 0; i < nums.size(); i++) {
+        //     printf("%d %d\n", scoreindex[i].first, scoreindex[i].second);
+        // }
+
+        sort(scoreindex.begin(), scoreindex.end(), cmp);
+        map<int, string> indexmedal;
+        
+        for(int i = 0; i < nums.size(); i++) {
+            //printf("%d %d\n", scoreindex[i].first, scoreindex[i].second);
+            if(i == 0) indexmedal[scoreindex[i].second] = "Gold Medal";
+            else if(i == 1) indexmedal[scoreindex[i].second] = "Silver Medal";
+            else if(i == 2) indexmedal[scoreindex[i].second] = "Bronze Medal";
+            else indexmedal[scoreindex[i].second] = to_string(i + 1);
+        }
+
+        for(int i = 0; i < nums.size(); i++) {
+            ans.push_back(indexmedal[i]);
+        }     
+
+        return ans;
+    }
+};
