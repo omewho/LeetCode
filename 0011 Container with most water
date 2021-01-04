@@ -1,0 +1,28 @@
+int maxArea(int* height, int heightSize){
+    int maxVolume = 0, this_Volume = 0;
+    // for(int i = height[0; i < heightSize; i++) {
+
+    // }
+
+    int left = 0, right = heightSize - 1;
+
+    while(left < right) {
+
+        if(height[left] < height[right]) {
+            this_Volume = (right - left) * height[left];
+            // printf("left = %d, right = %d, heightleft = %d, heightright = %d, width = %d\n", left, right, height[left], height[right], right - left);
+            // printf("this_Volume = %d\n", this_Volume);
+            left++;
+        }
+        else {
+            this_Volume = (right - left) * height[right];
+            // printf("right = %d, left = %d, heightleft = %d, heightright = %d, width = %d\n", right, left, height[left], height[right], right - left);
+            // printf("right, this_Volume = %d.\n", this_Volume);
+            right--;
+        }
+        maxVolume = fmax(maxVolume, this_Volume);
+    }
+
+
+    return maxVolume;
+}
