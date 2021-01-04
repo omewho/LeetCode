@@ -1,0 +1,89 @@
+class Solution {
+public:
+    bool isNum(char ch){
+        if(ch >= '0' && ch <= '9') return true;
+        return false;
+    }
+    int myAtoi(string s) {
+
+        int ans = 0, idx = 0, numcount= 0;
+
+        bool minus = false;
+
+        while(s[idx] && s[idx] == ' ') idx++;
+
+        if(s[idx] == '-'){
+            minus = true;
+            idx++;
+        }
+        else if(s[idx] == '+') idx++;
+
+        if(s[idx] <'0'|| s[idx] > '9') return 0;
+        
+        while(s[idx] == '0') idx++;
+        if(s[idx] <'0'|| s[idx] > '9') return 0;
+
+        while(s[idx] && numcount <= 8 && s[idx] >= '0' && s[idx] <= '9') {
+            ans = ans * 10 + s[idx] - '0';
+            printf("ans = %d\n", ans);
+            numcount++;
+            idx++;
+        }
+        // printf("isnum? %d %d\n", isNum(s[idx]), idx);
+        // printf("isnum? %d %d\n", isNum(s[idx + 1]), idx + 1);
+        // printf("now ans = %d, s[%d] = %c, numcount = %d, s[%d] = %c\n", ans, idx, s[idx], numcount, idx + 1, s[idx + 1]);
+        if(numcount == 9){
+            if(isNum(s[idx]) && isNum(s[idx + 1])) {
+                if(minus) ans = INT_MIN;
+                else ans = INT_MAX;
+            }
+            else if( isNum(s[idx]) && !isNum(s[idx + 1]) ) {
+                printf("I am here\n");
+                if(ans > INT_MAX / 10) {
+
+                    if(minus) ans = INT_MIN;
+                    else ans = INT_MAX;
+                }
+
+                else if(ans == INT_MAX / 10 ) {
+                    printf("Hello!\n");
+                    if(minus) {
+                        if(s[idx] >= '0' && s[idx] < '8') {
+                            ans = (s[idx] - '0') + ans * 10;
+                            ans = -ans;
+                        }
+                        else ans = INT_MIN;
+                    }
+                    else {
+                        printf("positive, s[%d] = %c\n", idx, s[idx]);
+                        if(s[idx] >= '0' && s[idx] < '7') ans = ans * 10 + (s[idx] - '0');
+                        else ans = INT_MAX;
+                    }
+                }
+                else {
+                    ans = ans * 10 + s[idx] - '0';
+                    if(minus) ans = -ans;
+                }
+                
+            }
+
+
+            else if( minus)  ans = -ans;
+
+            // else { // !isNum(s[idx] && !isNum(s[idx + 1]));
+            //     //do nothing;
+            // }
+
+
+        }
+        else {
+            if(minus) ans = - ans;
+        }
+
+
+
+        return ans;
+
+
+    }
+};
