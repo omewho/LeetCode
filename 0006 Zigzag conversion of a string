@@ -1,0 +1,42 @@
+#include <cstdio>
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    string convert(string s, int numRows) {
+        if(numRows == 1) return s;
+        
+        string ans = "";
+        
+        int cycle = 2 * numRows - 2, len = s.length();
+        
+        for(int row = 0; row < numRows; row++) {
+        	for(int step = 0; step + row < len; step += cycle) {
+        		ans += s[step + row];
+        		if(row != 0 && row != numRows - 1 && step + cycle - row < len) {
+        			ans += s[step + cycle - row];
+				}
+			}
+		}
+
+        return ans;
+    }
+};
+
+int main() {
+	
+	char str[100];
+	scanf("%s", str);
+	string s = str, out;
+	printf("%s\n", s.c_str());
+	int numRows;
+	scanf("%d", &numRows);
+	
+	out = Solution().convert(s, numRows);
+	printf("%s\n", out.c_str());
+	
+	return 0;
+}
