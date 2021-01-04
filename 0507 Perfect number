@@ -1,0 +1,14 @@
+bool checkPerfectNumber(int num){
+
+    if(num == 1) return false;
+    int factor, sum = 1;
+    for(factor = 2; factor < (int)sqrt(num) + 1; factor++) {
+        if(num % factor == 0) {
+            sum += factor + num / factor;
+            //printf("factor is %d\n", factor);
+        }
+        
+    }
+
+    return num == sum;
+}
