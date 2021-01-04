@@ -1,0 +1,25 @@
+class Solution {
+public:
+    string convert(string s, int numRows) {
+        if(numRows == 1) return s;
+
+        bool goingDown = true;
+        string ans = "";
+        vector<string> rows(numRows);
+
+        int this_row = 0, curr_idx = 0;
+
+        for(auto c: s){
+            rows[this_row] += s[curr_idx++];
+            if(goingDown) this_row++;
+            else this_row--;
+            if(this_row == numRows - 1 || this_row == 0) goingDown = !goingDown;
+        }
+
+        for(string row: rows) {
+            ans += row;
+
+        }
+        return ans;
+    }
+};
