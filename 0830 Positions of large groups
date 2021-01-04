@@ -1,0 +1,27 @@
+class Solution {
+public:
+    vector<vector<int>> largeGroupPositions(string s) {
+        int slow = 0, fast = 0, n = s.length();
+        vector<vector<int>> ans;
+
+        while( fast < n) {
+            fast = slow;
+            
+            while(fast < n && s[fast] == s[slow]) fast++;
+            //printf("fast = %d\n", fast);
+            if(fast - slow >= 3) {
+                int end = fast - 1;
+                //printf("end = %d\n", end);
+                vector<int> apair;
+
+                apair.push_back(slow);
+                apair.push_back(end);
+                ans.push_back(apair);
+            }
+
+            slow = fast;
+        }
+
+        return ans;
+    }
+};
