@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int longestCommonSubsequence(string text1, string text2) {
+        int m = text1.length(), n = text2.length();
+
+        int maxLen[m + 1][n + 1];
+        for(int col = 0; col < n + 1; col++) maxLen[0][col] = 0;
+        for(int row = 0; row < m + 1; row++) maxLen[row][0] = 0;
+
+        for(int row = 1; row < m + 1; row++) {
+            for(int col = 1; col < n + 1; col++) {
+                if(text1[row - 1] == text2[col - 1]) maxLen[row][col] = maxLen[row - 1][col - 1] + 1;
+                else maxLen[row][col] = max(maxLen[row - 1][col], maxLen[row][col - 1]);
+            }
+        }
+
+        return maxLen[m][n];
+    }
+};
