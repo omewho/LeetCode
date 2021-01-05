@@ -1,0 +1,46 @@
+#include <cstdio>
+#include <vector>
+
+const int MAX = 1010;
+
+int maxLen[MAX][MAX];
+
+using namespace std;
+
+class Solution {
+public:
+	void resetdp(int m, int n) {
+		
+		for(int col = 0; col < n + 1; col++) maxLen[0][col] = 0;
+		for(int row = 0; row < m + 1; row++) maxLen[row][0] = 0;
+		
+	}
+	
+    int findLength(vector<int>& A, vector<int>& B) {
+    	int m, n;
+    	m = A.size(), n = B.size();
+    	resetdp(m, n);
+    	
+    	int ans = 0;
+    	for(int row = 1; row < m + 1; row++) {
+    		for(int col = 1; col < n + 1; col++) {
+    			if(A[row - 1] == B[col - 1]) maxLen[row][col] = maxLen[row - 1][col - 1] + 1;
+    			else maxLen[row][col] = 0;
+    			ans = max(ans, maxLen[row][col]); 
+    			//printf("maxLen[%d][%d] = %d\n", row, col, maxLen[row][col]);
+			}
+		}
+		
+		return ans;
+	}  
+};
+
+int main() {
+	
+	vector<int> v1 = {1, 2, 3, 2, 1}, v2 = {3,2,1,4,7};
+	
+	int lcs = Solution().findLength(v1, v2);
+	printf("%d\n", lcs);
+	
+	return 0;
+}
