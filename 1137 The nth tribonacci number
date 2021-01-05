@@ -1,0 +1,13 @@
+class Solution {
+public:
+    int tribonacci(int n) {
+        int tribona[37 + 1];
+        tribona[0] = 0, tribona[1] = 1, tribona[2] = 1;
+
+        for(int i = 3; i < n + 1; i++) {
+            tribona[i] = tribona[i - 3] + tribona[i - 2] + tribona[i - 1];
+        }
+
+        return tribona[n];
+    }
+};
