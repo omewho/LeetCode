@@ -1,0 +1,30 @@
+int findCircleNum(int** isConnected, int isConnectedSize, int* isConnectedColSize){
+    int n = isConnectedSize;
+
+    int visited[n];
+    for(int i = 0; i < n; i++) {
+        visited[i] = 0;
+    }
+
+    int Queue[n * n], front = 0, rear = 0;
+    int count = 0;
+    for(int u = 0; u < n; u++) {
+
+        if(!visited[u]) {
+            Queue[rear++] = u;
+            count++;
+        }
+
+        while(front != rear) {
+            int v = Queue[front++];
+            visited[v] = 1;
+            for(int w = 0; w < n; w++ ) {
+                if( !visited[w] && isConnected[v][w]) {
+                    Queue[rear++] = w;
+                }
+            }
+        }
+
+    }
+    return count;
+}
