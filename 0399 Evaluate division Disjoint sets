@@ -1,0 +1,71 @@
+//unordered_map<string, string>::iterator mpit;
+
+class Solution {
+public:
+	unordered_map<string, string> childtoparent;
+	unordered_map<string, double> weight; 
+	string findRoot(string child) {
+		if(childtoparent[child] != child) {
+			string temp = findRoot(childtoparent[child]);
+			weight[child] = weight[child] * weight[childtoparent[child]];
+			childtoparent[child] = temp;
+		}
+		
+		return childtoparent[child];
+		
+	}
+	
+	void unify(string a, string b, double value) {
+		
+		string ra = findRoot(a), rb = findRoot(b);
+		childtoparent[ra] = rb;
+		weight[ra] = value * weight[b] / weight[a];
+	}
+	
+    vector<double> calcEquation(vector<vector<string>>& equations, vector<double>& values, vector<vector<string>>& queries) {
+        int rowSize = equations.size(), m = queries.size();
+        vector<double> ans;
+        
+        
+        for(int row = 0; row < rowSize; row++) {
+        	string child = equations[row][0];
+        	string parent = equations[row][1];
+        	
+        	
+        	childtoparent[child] = parent;
+        	weight[child] = values[row];
+        	childtoparent[parent] = parent;
+        	weight[parent] = 1.0;
+		}
+		
+		for(int row = 0; row < rowSize; row++) {
+			string a = equations[row][0];
+			string b = equations[row][1];
+			
+			unify(a, b, values[row]);
+		}
+		
+		
+		// for(mpit = childtoparent.begin(); mpit != childtoparent.end(); mpit++) {
+		// 	printf("%s %s %lf\n", mpit->first.c_str(), mpit->second.c_str(), weight[mpit->first]);
+		// }
+        
+        //string res = findRoot("a");
+        
+//       	for(mpit = childtoparent.begin(); mpit != childtoparent.end(); mpit++) {
+//			printf("%s %s\n", mpit->first.c_str(), mpit->second.c_str());
+//		}
+
+		for(int i = 0; i < m; i++) {
+			string child = queries[i][0], parent = queries[i][1];
+			if(childtoparent.find(child) == childtoparent.end() || childtoparent.find(parent) == childtoparent.end() \
+			|| findRoot(child) != findRoot(parent)) {
+				ans.push_back(-1);	
+			}
+			else ans.push_back(weight[child] / weight[parent]);
+		} 
+		
+        
+        return ans;
+    }
+};
