@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int findNthDigit(int n) {
+        
+        int start_number = 1, numofDigits = 1, numofNumbers = 9;
+        
+        long long temp = n;
+        
+        while(temp - (long long)numofDigits * numofNumbers > 0) {
+        	
+        	temp -= numofDigits * numofNumbers;
+        	start_number *= 10;
+        	numofDigits++;
+        	numofNumbers *= 10;
+        	
+        	printf(	"temp is %d\n", temp);
+		}
+        printf("temp is now %d, start_number = %d, digit = %d.\n", temp, start_number, numofDigits);
+        int num = start_number + temp / numofDigits - 1 ;
+        if(temp % numofDigits) num++;
+        int ans = to_string(num)[ (temp % numofDigits + numofDigits - 1) % numofDigits ] - '0';
+        
+        
+        //printf("num = %d, digit = %d\n", num, to_string(num)[numofDigits - temp % numofDigits - 1] - '0');
+        
+        return ans;
+    }
+};
