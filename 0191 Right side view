@@ -1,0 +1,23 @@
+class Solution {
+public:
+    vector<int> ans;
+    
+    vector<int> rightSideView(TreeNode* root) {
+        TreeNode* Queue[200];
+        int front = 0, rear = 0, rear_alias;
+        if(root) Queue[rear++] = root;
+
+        while(front != rear) {
+            rear_alias = rear;
+            while(front != rear_alias) {
+                TreeNode* tn = Queue[front++];
+                
+                if(tn->left) Queue[rear++] = tn->left;
+                if(tn->right) Queue[rear++] = tn->right;
+                if(front == rear_alias) ans.push_back(Queue[front - 1]->val);
+            }
+        }
+        
+        return ans;
+    }
+};
