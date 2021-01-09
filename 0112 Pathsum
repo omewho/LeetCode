@@ -1,0 +1,22 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+typedef struct TreeNode* Tree;
+
+bool found(Tree root, int this_total, int sum) {
+    if(!root) return false;
+
+    if(!root->left && !root->right) return this_total + root->val == sum;
+    
+    return found(root->left, this_total + root->val, sum) || found(root->right, this_total + root->val, sum);
+}
+
+bool hasPathSum(struct TreeNode* root, int sum){
+
+    return found(root, 0, sum);
+}
