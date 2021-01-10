@@ -1,0 +1,65 @@
+class Solution {
+public:
+	
+	void printList(ListNode* head) {
+		ListNode* h = head;
+		
+		bool first = true;
+		while(h) {
+			if(first) first = false;
+			else printf(" ");
+			printf("%d", h->val);
+			
+			h = h->next;
+		}
+		printf("\n");
+	}
+	
+	
+    ListNode* swapNodes(ListNode* head, int k) {
+		ListNode* dummy = new ListNode(0, head);
+		int step1 = k - 1;
+		
+		ListNode *prevfirst = dummy, *first, *prevsecond, *second, *last, *firstnext, *secondnext, *temp;
+		
+		int i = 0;
+		while(i < k - 1) {
+			//printList(p);
+			prevfirst = prevfirst->next;
+			//p = p->next;
+			i++;
+		}
+		
+		first = prevfirst->next;
+		// printf("first: ");
+		// printList(first);
+		// printf("prev: ");
+		// printList(prevfirst);
+		
+//		printf("p: ");
+//		printList(p);
+		
+		prevsecond = dummy;
+		last = first;
+		
+		while(last->next) {
+			prevsecond = prevsecond->next;
+			last = last->next;	
+		}
+		
+		second = prevsecond->next;
+		// printf("prevsecond: ");
+		// printList(prevsecond);
+		// printf("second: ");
+		// printList(second);
+		
+		if(prevsecond != prevfirst) {
+			
+			int temp = first->val;
+            first->val = second->val;
+            second->val = temp;
+		}
+		
+		return dummy->next;
+    }
+};
