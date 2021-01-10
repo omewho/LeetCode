@@ -1,0 +1,24 @@
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+        int m = s.length(), n = t.length();
+        if(m != n) return false;
+
+        bool ans = true;
+        map<char, int> mp1, mp2;
+        map<char, int>::iterator mpit;
+        for(int i = 0; i < m; i++) {
+            mp1[s[i]]++;
+        }
+
+        for(int i = 0; i < n; i++) {
+            mp2[t[i]]++;
+        }
+
+        for(mpit = mp2.begin(); mpit != mp2.end(); mpit++) {
+            if(mp1.find(mpit->first) == mp1.end() || mp1[mpit->first] != mpit->second) ans = false;
+        }
+
+        return ans;
+    }
+};
