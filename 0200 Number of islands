@@ -1,0 +1,65 @@
+class Solution {
+public:
+    
+    int numIslands(vector<vector<char>>& grid) {
+
+        int m = grid.size(), n = grid[0].size();
+        //printf("m = %d, n = %d\n", m, n);
+
+        bool visited[m][n];
+        for(int row = 0; row < m; row++) {
+            for(int col = 0; col < n; col++) {
+                visited[row][col] = false;
+            }
+        }
+
+        int ans = 0;
+
+        for(int row = 0; row < m; row++) {
+            for(int col = 0; col < n; col++) {
+                if(!visited[row][col] && grid[row][col] == '1') {
+
+                    queue<pair<int, int>> coords;
+                    coords.push(std::make_pair(row, col));
+                    visited[row][col] = true;
+
+                    while(!coords.empty()) {
+                        pair<int, int> pos = coords.front();
+                        coords.pop();
+
+                        //printf("pos.first = %d, pos.second = %d, %d\n", pos.first, pos.second, pos.first - 1 >= 0 && !visited[pos.first - 1][pos.second] && grid[pos.first - 1][pos.second] == '1');
+                        if(pos.first - 1 >= 0 && !visited[pos.first - 1][pos.second] && grid[pos.first - 1][pos.second] == '1') {
+                            coords.push(std::make_pair(pos.first - 1, pos.second));
+                            visited[pos.first - 1][pos.second] = true;
+                            //printf("%d %d 1 position %d %d was added to the island\n", pos.first, pos.second, pos.first - 1, pos.second);
+                        }
+
+                        if(pos.first + 1 <= m - 1 && !visited[pos.first + 1][pos.second] && grid[pos.first + 1][pos.second] == '1') {
+                            coords.push(std::make_pair(pos.first + 1, pos.second));
+                            visited[pos.first + 1][pos.second] = true;
+                            //printf("1 position %d %d was added to the island\n", pos.first + 1, pos.second);
+                        }
+
+                        if(pos.second - 1 >= 0 && !visited[pos.first][pos.second - 1] && grid[pos.first][pos.second - 1] == '1') {
+                            coords.push(std::make_pair(pos.first, pos.second - 1));
+                            visited[pos.first][pos.second - 1] = true;
+                            //printf("1 position %d %d was added to the island\n", pos.first, pos.second - 1);
+                        }   
+                        
+                        if(pos.second + 1 <= n - 1 && !visited[pos.first][pos.second + 1] && grid[pos.first][pos.second + 1] == '1') {
+                            coords.push(std::make_pair(pos.first, pos.second + 1));
+                            visited[pos.first][pos.second + 1] = true;
+                            //printf("1 position %d %d was added to the island\n", pos.first, pos.second + 1);
+                        }                                             
+
+
+                    }
+
+                    ans++;
+                }
+            }
+        }
+
+        return ans;
+    }
+};
