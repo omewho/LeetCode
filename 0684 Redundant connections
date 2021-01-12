@@ -1,0 +1,72 @@
+class Solution {
+public:
+    int parent[1000];
+
+    void initParent(int n) {
+        for(int i = 0; i < n; i++) {
+            parent[i] = -1;
+        }        
+    }
+
+    int findRoot(int thisnode) {
+        int temp = thisnode;
+        while( parent[temp] >= 0 ) {
+            temp = parent[temp];
+        }
+
+        while(parent[thisnode] >= 0 ) {
+            parent[thisnode] = temp;
+            thisnode = parent[thisnode];
+        }
+        return temp;
+    }
+
+    void unify(int r1, int r2) {
+
+        if(parent[r1] < parent[r2]) { //r1 belongs to a larger group;
+            parent[r2] = r1;
+            parent[r1] -= parent[r2];
+        }
+        else {
+            parent[r1] = r2;
+            parent[r2] -= parent[r1];
+        }
+    }
+
+    void printParent(int n) {
+        for(int i = 0; i < n; i++) {
+            if(i) printf(" ");
+            printf("%d", parent[i]);
+        }
+        printf("\n");
+    }
+
+    
+    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+        int n = edges.size();
+
+        vector<int> ans;
+        initParent(n);
+
+        int n1, n2;
+        int p1, p2;
+        for(int i = 0; i < n; i++) {
+            n1 = edges[i][0] - 1;
+            n2 = edges[i][1] - 1;
+
+            p1 = findRoot(n1);
+            //printf("p1 = %d\n", p1);
+            p2 = findRoot(n2);
+            //printf("p2 = %d\n", p2);
+
+            if(p1 != p2) unify(p1, p2);
+            else {
+                ans.push_back(n1 + 1);
+                ans.push_back(n2 + 1);
+            }
+        }
+        //printParent(n);
+
+        return ans;
+    }
+};
