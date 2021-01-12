@@ -1,0 +1,34 @@
+class Solution {
+public:
+    int minDistance(vector<int>& houses, int k) {
+	
+	int n = houses.size();
+	
+	sort(houses.begin(), houses.end());
+	houses.insert(houses.begin(), INT_MIN);
+	auto dp = vector<vector<int>> (n + 1, vector<int> (k + 1, INT_MAX>>1));
+	
+	vector<vector<int>> minDistSum(n + 1, vector<int>(n + 1, 0));
+	for(int h1 = 1; h1 < n + 1; h1++){
+		
+		for(int h2 = h1; h2 < n + 1; h2++) {
+			
+			for(int h = h1; h <= h2; h++) {
+				minDistSum[h1][h2] += abs(houses[h] - houses[ (h1 + h2) / 2]);
+			}
+		}
+	}
+	
+	for(int h = 1; h < n + 1; h++) dp[h][1] = minDistSum[1][h]; // only 1 mailbox from 1 to this house
+	for(int h = 1; h < n + 1; h++) {
+		for(int mb = 2; mb < k + 1; mb++) {
+			for(int h1 = 1; h1 + 1 <= h; h1++) {
+				dp[h][mb] = min(dp[h][mb], dp[h1][mb - 1] + minDistSum[h1 + 1][h]);
+			}	
+		}
+		
+	}
+	
+	return dp[n][k];
+    }
+};
