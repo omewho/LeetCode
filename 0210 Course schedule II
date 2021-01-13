@@ -1,0 +1,61 @@
+class Solution {
+public:
+    void printgraph(vector<vector<int> >& edges) {
+        for(int u = 0; u < edges.size(); u++) {
+            printf("u = %d\n", u);
+            if(edges[u].size()) {
+                printf("adjv: ");
+                for(int i = 0; i < edges[u].size(); i++) {
+                    printf(" %d", edges[u][i]);
+                }
+                printf("\n");
+            }
+        }
+    }
+
+    vector<int> topologicalSort(vector<int>& indegree, vector<vector<int> >& edges) {
+        
+        vector<int> ans;
+        int n = indegree.size();
+
+        queue<int> Q;
+        for(int i = 0; i < n; i++) {
+            if(!indegree[i]) Q.push(i);
+        }
+
+        int u, v;
+        while(!Q.empty()) {
+            u = Q.front();
+            ans.push_back(u);
+            Q.pop();
+
+            for(int i = 0; i < edges[u].size(); i++) {
+                v = edges[u][i];
+                indegree[v]--;
+                if(!indegree[v]) Q.push(v);
+            }
+        }
+
+        if(ans.size() == n) return ans;
+        return vector<int>{};
+    }
+
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<vector<int>> edges(numCourses);
+
+        vector<int> indegree(numCourses, 0);
+
+        int n = prerequisites.size(), u, v;
+        for(int i = 0; i < n; i++) {
+            u = prerequisites[i][0];
+            v = prerequisites[i][1];
+
+            indegree[u]++;
+            edges[v].push_back(u);
+        }
+
+        //printgraph(edges);
+
+        return topologicalSort(indegree, edges);
+    }
+};
