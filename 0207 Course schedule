@@ -1,0 +1,90 @@
+class Solution {
+public:
+    void printArr(vector<int>& arr) {
+        int n = arr.size();
+        for(int i = 0; i < n; i++) {
+            if(i) printf(" ");
+            printf("%d", arr[i]);
+        }
+        printf("\n");
+    }
+
+    void printGraph(vector<vector<int>>& graph) {
+        int m = graph.size();
+        for(int u = 0; u < m; u++) {
+            //printf(" u = %d, col = %d\n", u, graph[u].size());
+            int v;
+            for(int i = 0; i < graph[u].size(); i++) {
+                v = graph[u][i];
+                if(i) printf(" ");
+                //printf("%d", v);
+            }
+            printf("--\n");
+        } 
+    }
+
+    bool topologicalSort(vector<int>& indegree, vector<vector<int>>& graph) {
+        queue<int> Q;
+
+        // printf("In top, graph.size() = %d\n", graph.size());
+        // printArr(indegree);
+        // printf("graph in top:\n");
+        // printGraph(graph);
+        // printf("end\n\n");
+        int n = indegree.size();
+        //printf("n = %d\n", n);
+        for(int i = 0; i < n; i++) {
+            if(!indegree[i])Q.push(i);
+        }
+        int u, v, count = 0;
+        while(!Q.empty()) {
+            u = Q.front();
+            //printf("u = %d\n", u);
+            count++;
+            Q.pop();
+            for(int i = 0; i < graph[u].size(); i++) {
+                
+                v = graph[u][i];
+                //printf("v = %d\n", v);
+
+                indegree[v]--;
+                if(!indegree[v])Q.push(v);
+                //printf("v = %d was added.\n", v);
+
+            }
+        }
+        //printf("count = %d\n", count);
+        if(count == n) return true;
+        return false;
+    }
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+
+        vector<int> indegree(numCourses);
+        vector<vector<int>> graph(numCourses);
+
+        //printf("graph: size = %d\n", graph.size());
+        //printGraph(graph);
+
+        int u, v;
+
+        for(int i = 0; i < prerequisites.size(); i++) {
+            u = prerequisites[i][0];
+            v = prerequisites[i][1];
+            
+            //printf("i = %d, u = %d, v = %d\n", i, u, v);
+            graph[v].push_back(u); 
+            //printf("graph[%d][%d] = %d\n", v, u, graph[v][u]);        
+            indegree[u]++;
+        }
+
+        // printf("111 graph；\n");
+        // printGraph(graph);
+        // printf("sahfl\n");
+
+        bool ans = topologicalSort(indegree, graph);
+        // queue<int> Q;
+        // for(int i = 0; i < numCourses; i++) if()Q.push()
+
+        return ans;
+    }
+};
