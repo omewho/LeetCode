@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int jump(vector<int>& nums) {
+		
+		int curRightmost = 0, nextRightmost = 0, i = 0, steps = 0;
+		while(i < nums.size() - 1) {
+			
+			nextRightmost = max(i + nums[i], nextRightmost);
+			if(i == curRightmost) {
+				steps++;
+				curRightmost = nextRightmost;
+			}
+			
+			i++;
+		}
+		
+		return steps;
+    }
+};
