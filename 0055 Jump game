@@ -1,0 +1,23 @@
+class Solution {
+public:
+    bool canJump(vector<int>& nums) {
+        int rightMost = 0;
+        bool ans = true;
+        for(int i = 0; i < nums.size(); i++) {
+            if(i <= rightMost) {
+                rightMost = max(i + nums[i], rightMost);
+                //printf("rightmot = %d\n", rightMost);
+                if(rightMost >= nums.size() - 1) {
+                    break;
+                }
+            }
+            else {
+                //printf("i = %d, rightmost = %d\n", i, rightMost);
+                ans = false;
+                break;
+            }
+        }
+
+        return ans;
+    }
+};
