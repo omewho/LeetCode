@@ -1,0 +1,30 @@
+class Solution {
+public:
+    int calculateMinimumHP(vector<vector<int>>& dungeon) {
+        int rowSize = dungeon.size(), colSize = dungeon[0].size();
+
+        vector<vector<int> > dp(rowSize, vector<int> (colSize, INT_MAX / 2));
+        dp[rowSize - 1][colSize - 1] = max( 1, 1 - dungeon[rowSize - 1][colSize - 1]);
+        //printf("dp")
+
+        for(int col = colSize - 2; col >= 0; col--) {
+            dp[rowSize - 1][col] = max(1, dp[rowSize - 1][col + 1] - dungeon[rowSize - 1][col]);
+            //printf("dp[%d][%d] = %d\n", rowSize - 1, col, dp[rowSize - 1][col]);
+        }
+
+        for(int row = rowSize - 2; row >= 0; row--) {
+            dp[row][colSize - 1] = max(1, dp[row + 1][colSize - 1] - dungeon[row][colSize - 1]);
+            //printf("row dp[%d][%d] = %d\n", row, colSize - 1, dp[row][colSize - 1]);
+        }
+
+        for(int row = rowSize - 2; row >= 0; row--) {
+            for(int col = colSize - 2; col >= 0; col--) {
+                dp[row][col] = max(1, min(dp[row + 1][col], dp[row][col + 1]) - dungeon[row][col]);
+                //printf("row col dp[%d][%d] = %d\n", row, col, dp[row][col]);
+            }
+            //printf("hello\n");
+        }
+
+        return dp[0][0];
+    }
+};
