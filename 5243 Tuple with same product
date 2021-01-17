@@ -1,0 +1,20 @@
+class Solution {
+public:
+    int tupleSameProduct(vector<int>& nums) {
+        int n = nums.size(), ans = 0;
+        map<int, int> productfreq;
+        for(int i = 0; i < n - 1; i++) {
+            for(int j = i + 1; j < n; j++){
+                productfreq[nums[i] * nums[j]]++;
+            }
+            
+        }
+
+        for(auto pf: productfreq) {
+            int freq = pf.second;
+            ans += (freq * (freq - 1)) / 2;
+        }
+
+        return ans * 8;
+    }
+};
