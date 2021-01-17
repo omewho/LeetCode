@@ -1,0 +1,70 @@
+class Solution {
+public:
+    void printArr(int *arr, int n) {
+        for(int i = 0; i < n; i++) {
+            if(i) printf(" ");
+            printf("%d", arr[i]);
+        }
+        printf("\n");
+    }
+
+    int parent[100000];
+
+    void initParent(int dsuSize) {
+        for(int i = 0; i < dsuSize; i++) parent[i] = -1;
+    }
+
+    int findRoot(int idx) {
+        if(parent[idx] < 0) return idx;
+
+        int root = findRoot(parent[idx]);
+        parent[idx] = root;
+        return root;
+    }
+
+    void unify(int root1, int root2) {
+
+        if(parent[root1] < parent[root2]) {
+
+            parent[root1] += parent[root2];
+            parent[root2] = root1;
+        }
+        else {
+            parent[root2] += parent[root1];
+            parent[root1] = root2;
+        }
+    }
+
+
+    int minimumHammingDistance(vector<int>& source, vector<int>& target, vector<vector<int>>& allowedSwaps) {
+        int ans = 0, r1, r2;
+        int n = source.size();
+        initParent(n);
+
+        int m = allowedSwaps.size();
+        for(auto as : allowedSwaps) {
+            r1 = findRoot(as[0]);
+            r2 = findRoot(as[1]);
+            if(r1 != r2) unify(r1, r2);
+        }
+
+        //printArr(parent, n);
+
+        unordered_map<int, unordered_multiset<int> > rootElem_S, rootElem_T;
+        for(int i = 0; i < n; i++) {
+            int root = findRoot(i);
+            rootElem_S[root].insert(source[i]);
+            rootElem_T[root].insert(target[i]);
+        }
+
+        for(auto [k, v] : rootElem_S) {
+            //printf("%d\n", k);
+            for(auto elem : v) {
+                if(rootElem_T[k].find(elem) == rootElem_T[k].end()) ans++;
+                else rootElem_T[k].erase(rootElem_T[k].find(elem));
+            }
+        }
+
+        return ans;
+    }
+};
