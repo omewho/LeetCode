@@ -1,0 +1,17 @@
+class Solution {
+public:
+    int totalMoney(int n) {
+        int money[7], sum = 0;
+        money[0] = 0;
+
+        for(int i = 0; i < n; i++) {
+            int idx = i % 7;
+            if( idx == 0) money[idx]++;
+            else money[idx] = money[0] + idx;
+
+            sum += money[idx];
+        }
+
+        return sum;
+    }
+};
