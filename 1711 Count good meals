@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int countPairs(vector<int>& deliciousness) {
+        int n = deliciousness.size(), mod = 1000000007, sum, remainder, ans = 0;
+
+        unordered_map<int, int> remainderfreq;
+        for(int i = 0; i < n; i++) {
+
+            for(int j = 0; j <= 21; j++) {
+                sum = 1<<j;
+                remainder = sum - deliciousness[i];
+                if(remainderfreq.find(remainder) != remainderfreq.end()) {
+                    ans = (ans + remainderfreq[remainder]) % mod;
+                    //printf("sum = %d, deli = %d, remainder = %d\n", sum, deliciousness[i], remainder);
+                }
+                    
+            }
+            remainderfreq[deliciousness[i]]++;
+            //printf("\n");
+            // for(auto [k, freq] : remainderfreq) {
+            //     printf(" k = %d, freq = %d\n", k, freq);
+            // }
+            
+        }
+
+        return ans % mod;
+    }
+};
