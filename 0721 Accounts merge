@@ -1,0 +1,87 @@
+class DesjointUnionSet {
+
+    private:
+        vector<int> parent;
+    
+    public:
+        DesjointUnionSet(int n): parent( vector<int>(n)) {
+            for(int i = 0; i < n; i++) {
+                parent[i] = -1;
+            }
+        }
+
+        int findRoot(int idx) {
+            if(parent[idx] < 0) return idx;
+            return parent[idx] = findRoot(parent[idx]);
+        }
+
+        void unify(int rootx, int rooty) {
+
+            if(parent[rootx] < parent[rooty]) {
+                parent[rootx] += parent[rooty];
+                parent[rooty] = rootx;
+            }
+            else {
+                parent[rooty] += parent[rootx];
+                parent[rootx] = rooty;
+            }
+        }
+
+        void print() {
+            for(int i = 0; i < parent.size(); i++) {
+                if(i) printf(" ");
+                printf("%d", parent[i]);
+            }
+            printf("\n");
+        }
+};
+
+
+class Solution {
+public:
+
+    vector<vector<string>> accountsMerge(vector<vector<string>>& accounts) {
+        vector<vector<string>> ans;
+
+        int n = accounts.size();
+        //printf("n = %d\n", n);
+        unordered_map<string, int> email2idx;
+
+        DesjointUnionSet dsu(n);
+        //dsu.print();
+        for(int i = 0; i < n; i++) {
+
+            int size = accounts[i].size();
+            for(int j = 1; j < size; j++) {
+                //printf("i = %d, email = %s\n", i, accounts[i][j].c_str());
+                if(email2idx.find(accounts[i][j]) == email2idx.end()) email2idx[accounts[i][j]] = i;
+                else {
+                    int rootx = dsu.findRoot(email2idx[accounts[i][j]]);
+                    int rooty = dsu.findRoot(i);
+                    if(rootx != rooty) {
+                        dsu.unify(rootx, rooty);
+                    }
+                }   
+            }
+        }
+
+        //dsu.print();
+
+        unordered_map<int, set<string>> idx2emails;
+        for(auto [k, v] : email2idx) {
+            
+            int idx = dsu.findRoot(v);
+            idx2emails[idx].insert(k);
+        }
+
+        for(auto [k, v] : idx2emails) {
+            vector<string> aRecord(1, accounts[k][0]);
+            for(auto email : v) {
+                aRecord.emplace_back(email);
+            }
+            ans.push_back(aRecord);
+        }
+        
+        return ans;
+    }
+};
