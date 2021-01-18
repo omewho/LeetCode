@@ -1,0 +1,22 @@
+class Solution {
+public:
+    string maximumBinaryString(string binary) {
+
+        int len = binary.length();
+
+        int beginning_ones = 0, ending_ones = 0;
+
+        int i = 0;
+        while(binary[i++] == '1') beginning_ones++;
+        if(beginning_ones == len) return binary;
+
+        while(i < len) {
+            if(binary[i++] == '1') ending_ones++;
+        }
+
+        int trans = len - ending_ones - beginning_ones - 1;
+        string ans = string(len - ending_ones - 1 , '1') + '0' + string(ending_ones, '1');
+
+        return ans;
+    }
+};
