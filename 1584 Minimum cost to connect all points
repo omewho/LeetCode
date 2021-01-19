@@ -1,0 +1,45 @@
+class Solution {
+public:
+    int minCostConnectPoints(vector<vector<int>>& points) {
+        int n = points.size();
+
+        if(n < 2) return 0;
+
+        int ans = 0;
+
+        vector<pair<int, int> > Edges;
+
+        priority_queue<pair<int, int>, vector<pair<int, int> >, greater<pair<int, int> > > distandidx;
+
+        vector<bool> visited(n, false);
+
+        int dist;
+
+        int count = 0;
+
+        distandidx.push({0, 0});
+
+        while(!distandidx.empty() && count < n) {
+            auto [d, p] = distandidx.top();
+            
+            if(!visited[p]) {
+                distandidx.pop();
+                count++;
+                //printf(" d = %d, p = %d\n", d, p);
+                ans += d;
+                visited[p] = true;
+
+                for(int i = 0; i < n; i++) {
+                    if(!visited[i]) {
+                        dist = abs(points[p][0] - points[i][0]) + abs(points[p][1] - points[i][1]);
+                        distandidx.push({dist, i});
+                    }
+                }
+            
+            }
+            else distandidx.pop();
+        }
+        
+        return ans;
+    }
+};
