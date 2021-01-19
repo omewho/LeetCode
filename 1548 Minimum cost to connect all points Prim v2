@@ -1,0 +1,43 @@
+class Solution {
+public:
+    int minCostConnectPoints(vector<vector<int>>& points) {
+        int n = points.size();
+
+        if(n < 2) return 0;
+
+        vector<int> parent(n, -1);
+        
+        int count = n, d;
+        vector<int> dist(n, 0x3f3f3f3f);
+        dist[0] = -1;
+
+        int ans = 0, from;
+
+        while(count > 0) {
+            int minDist = 0x3f3f3f3f;
+            from = -1;
+            for(int i = 0; i < n; i++) {
+                
+                if(dist[i] != 0 && dist[i] < minDist) {
+                    from = i;
+                    minDist = dist[from];
+                }
+            }
+
+            if(count == n) ans += 0;
+            else ans += dist[from];
+            
+            dist[from] = 0;
+            
+            count--;
+
+            for(int j = 0; j < n; j++) {
+                d = abs(points[from][0] - points[j][0]) + abs(points[from][1] - points[j][1]);
+                
+                if(dist[j] > d) dist[j] = d;
+            }
+        }
+
+        return ans;
+    }
+};
