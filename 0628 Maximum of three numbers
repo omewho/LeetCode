@@ -1,0 +1,34 @@
+class Solution {
+public:
+    int maximumProduct(vector<int>& nums) {
+
+        int n = nums.size();
+        int min_first = INT_MAX, min_second = INT_MAX;
+        int max_first = INT_MIN, max_second = INT_MIN, max_third = INT_MIN;
+
+        for(int num : nums) {
+            if(num < min_first) {
+                min_second = min_first;
+                min_first = num;
+            }
+            else if(num < min_second){
+                min_second = num;
+            }
+
+            if(num > max_first) {
+                max_third = max_second;
+                max_second = max_first;
+                max_first = num;
+            }
+            else if(num > max_second) {
+                max_third = max_second;
+                max_second = num;
+            }
+            else if(num > max_third) {
+                max_third = num;
+            }
+        }
+        
+        return max(min_first * min_second * max_first, max_first * max_second * max_third);
+    }
+};
