@@ -1,0 +1,35 @@
+class Solution {
+public:
+
+    int findlastIndex(vector<int>& nums, int left, int right, int k ) {
+        //printf("k = %d\n", k);
+        int l = left, r = right;
+        //printf("l = %d, r = %d\n", l, r);
+        while(l <= r) {  // find the first index idx such that nums[idx] > k, then the last index is idx - 1;
+            int mid = l + (r - l) / 2;
+            //printf("mid = %d\n", mid);
+            if(nums[mid] >= k) r = mid - 1;
+            else l = mid + 1;
+            //printf("l = %d, r = %d, ahele\n", l, r);
+        }
+
+        return l - 1;
+    }
+    int triangleNumber(vector<int>& nums) {
+        int n = nums.size(), ans = 0;
+
+        sort(nums.begin(), nums.end());
+
+        for(int i = 0; i < n - 2; i++) {
+            if(nums[i]) {
+                for(int j = i + 1; j < n - 1; j++) {
+                    int idx = findlastIndex(nums, j + 1, n - 1, nums[i] + nums[j]);
+                    //printf(" i = %d, j = %d, idx = %d\n", i, j, idx);
+                    ans += idx - j;
+                }
+            }
+        }
+
+        return ans;
+    }
+};
