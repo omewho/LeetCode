@@ -1,0 +1,45 @@
+class Solution {
+public:
+    int kthFactor(int n, int k) {
+        vector<int> factors;
+        vector<int> lasthalf;
+        int rt = (int)sqrt(n), ans;
+        for(int i = 1; i < rt + 1; i++) {
+            if( n % i == 0) {
+                factors.push_back(i);
+                if(i == rt && rt * rt == n) break;
+                lasthalf.insert(lasthalf.begin(), n / i);
+            }
+        }
+        //if( (rt) * (rt) == n ) factors.push_back(rt);
+        factors.insert(factors.end(), lasthalf.begin(), lasthalf.end());
+
+        for(int i = 0; i < factors.size(); i++) {
+            printf("%d\n", factors[i]);
+        }
+
+        if(factors.size() < k) ans = -1;
+        else ans = factors.at(k - 1);
+
+        return ans;
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int n = stringToInteger(line);
+        getline(cin, line);
+        int k = stringToInteger(line);
+        
+        int ret = Solution().kthFactor(n, k);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
