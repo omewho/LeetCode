@@ -1,0 +1,81 @@
+class DisjointSetUnion {
+    private:
+        vector<int> parent;
+
+    public:
+        DisjointSetUnion(int n): parent(vector<int> (n, -1)) {}
+
+        int UnionFind(int idx) {
+            if(parent[idx] < 0) return idx;
+            return parent[idx] = UnionFind(parent[idx]);
+        }
+
+        void unify(int rootx, int rooty) {
+            if(parent[rootx] < parent[rooty]) {
+                parent[rootx] += parent[rooty];
+                parent[rooty] = rootx;
+            }
+            else {
+                parent[rooty] += parent[rootx];
+                parent[rootx] = rooty;
+            }
+        }
+
+        void print(){
+            printf("size = %d\n", parent.size());
+            for(int i = 0; i < parent.size(); i++) {
+                if(i) printf(" ");
+                printf("%d", parent[i]);
+            }
+            printf("\n");
+        }
+
+};
+class Solution {
+public:
+    struct comp{
+        bool operator() (const vector<int>&a, const vector<int>&b) {
+            if(a[2] == b[2]) return a[1] > b[1];
+            return a[2] > b[2];
+        }
+    };
+    
+    vector<vector<int>> findCriticalAndPseudoCriticalEdges(int n, vector<vector<int>>& edges) {
+        vector<vector<int>> ans;
+
+        DisjointSetUnion dsu(n);
+
+        priority_queue<vector<int>, vector<vector<int> >, comp> pq(edges.begin(), edges.end());
+
+        // while(!pq.empty()) {
+        //     printf("top = %d\n", pq.top()[2]);
+        //     pq.pop();
+        // }
+
+        int total = 0, count = 0, rootx, rooty;
+
+        while(count < n - 1) {
+
+            auto edge = pq.top();
+            printf("edge = %d %d %d\n", edge[0], edge[1], edge[2]);
+            pq.pop();
+            //total += edge[2];
+            int x = edge[0], y = edge[1];
+            rootx = dsu.UnionFind(x), rooty = dsu.UnionFind(y);
+            if(rootx != rooty) {
+                total += edge[2];
+                printf("edge = %d %d %d was added.\n", edge[0], edge[1], edge[2]);
+                dsu.unify(rootx, rooty);
+                count++;
+            }
+
+        }
+
+        printf("total = %d\n", total);
+        dsu.print();
+
+
+
+        return ans;
+    }
+};
