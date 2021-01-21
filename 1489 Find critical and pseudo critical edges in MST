@@ -1,0 +1,132 @@
+class DisjointSetUnion {
+    private:
+        vector<int> parent;
+
+    public:
+        DisjointSetUnion(int n): parent(vector<int> (n, -1)) {}
+
+        int UnionFind(int idx) {
+            if(parent[idx] < 0) return idx;
+            return parent[idx] = UnionFind(parent[idx]);
+        }
+
+        void unify(int rootx, int rooty) {
+            if(parent[rootx] < parent[rooty]) {
+                parent[rootx] += parent[rooty];
+                parent[rooty] = rootx;
+            }
+            else {
+                parent[rooty] += parent[rootx];
+                parent[rootx] = rooty;
+            }
+        }
+
+        void print(){
+            printf("size = %d\n", parent.size());
+            for(int i = 0; i < parent.size(); i++) {
+                if(i) printf(" ");
+                printf("%d", parent[i]);
+            }
+            printf("\n");
+        }
+
+};
+class Solution {
+public:
+    // struct comp{
+    //     bool operator() (const vector<int>&a, const vector<int>&b) {
+    //         if(a[2] == b[2]) return a[1] < b[1];
+    //         return a[2] < b[2];
+    //     }
+    // };
+    
+    vector<vector<int>> findCriticalAndPseudoCriticalEdges(int n, vector<vector<int>>& edges) {
+        vector<vector<int>> ans(2);
+
+        DisjointSetUnion dsu(n);
+
+        //priority_queue<vector<int>, vector<vector<int> >, comp> pq(edges.begin(), edges.end());
+
+        vector<vector<int>> edges_alias(edges);
+
+        for(int i = 0; i < edges_alias.size(); i++) {
+            edges_alias[i].push_back(i);
+        }
+
+        sort(edges_alias.begin(), edges_alias.end(), [](const vector<int>& a, const vector<int>& b){
+            if(a[2] == b[2]) return a[0] < b[0];
+            return a[2] < b[2];
+        });
+
+        for(int i = 0; i < edges_alias.size(); i++) {
+            //printf("i = %d, %d %d %d %d\n", i, edges_alias[i][0], edges_alias[i][1], edges_alias[i][2], edges_alias[i][3]);
+        }
+
+        int total = 0, count = 0, x, y, w, rootx, rooty, idx = 0;
+
+        while(count < n - 1) {
+            //printf("count = %d\n", count);
+            x = edges_alias[idx][0], y = edges_alias[idx][1], w = edges_alias[idx][2];
+            // vector<int> e = edges_alias[idx];
+            // printf("e = %d %d %d\n", e[0], e[1], e[2]);
+            rootx = dsu.UnionFind(x);
+            rooty = dsu.UnionFind(y);
+            //printf("rootx = %d, rooty = %d\n", rootx, rooty);
+            if(rootx != rooty) {
+                total += w;
+                count++;
+                dsu.unify(rootx, rooty);
+            }
+
+            idx++;
+        }
+
+        int m = edges_alias.size(), total_alias, count_alias, from, to, wt, pos;
+
+        for(int i = 0; i < m; i++) {
+            total_alias = 0, count_alias = 0;
+            DisjointSetUnion dsu_alias(n);
+            for(int j = 0; j < m; j++) {
+                if(i == j) continue;
+
+                vector<int> e = edges_alias[j];
+                from = e[0], to = e[1], wt = e[2];
+                if(dsu_alias.UnionFind(from) != dsu_alias.UnionFind(to)) {
+                    count_alias++;
+                    total_alias += wt;
+                    dsu_alias.unify(dsu_alias.UnionFind(from), dsu_alias.UnionFind(to) );
+                }
+            }
+
+            if(count_alias < n - 1 || total_alias > total) {
+                ans[0].push_back(edges_alias[i][3]);
+            } 
+
+            else {
+                dsu_alias = DisjointSetUnion(n);
+                //dsu_alias.print();
+
+                vector<int> e = edges_alias[i];
+                from = e[0], to = e[1], w = e[2], pos = e[3];
+                int total_weight = w;
+                dsu_alias.unify(from, to);
+
+                for(int j = 0; j < m; j++) {
+                    if(j == i) continue;
+                    int rx = dsu_alias.UnionFind(edges_alias[j][0]), ry = dsu_alias.UnionFind(edges_alias[j][1]);
+                    if(rx != ry) {
+                        total_weight += edges_alias[j][2];
+                        dsu_alias.unify(rx, ry);
+                    }
+                }
+                //printf("e = %d %d %d %d, total_weight = %d\n", edges_alias[i][0], edges_alias[i][1], edges_alias[i][2], edges_alias[i][3], total_weight);
+                if(total_weight == total) ans[1].push_back(edges_alias[i][3]);
+                
+
+            }
+
+        }
+
+        return ans;
+    }
+};
