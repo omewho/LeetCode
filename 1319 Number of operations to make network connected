@@ -1,0 +1,42 @@
+class Solution {
+    
+public:
+
+    void dfs(vector<vector<int>>& graph, vector<bool>& visited, int start) {
+        int n = graph.size();
+        visited[start] = true;
+        for(auto v: graph[start]) {
+            //printf("v = %d\n", v);
+            if(!visited[v])dfs(graph, visited, v);
+        }
+    }
+
+
+    int makeConnected(int n, vector<vector<int>>& connections) {
+        int existing_edges = connections.size();
+
+        if(existing_edges < n - 1 ) return -1;
+
+        vector<vector<int> > graph(n);
+        printf("n = %d\n", n);
+
+        for(auto& conn : connections) {
+            //printf("u = %d, v = %d\n", conn[0], conn[1]);
+            graph[conn[0]].push_back(conn[1]);
+            graph[conn[1]].push_back(conn[0]);
+        }
+
+        vector<bool> visited(n, false);
+        //printf("hello!\n");
+        int num = 0;
+        for(int i = 0; i < n; i++) {
+            if(!visited[i]) {
+                dfs(graph, visited, i);
+                num++;
+            }
+            //printf("num = %d\n", num);
+        }
+
+        return num - 1;
+    }
+};
