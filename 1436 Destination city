@@ -1,0 +1,18 @@
+class Solution {
+public:
+    string destCity(vector<vector<string>>& paths) {
+        string ans;
+        unordered_map<string, int> cityoutdegree;
+
+        for(auto& path: paths) {
+            cityoutdegree[path[0]]++;
+            cityoutdegree[path[1]] += 0;
+        }
+
+        for(auto& [k, v]: cityoutdegree) {
+            if(!v) ans = k;
+        }
+
+        return ans;
+    }
+};
