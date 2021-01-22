@@ -36,7 +36,7 @@ public:
         bool ans = true;
         
         TreeNode* queue[100001];
-        int front = 0, rear = 0, rear_alias, lvl = 0;
+        int front = 0, rear = 0, rear_alias, lvl = 0, pre;
         queue[rear++] = root;
         
         
@@ -44,41 +44,65 @@ public:
         	
         	rear_alias = rear;
         	
-        	bool oddeven, incrdecr;
-        	if(lvl % 2 == 0) {
-        		
-        		int pre = 0;
-        		while(front != rear_alias) {
-        			TreeNode* t = queue[front++];
+        	if(lvl % 2 == 0) pre = 0; // node->val ranges from 1 to 10^6
+        	else pre = 1000001;
+        	
+        	while(front != rear_alias) {
+        		TreeNode* t = queue[front++];
+        		if(lvl % 2 == 0) {
         			if(t->val % 2 == 0 || t->val <= pre) {
-        				//printf("t->val = %d\n", t->val);
         				ans = false;
         				break;
 					}
-					
-					pre = t->val;
-        			
-        			if(t->left) queue[rear++] = t->left;
-        			if(t->right) queue[rear++] = t->right;
-        			
-				}	
-			}
-			
-			else {
-				int pre = 1000001;
-	        	while(front != rear_alias) {
-	        		TreeNode* t = queue[front++];
-	        		if(t->val % 2 != 0 || t->val >= pre) {
-	        			//printf("t->val = %d\n", t->val);
-	        			ans = false;
-	        			break;
+				}
+				else {
+					if(t->val % 2 != 0 || t->val >= pre) {
+						ans = false;
+						break;
 					}
-					pre = t->val;
-					
-					if(t->left) queue[rear++] = t->left;
-					if(t->right) queue[rear++] = t->right;
-				}				
+				}
+				
+				pre = t->val;
+				if(t->left) queue[rear++] = t->left;
+				if(t->right) queue[rear++] = t->right;
 			}
+        	
+        	
+        	
+//        	if(lvl % 2 == 0) {
+//        		
+//        		int pre = 0;
+//        		while(front != rear_alias) {
+//        			TreeNode* t = queue[front++];
+//        			if(t->val % 2 == 0 || t->val <= pre) {
+//        				//printf("t->val = %d\n", t->val);
+//        				ans = false;
+//        				break;
+//					}
+//					
+//					pre = t->val;
+//        			
+//        			if(t->left) queue[rear++] = t->left;
+//        			if(t->right) queue[rear++] = t->right;
+//        			
+//				}	
+//			}
+//			
+//			else {
+//				int pre = 1000001;
+//	        	while(front != rear_alias) {
+//	        		TreeNode* t = queue[front++];
+//	        		if(t->val % 2 != 0 || t->val >= pre) {
+//	        			//printf("t->val = %d\n", t->val);
+//	        			ans = false;
+//	        			break;
+//					}
+//					pre = t->val;
+//					
+//					if(t->left) queue[rear++] = t->left;
+//					if(t->right) queue[rear++] = t->right;
+//				}				
+//			}
 			
 			if(!ans) break;
 			lvl++;
