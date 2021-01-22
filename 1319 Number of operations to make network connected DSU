@@ -1,0 +1,56 @@
+class DisjointSetUnion {
+    private:
+        vector<int> parent;
+        int setCount;
+
+
+    public:
+        DisjointSetUnion(int n): parent(vector<int>(n)), setCount(n) {
+            for(int i = 0; i < n; i++) parent[i] = -1;
+        }
+
+        int findRoot(int idx) {
+            return parent[idx] < 0 ? idx : parent[idx] = findRoot(parent[idx]);
+        }
+
+        int getSetNum() {
+            return setCount;
+        }
+
+        bool unify(int x, int y) {
+            int rootx = findRoot(x), rooty = findRoot(y);
+            if(rootx == rooty) return false;
+
+            if(parent[rootx] < parent[rooty]) {
+                parent[rootx] += parent[rooty];
+                parent[rooty] = rootx;
+            }
+            else {
+                parent[rooty] += parent[rootx];
+                parent[rootx] = rooty;
+            }
+
+            setCount--;
+
+            return true;
+        }
+
+
+};
+
+
+class Solution {
+public:
+    int makeConnected(int n, vector<vector<int>>& connections) {
+        int ans = 0, existing = connections.size();
+        if(existing < n - 1) return -1;
+
+        DisjointSetUnion dsu(n);
+        for(auto& con: connections) {
+            dsu.unify(con[0], con[1]);
+        }
+
+        ans = dsu.getSetNum() - 1;
+        return ans;
+    }
+};
