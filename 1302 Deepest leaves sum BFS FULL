@@ -1,0 +1,151 @@
+#include <iostream>
+#include <vector>
+#include <queue> 
+#include <algorithm>
+#include <sstream>
+
+using namespace std;
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+
+
+struct TreeNode {
+	int val;
+	TreeNode *left;
+	TreeNode *right;
+	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+
+class Solution {
+public:
+    int sum = 0;
+    int maxDepth = -1;
+//    
+//    void dfs(TreeNode* root, int depth) {
+//        if(root) {
+//            
+//            if(depth > maxDepth) {
+//            	sum = root->val;
+//            	maxDepth = depth;
+//			}
+//			else if(depth == maxDepth) sum += root->val;
+//			
+//			if(root->left) dfs(root->left, depth + 1);
+//			if(root->right) dfs(root->right, depth + 1);
+//             
+//        }
+//    }
+	
+	void bfs(TreeNode* root, int depth) {
+		
+		TreeNode* Queue[10000];
+		int front = 0, rear = 0, rear_alias;
+		Queue[rear++] = root;
+		
+		while(front != rear) {
+			rear_alias = rear;
+			while(front != rear_alias) {
+				TreeNode* tn = Queue[front++];
+				if(depth == maxDepth) {
+					//printf("detph = %d, maxDepth = %d\n", depth, maxDepth);
+					sum += tn->val;
+				}
+				else if(depth > maxDepth) {
+					//printf("detph = %d, maxDepth = %d\n", depth, maxDepth);
+					sum = tn->val;
+					maxDepth = depth;
+				}
+				if(tn->left) Queue[rear++] = tn->left;
+				if(tn->right) Queue[rear++] = tn->right;
+			}
+			depth++;
+		}	
+	}
+	
+	
+    int deepestLeavesSum(TreeNode* root) {
+        
+        bfs(root, 0);
+
+        return sum;
+    }
+};
+
+void trimLeftTrailingSpaces(string &input) {
+    input.erase(input.begin(), find_if(input.begin(), input.end(), [](int ch) {
+        return !isspace(ch);
+    }));
+}
+
+void trimRightTrailingSpaces(string &input) {
+    input.erase(find_if(input.rbegin(), input.rend(), [](int ch) {
+        return !isspace(ch);
+    }).base(), input.end());
+}
+
+TreeNode* stringToTreeNode(string input) {
+    trimLeftTrailingSpaces(input);
+    trimRightTrailingSpaces(input);
+    input = input.substr(1, input.length() - 2);
+    if (!input.size()) {
+        return nullptr;
+    }
+
+    string item;
+    stringstream ss;
+    ss.str(input);
+
+    getline(ss, item, ',');
+    TreeNode* root = new TreeNode(stoi(item));
+    queue<TreeNode*> nodeQueue;
+    nodeQueue.push(root);
+
+    while (true) {
+        TreeNode* node = nodeQueue.front();
+        nodeQueue.pop();
+
+        if (!getline(ss, item, ',')) {
+            break;
+        }
+
+        trimLeftTrailingSpaces(item);
+        if (item != "null") {
+            int leftNumber = stoi(item);
+            node->left = new TreeNode(leftNumber);
+            nodeQueue.push(node->left);
+        }
+
+        if (!getline(ss, item, ',')) {
+            break;
+        }
+
+        trimLeftTrailingSpaces(item);
+        if (item != "null") {
+            int rightNumber = stoi(item);
+            node->right = new TreeNode(rightNumber);
+            nodeQueue.push(node->right);
+        }
+    }
+    return root;
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        TreeNode* root = stringToTreeNode(line);
+        
+        int ret = Solution().deepestLeavesSum(root);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
