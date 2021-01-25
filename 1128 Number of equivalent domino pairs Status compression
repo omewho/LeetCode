@@ -1,0 +1,20 @@
+class Solution {
+public:
+    int numEquivDominoPairs(vector<vector<int>>& dominoes) {
+        int ans = 0, x, y;
+
+        unordered_map<int, int> freq;
+        for(auto d : dominoes) {
+        
+            x = d[0], y = d[1];
+            if(x > y) freq[10 * y + x]++;
+            else freq[10 * x + y]++;
+
+        }
+
+        for(auto [n, f]: freq) {    
+            if(f > 1) ans += f * (f - 1) / 2;
+        }
+        return ans;
+    }
+};
