@@ -1,0 +1,92 @@
+class DisjointSetUnion {
+private:
+    vector<int> parent;
+
+
+public:
+    DisjointSetUnion(int n): parent(vector<int>(n, -1)) {
+    }
+
+    int findRoot(int idx) {
+
+        if(parent[idx] < 0) return idx;
+
+        return parent[idx] = findRoot(parent[idx]);
+    }
+
+    bool unify(int x, int y) {
+        int rootx = findRoot(x), rooty = findRoot(y);
+        if( rootx == rooty ) return false;
+        else {
+            if(parent[rootx] < parent[rooty]) {
+                parent[rootx] += parent[rooty];
+                parent[rooty] = rootx;
+            }
+            else {
+                parent[rooty] += parent[rootx];
+                parent[rootx] = rooty;
+            }
+
+            return true;
+        }
+
+    }
+
+    void print() {
+        printf("%d\n", parent.size());
+        for(int i = 0; i < parent.size(); i++) {
+            if(i) printf(" ");
+            printf("%d", parent[i]);
+        }
+        printf("\n");
+    }
+
+
+};
+
+
+
+class Solution {
+public:
+
+    int regionsBySlashes(vector<string>& grid) {
+        
+        int n = grid.size() + 1;
+
+        DisjointSetUnion dsu(n * n);
+
+        for(int row = 0; row < n; row += n - 1) {
+            for(int col = 0; col < n - 1; col++) {
+                //printf("first = %d, second = %d\n", row * n + col, row * n + col + 1);
+                dsu.unify(row * n + col, row * n + col + 1);
+            }
+        }
+        //dsu.print();
+
+        for(int row = 0; row < n - 1; row++) {
+            //printf(" row = %d, first = %d, second = %d\n", row, n * row, (row + 1) * n);
+            dsu.unify(n * row, (row + 1) * n);
+            //printf(" helel row = %d, first = %d, second = %d\n", row, n * row + n - 1, n * (row + 1) + n - 1 );
+            dsu.unify(n * row + n - 1, n * ( row + 1) + n - 1);
+        }
+
+        //dsu.print();
+        int count = 1;
+        for(int row = 0; row < n - 1; row++) {
+            for(int col = 0; col < n - 1; col++) {
+                if(grid[row][col] == '\\') {
+                    //printf("now first = %d, second = %d\n", n * row + col, n * (row + 1) + col + 1);
+                    if(!dsu.unify(n * row + col, n * (row + 1) + col + 1)) count++;
+                }
+                else if(grid[row][col] == '/') {
+                    //printf("and now first = %d, second = %d\n", \
+                    n * row + col + 1, n * (row + 1) + col);
+                    if(!dsu.unify(n * row + col + 1, n * (row + 1) + col)) count++;
+                }
+            }
+        }
+
+
+        return count;
+    }
+};
