@@ -1,0 +1,85 @@
+class Solution {
+public:
+    int maximumUniqueSubarray(vector<int>& nums) {
+        int n = nums.size();
+
+        unordered_map<int, int> first_app;
+
+        int front = 0, rear = 0, start;
+
+        vector<int> presum(n + 1);
+        for(int i = 1; i < n + 1; i++) presum[i] = presum[i - 1] + nums[i - 1];
+        //for(int i = 0; i < n + 1; i++) printf("presum[%d] = %d\n", i, presum[i]);
+
+        int maxSum = 0, sum = 0;
+
+        while(rear < n) {
+
+            if(first_app.find(nums[rear]) == first_app.end()) {
+                first_app[nums[rear]] = rear;
+                sum += nums[rear];
+            }
+
+            else {
+                if( first_app[nums[rear]] >= front) {
+                    //printf("front = %d, rear = %d\n", front, rear);
+                    maxSum = max(maxSum, presum[rear] - presum[front]);
+                    //printf("maxSum = %d\n\n", maxSum);
+                    sum = 0;
+                    front = first_app[nums[rear]] + 1;
+                }
+                else {
+                    sum += nums[rear];
+                    
+                }
+                first_app[nums[rear]] = rear;
+            }
+            
+            rear++;
+
+        }
+        maxSum = max(maxSum, presum[rear] - presum[front]);
+
+        return maxSum;
+    }
+};
+
+void trimLeftTrailingSpaces(string &input) {
+    input.erase(input.begin(), find_if(input.begin(), input.end(), [](int ch) {
+        return !isspace(ch);
+    }));
+}
+
+void trimRightTrailingSpaces(string &input) {
+    input.erase(find_if(input.rbegin(), input.rend(), [](int ch) {
+        return !isspace(ch);
+    }).base(), input.end());
+}
+
+vector<int> stringToIntegerVector(string input) {
+    vector<int> output;
+    trimLeftTrailingSpaces(input);
+    trimRightTrailingSpaces(input);
+    input = input.substr(1, input.length() - 2);
+    stringstream ss;
+    ss.str(input);
+    string item;
+    char delim = ',';
+    while (getline(ss, item, delim)) {
+        output.push_back(stoi(item));
+    }
+    return output;
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        vector<int> nums = stringToIntegerVector(line);
+        
+        int ret = Solution().maximumUniqueSubarray(nums);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
