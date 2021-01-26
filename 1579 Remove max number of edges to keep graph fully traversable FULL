@@ -1,0 +1,83 @@
+class DisjointSetUnion {
+private:
+    vector<int> parent;
+    
+public:
+    int setCount;
+    DisjointSetUnion(int n): parent(vector<int>(n, -1)), setCount(n) {}
+
+    int findRoot(int idx) {
+        if(parent[idx] < 0) return idx;
+        return parent[idx] = findRoot(parent[idx]);
+        //parent[idx];
+    }
+
+    bool unionMerge(int x, int y) {
+        int _x = findRoot(x), _y = findRoot(y);
+
+        if(_x == _y) return false;
+
+        if(parent[_x] < parent[_y]) {
+            parent[_x] += parent[_y];
+            parent[_y] = _x;
+        }
+        else {
+            parent[_y] += parent[_x];
+            parent[_x] = _y;
+        }
+        setCount--;
+        return true;
+    }
+    void print() {
+        for(int i = 0; i < parent.size(); i++) {
+            if(i) printf(" ");
+            printf("%d", parent[i]);
+        }
+        printf("\n");
+    }
+};
+
+class Solution {
+public:
+    int maxNumEdgesToRemove(int n, vector<vector<int>>& edges) {
+        int size = edges.size();
+        DisjointSetUnion dsua(n), dsub(n);
+        int ans = 0;
+
+        bool can_merge;
+        for(auto& e: edges) {
+            e[1]--;
+            e[2]--;
+
+            if(e[0] == 3) {
+                can_merge = dsua.unionMerge(e[1], e[2]); // merge two vertices for Alice
+                if(!can_merge) {
+                    ans++;
+                    //printf("e[0] = %d, e[1] = %d, e[2] = %d\n", e[0], e[1], e[2]);
+                }
+                else dsub.unionMerge(e[1], e[2]); // merge two vertices for Bob 
+            }
+
+        }
+        // dsua.print();
+        // dsub.print();
+
+        for(auto e: edges) {
+            if(e[0] != 3){
+                if(e[0] == 1) can_merge = dsua.unionMerge(e[1], e[2]);
+                else if(e[0] == 2) can_merge = dsub.unionMerge(e[1], e[2]);
+                if(!can_merge) {
+                    ans++;
+                    //printf("e[0] = %d, e[1] = %d, e[2] = %d\n", e[0], e[1], e[2]);
+                }                
+            }
+
+        }
+        if(dsua.setCount != 1 || dsub.setCount != 1) return -1;
+        // dsua.print();
+        // dsub.print();
+        //printf("count a = %d, count b = %d\n", dsua.setCount, dsub.setCount);
+
+        return ans;
+    }
+};
