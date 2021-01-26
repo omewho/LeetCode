@@ -1,0 +1,28 @@
+class Solution {
+public:
+    string getSmallestString(int n, int k) {
+        string ans = string(n, 'a');
+        //printf("ans = %s\n", ans.c_str());
+        k -= n;
+
+        int i = n - 1;
+        while(k) {
+            if (k > 25) {
+                ans[i] += 25;
+                k -= 25;
+                //printf("ans[%d] = %c\n", i, ans[i]);
+            }
+            else {
+                ans[i] += k;
+                k = 0;
+            }
+            
+            //printf("ans = %s, i = %d\n", ans.c_str(), i);
+
+            i--;
+        }
+        //for(int i = 0; i < n; i++) ans += 
+
+        return ans;
+    }
+};
