@@ -1,0 +1,20 @@
+class Solution {
+public:
+    bool validateStackSequences(vector<int>& pushed, vector<int>& popped) {
+        int n = pushed.size(), top = -1, stack[1005], ui = 0, oi = 0;
+
+        bool ans = true;
+        while( ui < n && oi < n) {
+            stack[++top] = pushed[ui++];
+
+            while(top > -1 && oi < n && stack[top] == popped[oi]) {
+                top--;
+                oi++;
+            }
+        }
+
+        if(top > -1) ans = false;
+
+        return ans;
+    }
+};
