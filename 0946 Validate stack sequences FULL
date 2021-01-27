@@ -1,0 +1,80 @@
+#include <cstdio>
+#include <iostream>
+#include <sstream>
+#include <vector>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+class Solution {
+public:
+    bool validateStackSequences(vector<int>& pushed, vector<int>& popped) {
+        int n = pushed.size(), uidx = 0, oidx = 0;
+
+        bool ans = true;
+
+        int stack[1005], top = -1;
+
+        while(uidx < n && oidx < n) {
+            stack[++top] = pushed[uidx++];
+
+            while(top > -1 && oidx < n && stack[top] == popped[oidx]) {
+                //printf("stack[%d] = %d, popped[%d] = %d\n", top, stack[top], oidx, popped[oidx]);
+                top--;
+                oidx++;
+                //if(top > -1)printf("stack[%d] = %d, popped[%d] = %d\n", top, stack[top], oidx, popped[oidx]);
+            }    
+        }
+        if(top > -1) ans = false;
+
+        return ans;
+
+    }
+};
+
+void trimLeftTrailingSpaces(string &input) {
+    input.erase(input.begin(), find_if(input.begin(), input.end(), [](int ch) {
+        return !isspace(ch);
+    }));
+}
+
+void trimRightTrailingSpaces(string &input) {
+    input.erase(find_if(input.rbegin(), input.rend(), [](int ch) {
+        return !isspace(ch);
+    }).base(), input.end());
+}
+
+vector<int> stringToIntegerVector(string input) {
+    vector<int> output;
+    trimLeftTrailingSpaces(input);
+    trimRightTrailingSpaces(input);
+    input = input.substr(1, input.length() - 2);
+    stringstream ss;
+    ss.str(input);
+    string item;
+    char delim = ',';
+    while (getline(ss, item, delim)) {
+        output.push_back(stoi(item));
+    }
+    return output;
+}
+
+string boolToString(bool input) {
+    return input ? "True" : "False";
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        vector<int> pushed = stringToIntegerVector(line);
+        getline(cin, line);
+        vector<int> popped = stringToIntegerVector(line);
+        
+        bool ret = Solution().validateStackSequences(pushed, popped);
+
+        string out = boolToString(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
