@@ -1,0 +1,34 @@
+class Solution {
+public:
+    int evalRPN(vector<string>& tokens) {
+        int n = tokens.size();
+
+        stack<int> s;
+        int top = -1, ans, x, y, cur;
+        for(int i = 0; i < n; i++) {
+            if(tokens[i] != "+" && tokens[i] != "-" && tokens[i] != "*" && tokens[i] != "/") \
+            s.push(stoi(tokens[i]));
+            else {
+                //printf("i = %d, top = %d, tokens[i] = %s\n", i, top, tokens[i].c_str());
+                x = s.top();
+                s.pop();
+                y = s.top();
+                s.pop();
+                switch(tokens[i][0]) {
+                    case '+' : cur = x + y;
+                    break;
+                    case '-' : cur = y - x;
+                    break;
+                    case '*' : cur = x * y;
+                    break;
+                    case '/' : cur = y / x;
+                    break;
+                }
+                s.push(cur);
+            }
+        }
+        ans = s.top();
+
+        return ans;
+    }
+};
