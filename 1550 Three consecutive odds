@@ -1,0 +1,19 @@
+class Solution {
+public:
+    bool threeConsecutiveOdds(vector<int>& arr) {
+        bool ans = false;
+        int prev = 0, m = -1;
+        for(int i = 0; i < arr.size(); i++) {
+            if(arr[i] % 2) prev++;
+            else prev = 0;
+
+            m = max(m, prev);
+            if(m == 3) {
+                ans = true;
+                break;
+            }
+        }
+
+        return ans;
+    }
+};
