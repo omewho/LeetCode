@@ -1,0 +1,71 @@
+class DisjointSetUnion {
+private:
+    vector<int> parent;
+    int setCount;
+
+public:
+    DisjointSetUnion(int n) : parent(vector<int>(n, -1)), setCount(n){}
+
+    int findRoot(int idx) {
+        if(parent[idx] < 0) return idx;
+        return parent[idx] = findRoot(parent[idx]);
+    }
+
+    bool unify(int x, int y) {
+        int _x = findRoot(x);
+        int _y = findRoot(y);
+        if(_x == _y) return false;
+
+        if(parent[_x] < parent[_y]) {
+            parent[_x] += parent[_y];
+            parent[_y] = _x;
+        }
+        else {
+            parent[_y] += parent[_x];
+            parent[_x] = _y;
+        }
+        setCount--;
+        return true;
+    }
+
+    int getSetCount() {
+        return setCount;
+    }
+
+    bool isConnected(int x, int y) {
+        return findRoot(x) == findRoot(y);
+    }
+};
+
+struct Edge {
+    int u, v, diff;
+    Edge(int _u, int _v, int _diff) : u(_u), v(_v), diff(_diff) { }
+    bool operator<(const Edge& that) const {
+        return diff < that.diff;
+    }
+};
+
+class Solution {
+public:
+    int minimumEffortPath(vector<vector<int>>& heights) {
+        int m = heights.size(), n = heights[0].size();
+        vector<Edge> edges;
+        for(int row = 0; row < m; row++) {
+            for(int col = 0; col < n; col++) {
+                int cur = row * n + col;
+                if(row > 0) edges.emplace_back(Edge(cur - n, cur, abs(heights[row][col] - heights[row - 1][col])));
+                if(col > 0) edges.emplace_back(Edge(cur - 1, cur, abs(heights[row][col - 1] - heights[row][col])));
+            }
+        }
+
+        sort(edges.begin(), edges.end());
+
+        DisjointSetUnion dsu(m * n);
+        for(Edge e: edges) {
+            dsu.unify(e.u, e.v);
+            if(dsu.isConnected(0, m * n - 1)) return e.diff;
+        }
+        
+        return 0;
+    }
+};
