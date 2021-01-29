@@ -1,0 +1,77 @@
+class DisjointSetUnion {
+
+private:
+    vector<int> parent;
+    int setCount;
+public:
+    DisjointSetUnion(int n): parent(vector<int> (n, -1)), setCount(n) {} 
+
+    int UnionFind(int idx) {
+        if(parent[idx] < 0) return idx;
+        return parent[idx] = UnionFind(parent[idx]);
+    }
+
+    bool UnionMerge(int x, int y) {
+        int _x = UnionFind(x), _y = UnionFind(y);
+        
+        if(_x == _y) return false;
+
+        if(parent[_x] < parent[_y]) {
+            parent[_x] += parent[_y];
+            parent[_y] = _x;
+        }
+        else {
+            parent[_y] += parent[_x];
+            parent[_x] = _y;
+        }
+        setCount--;
+        return true;
+    }
+
+    bool isConnected(int x, int y) {
+        return UnionFind(x) == UnionFind(y);
+    }
+
+    int getSetCount() {
+        return setCount;
+    }
+};
+
+struct Edge{
+    int u, v, height;
+    Edge(int _u, int _v, int _height): u(_u), v(_v), height(_height) {}
+    bool operator < (const Edge& that) const{
+        return height < that.height;
+    }
+};
+
+class Solution {
+public:
+    int swimInWater(vector<vector<int>>& grid) {
+
+        int n = grid.size();
+        DisjointSetUnion dsu(n * n);
+
+        vector<Edge> edges;
+
+        for(int row = 0; row < n; row++) {
+            for(int col = 0; col < n; col++) {
+                if(row > 0) edges.push_back(Edge(row * n + col - n, row * n + col, max(grid[row - 1][col], grid[row][col])));
+                if(col > 0) edges.push_back(Edge(row * n + col - 1, row * n + col, max(grid[row][col - 1], grid[row][col])));
+                
+            }
+        }
+
+        sort(edges.begin(), edges.end());
+
+        for(auto e: edges) {
+            dsu.UnionMerge(e.u, e.v);
+            if(dsu.isConnected(0, n * n - 1)) {
+                // printf("u = %d, v = %d", e.u, e.v);
+                return e.height;
+            }
+        }
+
+        return 0;
+    }
+};
