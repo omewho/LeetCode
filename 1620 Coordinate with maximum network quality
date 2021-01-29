@@ -1,0 +1,40 @@
+class Solution {
+public:
+    double dist(int x, int y) {
+        return sqrt(x * x + y * y);
+    }
+    vector<int> bestCoordinate(vector<vector<int>>& towers, int radius) {
+        int n = towers.size();
+        int xmax = 0, ymax = 0;
+        for(int i = 0; i < n; i++) {
+            if(towers[i][0] > xmax) xmax = towers[i][0];
+            if(towers[i][1] > ymax) ymax = towers[i][1];
+        }
+
+        int maxintensity = -1, curr, ansx, ansy;
+        for(int x = 0; x < xmax + 1; x++) {
+            for(int y = 0; y < ymax + 1; y++) {
+                curr = 0;
+                for(int i = 0; i < n; i++) {
+                    int dx = towers[i][0] - x, dy = towers[i][1] - y;
+                    double d = dist(dx, dy);
+                    //printf("d = %lf\n", d);
+                    if(d <= radius) {
+                        curr += (int)(towers[i][2] / ( 1 + d));
+                    }
+                    //printf("i = %d, intensity[%d][%d] = %d\n", i, x, y, intensity[x][y]);
+
+                    if(curr > maxintensity) {
+                        maxintensity = curr;
+                        ansx = x, ansy = y;
+                        //printf("ansx = %d, ansy = %d\n", ansx, ansy);
+                    }
+
+                }
+                //printf("helele\n");
+            }
+        }
+
+        return {ansx, ansy};
+    }
+};
