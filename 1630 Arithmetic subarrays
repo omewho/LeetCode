@@ -1,0 +1,39 @@
+class Solution {
+public:
+
+    // void printVec(vector<int> vec) {
+    //     int i = 0;
+    //     for(int n: vec) {
+    //         if(i) printf(" ");
+    //         printf("%d", n);
+    //         i++;
+    //     }
+    //     printf("\n");
+    // }
+
+    bool isValid(vector<int> temp) {
+        sort(temp.begin(), temp.end());
+        int diff = temp[1] - temp[0];
+        bool ans = true;
+        for(int i = 2; i < temp.size(); i++) {
+            if(temp[i] - temp[i - 1] != diff) {
+                ans =false;
+                break;
+            }
+        }
+
+        return ans;
+    }
+    vector<bool> checkArithmeticSubarrays(vector<int>& nums, vector<int>& l, vector<int>& r) {
+        int n = l.size();
+        vector<bool> ans;
+
+        for(int i = 0; i < n; i++) {
+            vector<int> temp(nums.begin() + l[i], nums.begin() + r[i] + 1);
+            //printf("l = %d, r = %d\n", l[i], r[i]);
+            ans.push_back(isValid(temp));
+        }
+
+        return ans;
+    }
+};
