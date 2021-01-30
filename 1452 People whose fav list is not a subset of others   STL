@@ -1,0 +1,59 @@
+class Solution {
+public:
+    // void printVec(vector<string> vec) {
+    //     int i = 0;
+    //     for(auto s: vec) {
+    //         if(i) printf(" ");
+    //         printf("%s", s.c_str());
+    //         i++;
+    //     }
+    //     printf("\n");
+    // }
+
+    void printVec(vector<int> vec) {
+        int i = 0;
+        for(auto n: vec) {
+            if(i) printf(" ");
+            printf("%d", n);
+            i++;
+        }
+        printf("\n");
+    }
+
+    vector<int> peopleIndexes(vector<vector<string>>& favoriteCompanies) {
+        for(auto& fc: favoriteCompanies) sort(fc.begin(), fc.end());
+
+        int n = favoriteCompanies.size();
+        //for(auto fc: favoriteCompanies) printVec(fc);
+        map<int, vector<int>> vecSizeIndex;
+        for(int i = 0; i < n; i++) {
+            vecSizeIndex[favoriteCompanies[i].size()].push_back(i);
+        }
+
+        vector<int> ans;
+
+        // for(auto it = vecSizeIndex.rbegin(); it != vecSizeIndex.rend(); it++) {
+        //     printVec(it->second);
+        // }
+
+        for(auto it = vecSizeIndex.rbegin(); it != vecSizeIndex.rend(); it++) {
+            for(auto idx: it->second) {
+                if(it == vecSizeIndex.rbegin()) ans.push_back(idx);
+                else {
+                    bool aIncludeb = false;
+                    for(auto ans_idx : ans) {
+                        if(includes(favoriteCompanies[ans_idx].begin(), favoriteCompanies[ans_idx].end(), favoriteCompanies[idx].begin(), favoriteCompanies[idx].end())) {
+                            aIncludeb = true;
+                            break;
+                        }
+                    }
+                    if(!aIncludeb) ans.push_back(idx);
+                }
+            }    
+        }        
+
+        sort(ans.begin(), ans.end());
+        return ans;
+
+    }
+};
