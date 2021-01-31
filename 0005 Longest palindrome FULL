@@ -1,0 +1,99 @@
+class Solution {
+public:
+
+    string longestPalindrome(string s) {
+
+        string ans = "";
+
+        int start = 0, maxLen = 1, n = s.length();
+        vector<vector<bool>> dp(n, vector<bool>(n));
+
+        for(int left = n - 1; left >= 0; left--) {
+            for(int right = left; right < n; right++) {
+                dp[left][right] = (s[left] == s[right]) && ( right - left <= 1 || dp[left + 1][right - 1]);
+
+                // if(  ) \
+                // dp[left][right] = true;
+                // else dp[left][right] = false;
+                // printf("l = %d, r = %d, dp[%d][%d] = ", left, right, left, right);
+                // if(dp[left][right]) printf("True\n");
+                // else printf("False\n");
+                if(dp[left][right] && right - left + 1 > maxLen) {
+                    maxLen = right - left + 1;
+                    start = left;
+                }
+            }
+        }
+
+        return s.substr(start, maxLen);
+    }
+    
+    // string longestPalindrome(string s) {
+    //     // string ans = s.substr(0, 1);
+    //     // int m = 1;
+    //     // int n = s.length();
+    //     // for(int i = 0; i < n - 1; i++) {
+    //     //     for(int j = i + 1; j < n; j++) {
+    //     //         if(isPalindromic(s, i, j)) {
+    //     //             if(j - i + 1 > m) {
+    //     //                 m = j - i + 1;
+    //     //                 ans = s.substr(i, j - i + 1);
+    //     //             }
+    //     //         }
+    //     //     }
+    //     // }
+    //     return ans;
+    // }
+
+    // bool isPalindromic(string s, int start, int end) {
+    //     bool ans = true;
+    //     while(start < end) {
+    //         if(s[start] != s[end]) {
+    //             ans = false;
+    //             break;
+    //         }
+    //         start++;
+    //         end--;
+    //     }
+    //     return ans;
+    // }
+};
+
+string stringToString(string input) {
+    assert(input.length() >= 2);
+    string result;
+    for (int i = 1; i < input.length() -1; i++) {
+        char currentChar = input[i];
+        if (input[i] == '\\') {
+            char nextChar = input[i+1];
+            switch (nextChar) {
+                case '\"': result.push_back('\"'); break;
+                case '/' : result.push_back('/'); break;
+                case '\\': result.push_back('\\'); break;
+                case 'b' : result.push_back('\b'); break;
+                case 'f' : result.push_back('\f'); break;
+                case 'r' : result.push_back('\r'); break;
+                case 'n' : result.push_back('\n'); break;
+                case 't' : result.push_back('\t'); break;
+                default: break;
+            }
+            i++;
+        } else {
+          result.push_back(currentChar);
+        }
+    }
+    return result;
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        string s = stringToString(line);
+        
+        string ret = Solution().longestPalindrome(s);
+
+        string out = (ret);
+        cout << out << endl;
+    }
+    return 0;
+}
