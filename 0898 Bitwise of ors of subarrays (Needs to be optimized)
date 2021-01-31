@@ -1,0 +1,40 @@
+class Solution {
+public:
+    int subarrayBitwiseORs(vector<int>& arr) {
+        int n = arr.size();
+
+        vector<int> dp(n);
+
+        unordered_set<int> ans(arr.begin(), arr.end());
+
+        unordered_set<int> prev;
+        prev.insert(arr[0]);
+
+        unordered_set<int> curr;
+
+        for(int i = 1; i < n; i++) {
+            //printf("i = %d\n", i);
+            curr.clear();
+            for(int num: prev) {
+                curr.insert(num | arr[i]);
+                ans.insert(num | arr[i]);
+                
+            }
+            curr.insert(arr[i]);
+            ans.insert(arr[i]);
+            // for(int num: curr) printf(" num = %d ", num);
+            // printf("\n");
+            prev = curr;
+            
+            // for(int j = i + 1; j < n; j++) {
+            //     //printf("j = %d, j - cur - 1 = %d\n", j, j - i - 1);
+            //     //dp[i].push_back( dp[i][j - i - 1]|arr[j] );
+                
+            //     ans.insert(dp[i]| arr[j]);
+            //     dp[i] = dp[i] |arr[j];
+            // }
+        }
+
+        return ans.size();
+    }
+};
