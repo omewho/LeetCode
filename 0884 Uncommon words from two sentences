@@ -1,0 +1,30 @@
+class Solution {
+public:
+    vector<string> uncommonFromSentences(string A, string B) {
+        stringstream ssa(A);
+        stringstream ssb(B);
+
+        unordered_map<string, int> afreq;
+        unordered_map<string, int> bfreq;
+
+
+        string word;
+        while(ssa>>word) {
+            afreq[word]++;
+        }
+
+        while(ssb>>word) {
+            bfreq[word]++;
+        }
+
+        vector<string> ans;
+
+        for(auto [word, f]: afreq) {
+            if(f == 1 && bfreq.find(word) == bfreq.end()) ans.push_back(word);
+        }
+        for(auto [word, f]: bfreq) {
+            if(f == 1 && afreq.find(word) == afreq.end()) ans.push_back(word);
+        }
+        return ans;
+    }
+};
