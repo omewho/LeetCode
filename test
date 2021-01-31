@@ -1,0 +1,36 @@
+class Solution {
+public:
+    void printVec(vector<int> vec) {
+        for(int i = 0; i < vec.size(); i++) {
+            if(i) printf(" ");
+            printf("%d", vec[i]);
+        }
+        printf("\n");
+    }
+
+    vector<bool> canEat(vector<int>& candiesCount, vector<vector<int>>& queries) {
+        int qn = queries.size(), cn = candiesCount.size();
+
+        vector<int> presum(cn + 1, 0);
+        for(int i = 1; i < cn + 1; i++) presum[i] = presum[i - 1] + candiesCount[i - 1];
+
+        printVec(presum);
+
+        vector<bool> ans(qn, true);
+        for(int i = 0; i < qn; i++) {
+            auto q = queries[i];
+            int ftype = q[0], fday = q[1], dcap = q[2];
+            int pre = presum[ftype], prethis = presum[ftype] + candiesCount[ftype];
+            printf("i = %d, pre = %d, pre + self = %d\n", i, presum[ftype], presum[ftype] + candiesCount[ftype]);
+            printf("dcap = %d, pre / fday = %lf\n", dcap, pre * 1.0 / fday);
+            printf("ftype = %d, fday = %d, rem = %d\n", ftype, fday, pre + prethis - fday);
+            
+            if(presum[ftype] + candiesCount[ftype] - fday - 1 < 0) ans[i] = false; // eat the least number of candies
+            else if( pre * 1.0 / fday > dcap) ans[i] = false;
+            //if()
+        }
+
+        
+        return ans;
+    }
+};
