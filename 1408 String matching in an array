@@ -43,3 +43,28 @@ public:
         return ans;
     }
 };
+
+
+/*******
+class Solution {
+public:
+    vector<string> stringMatching(vector<string>& words) {
+        int n = words.size();
+        vector<bool> isSub(n, false);
+
+        vector<string> ans;
+        for(int i = 0; i < n; i++) {
+            if(isSub[i]) continue;
+            for(int j = 0; j < n; j++) {
+                if( j == i || isSub[i]) continue; // 有可能对于同一个i，有不同的j， words[j]包含words[i]
+                if(words[j].find(words[i]) != words[j].npos) {
+                    ans.push_back(words[i]);
+                    isSub[i] = true;
+                }
+            }
+        }
+
+        return ans;
+    }
+};
+******/
