@@ -1,0 +1,64 @@
+class Solution {
+public:
+    vector<int> findDiagonalOrder(vector<vector<int>>& nums) {
+        int m = nums.size();
+        
+        vector<int> ans;
+
+        map<int, vector<int>> dict;
+        for(int row = 0; row < m; row ++) {
+            int colSize = nums[row].size();
+            for(int col = 0; col < colSize; col++) {
+                dict[row + col].push_back(nums[row][col]);
+            }
+        }
+
+        for(auto [k, v] : dict) {
+            //reverse(v.begin(), v.end());
+            for(int i = v.size() - 1; i >= 0; i--) ans.push_back(v[i]);
+        }
+
+        return ans;
+    }
+};
+
+
+// class Solution {
+// public:
+//     vector<int> findDiagonalOrder(vector<vector<int>>& nums) {
+//         int m = nums.size();
+//         if(m == 1) return nums[0];
+//         vector<int> ans;
+
+//         int colSize = 0;
+//         for(int i = 0; i < m; i++) {
+//             colSize = fmax(colSize, nums[i].size());
+//         }
+        
+//         int lastcol;
+//         for(int i = 0; i < m; i++) {
+//             for(int row = i, col = 0; row >= 0 && col <= i; row--, col++) {
+                
+//                 if( col >= nums[row].size()) continue;
+//                 //printf("row = %d, col = %d, nums[row][col] = %d\n", row, col, nums[row][col]);
+//                 ans.push_back(nums[row][col]);
+//                 lastcol = col;
+//             }
+            
+//         }
+//         //int colSize = max(nums[0].size(), nums[m - 1].size());
+//         for(int j = 1; j < colSize; j++) {
+//             //printf("j = %d\n", j);
+//             int row, col;
+//             for( row = m - 1, col = j; row >= 0 && col < colSize; row--, col++ ) {
+//                 if(col >= nums[row].size()) continue;
+//                 //printf("row = %d, col = %d, nums[row][col]\n", row, col);
+//                 //printf("row = %d, col = %d, nums[row][col] = %d\n", row, col, nums[row][col]);
+//                 ans.push_back(nums[row][col]);
+//             }
+//             //printf("here row = %d, col = %d\n", row, col);
+//         }
+
+//         return ans;
+//     }
+// };
