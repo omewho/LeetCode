@@ -1,0 +1,64 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+    void printList(ListNode* l) {
+        int i = 0;
+        while(l) {
+            if(i) printf(" ");
+            printf("%d", l->val);
+            l = l->next;
+            i++;
+        }
+        printf("\n");
+    }
+public:
+    ListNode* merge2Lists(ListNode* l1, ListNode* l2) {
+        ListNode dummy;
+        ListNode* alias = &dummy;
+
+        //ListNode* d = new ListNode();
+        //printList(l1);
+        //printList(l2);
+        while(l1 && l2) {
+            if(l1->val < l2->val) {
+                alias->next = l1;
+                //printf("l1 = %d\n", l1->val);
+                alias = alias->next;
+                l1 = l1->next;
+            }
+            else {
+                //printf()
+                alias->next = l2;
+                l2 = l2->next;
+                alias = alias->next;
+            }
+        }
+        if(l1) alias->next = l1;
+        if(l2) alias->next = l2;
+        //printList(dummy.next);
+        return dummy.next;
+    }
+
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        
+        int n =lists.size();
+        if(n == 0) return nullptr;
+        if(n == 1) return lists[0];
+
+
+        ListNode* d = new ListNode();
+        for(int i = 0; i < n; i++) {
+            d->next = merge2Lists(d->next, lists[i]);
+        }
+
+        return d->next;
+    }
+};
