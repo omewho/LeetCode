@@ -1,0 +1,45 @@
+class Solution {
+public:
+    bool isSub(string shorter, string longer) {
+        int n = shorter.length();
+        for(int i = 0; i < longer.length() - n + 1; i++) {
+            if(longer.substr(i, n) == shorter) return true;
+        }
+
+        return false;
+    }
+    vector<string> stringMatching(vector<string>& words) {
+
+        sort(words.begin(), words.end(), [](const string& lhs, const string& rhs) {
+            return lhs.length() < rhs.length();
+        });
+
+        unordered_map<int, vector<string>> lenwords;
+        set<int> len;
+
+        for(auto w: words) {
+            //printf("%s ", w.c_str());
+            int l = w.length();
+            lenwords[l].push_back(w);
+            len.insert(l);
+        }
+        vector<int> vlen(len.begin(), len.end());
+
+        vector<string> ans;
+
+        for(int i = 0; i < vlen.size() - 1; i++) {
+            for(auto shorter: lenwords[vlen[i]]) {
+                //printf("shorter = %s\n", shorter.c_str());
+                for(int j = i + 1; j < vlen.size(); j++) {
+                    for(auto longer: lenwords[vlen[j]]) {
+                        //printf("longer = %s\n", longer.c_str());
+                        if(isSub(shorter, longer)) ans.push_back(shorter);
+                    }
+                }
+            }
+        }
+        ans.erase(unique(ans.begin(), ans.end()), ans.end());
+
+        return ans;
+    }
+};
