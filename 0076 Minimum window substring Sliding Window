@@ -44,6 +44,37 @@ public:
     }
 };
 
+// class Solution {
+// public:
+//      // r 猛地往右跑 直到覆盖，l开始缩进  取得一个min
+//     // 滑动窗口 time: O(n) space: O(1)
+//     string minWindow(string s, string t) {
+//         vector<int> sub = {0, INT_MAX};  // 记录最短覆盖子串的下标，sub[0]表示起始下标，sub[1]表示子串长度
+//         int need[128] = {0}, have[128] = {0};// 分别记录需要覆盖的字母个数和当前窗口内字串包含的字母个数
+//         int toMatch = 0;  // 表示当前窗口还需要匹配多少个字母，例如t="abbc", 则toMatch=3，当toMatch=0时表示已经覆盖字串
+//         int l = 0, r = 0;
+//         for (auto c : t) {  // 遍历待覆盖子串，记录需要覆盖的字母个数toMatch和每个字母的个数need[c]
+//             if (need[c] == 0) toMatch++;
+//             need[c]++;
+//         } 
+//         while (r < s.size()) {
+//             while (r < s.size() && toMatch > 0) {  // 不断向右扩展窗口，直到到达字符串末尾或者成功覆盖子串(toMatch == 0)，r最终停留在s.size()或者当前窗口字符串末尾字母的下一位置
+//                 if (++have[s[r]] == need[s[r]]) toMatch--;  // 更新窗口内字母个数，当某个字母达到需要的个数时，将toMatch减一
+//                 r++;
+//             } 
+//             // 如果此时剩余待覆盖字母个数为0，表明已经成功覆盖字符串t，但是此时窗口内的字符串不一定是最短的覆盖子串
+//             // 如果此时剩余待覆盖字母个数大于0，则表明不存在覆盖子串，此时r == s.size()，之后会跳出循环
+//             while (toMatch == 0) {   // 不断向右收缩窗口，直到无法覆盖子串(toMatch>0)，l最终等于0（即不存在覆盖子串，toMatch > 0）或者当前最短覆盖字串起始字母的下一位置（此时toMatch == 1）
+//                 if (--have[s[l]] < need[s[l]]) toMatch++;  // 更新窗口内字母个数，当某个字母小于需要的个数时，将toMatch加一
+//                 l++;
+//             }
+//             if (r - l + 1 < sub[1]) sub[0] = l - 1, sub[1] = r - l + 1;  // 更新最短覆盖字串的起点下标与长度，如果不存在覆盖子串，这一步会将sub[0]置-1，从而使结果返回空串
+//         }
+//         // 如果sub[0]小于0，则不存在一个覆盖子串
+//         return sub[0] < 0 ? "" : s.substr(sub[0], sub[1]);
+//     }
+// };
+
 
 string stringToString(string input) {
     assert(input.length() >= 2);
