@@ -1,0 +1,87 @@
+class Solution {
+public:
+    map<char, int> schfreq, tchfreq;
+    bool allinwindow() {
+        for(auto [ch, freq]: tchfreq) {
+            if(schfreq[ch] < freq) return false;
+        }
+        return true;
+    }
+
+    string minWindow(string s, string t) {
+        int lens = s.length(), lent = t.length();
+        
+        for(char ch: t) tchfreq[ch]++;
+
+        int minLen = INT_MAX>>1, curLen, l = 0, r = 0, count = 0, start = -1;
+
+        while(r < lens) {
+            char ch = s[r++];
+            //printf("ch = %c\n", ch);
+            if(tchfreq.find(ch) != tchfreq.end()) schfreq[ch]++;
+
+            // if(allinwindow()) {
+            //     printf("now l = %d, r = %d\n", l, r);
+            // }
+            while( allinwindow() && l <= r ) {
+                curLen = r - l;
+                if(curLen < minLen) {
+                    minLen = curLen;
+                    start = l;
+
+                    //printf("minLen = %d, start = %d\n", minLen, start);
+                }
+                if( tchfreq.find(s[l]) != tchfreq.end()) schfreq[s[l]]--;
+
+                l++;
+            }
+            
+        }
+        string ans = "";
+        if(minLen != INT_MAX>>1 ) ans = s.substr(start, minLen);
+
+        return ans;
+    }
+};
+
+
+string stringToString(string input) {
+    assert(input.length() >= 2);
+    string result;
+    for (int i = 1; i < input.length() -1; i++) {
+        char currentChar = input[i];
+        if (input[i] == '\\') {
+            char nextChar = input[i+1];
+            switch (nextChar) {
+                case '\"': result.push_back('\"'); break;
+                case '/' : result.push_back('/'); break;
+                case '\\': result.push_back('\\'); break;
+                case 'b' : result.push_back('\b'); break;
+                case 'f' : result.push_back('\f'); break;
+                case 'r' : result.push_back('\r'); break;
+                case 'n' : result.push_back('\n'); break;
+                case 't' : result.push_back('\t'); break;
+                default: break;
+            }
+            i++;
+        } else {
+          result.push_back(currentChar);
+        }
+    }
+    return result;
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        string s = stringToString(line);
+        getline(cin, line);
+        string t = stringToString(line);
+        
+        string ret = Solution().minWindow(s, t);
+
+        string out = (ret);
+        cout << out << endl;
+    }
+    return 0;
+}
