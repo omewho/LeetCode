@@ -1,0 +1,95 @@
+class Solution {
+public:
+    bool check(string first, string second){
+        int one[26] = {0}, two[26] = {0};
+        int f = first.length(), s = second.length();
+        
+        for(char ch: first) one[ch - 'a']++;
+        for(char ch: second) two[ch - 'a']++;
+        //printf("%s seond = %s\n", first.c_str(), second.c_str() );
+
+        if(f == s) {
+            int d = 0;
+            for(int i = 0; i < f; i++) {
+                if(first[i] != second[i]) d++;
+            }
+            return d == 1 || d == 0;
+        }
+        else if(s > f) swap(first, second);
+        //printf("%s seond = %s\n", first.c_str(), second.c_str() );
+        
+        int diff = 0, idx;
+        for(int i = 0; i < 26; i++) {
+            if(one[i] != two[i]) {
+                diff++;
+                idx = i;
+            }
+        }
+        //printf("idx = %d\n", idx);
+        
+        //"detacher"
+        int l = first.length();
+
+        bool possible = false;
+        for(int i = 1; i < l + 1; i++) {
+            //printf("i = %d, sub1 = %s, sub2 = %s\n", i, first.substr(0, i - 1).c_str(), first.substr(i, l - 1 - i + 1).c_str());
+            string sub = first.substr(0, i - 1) + first.substr(i, l - 1 - i + 1);
+            //printf("sub = %s\n", sub.c_str());
+            if(second == sub) {
+                possible = true;
+            }
+        }
+
+        return diff == 1 && possible;
+    }
+
+    bool oneEditAway(string first, string second) {
+        
+        return check(first, second);
+    }
+};
+
+string stringToString(string input) {
+    assert(input.length() >= 2);
+    string result;
+    for (int i = 1; i < input.length() -1; i++) {
+        char currentChar = input[i];
+        if (input[i] == '\\') {
+            char nextChar = input[i+1];
+            switch (nextChar) {
+                case '\"': result.push_back('\"'); break;
+                case '/' : result.push_back('/'); break;
+                case '\\': result.push_back('\\'); break;
+                case 'b' : result.push_back('\b'); break;
+                case 'f' : result.push_back('\f'); break;
+                case 'r' : result.push_back('\r'); break;
+                case 'n' : result.push_back('\n'); break;
+                case 't' : result.push_back('\t'); break;
+                default: break;
+            }
+            i++;
+        } else {
+          result.push_back(currentChar);
+        }
+    }
+    return result;
+}
+
+string boolToString(bool input) {
+    return input ? "True" : "False";
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        string first = stringToString(line);
+        getline(cin, line);
+        string second = stringToString(line);
+        
+        bool ret = Solution().oneEditAway(first, second);
+
+        string out = boolToString(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
