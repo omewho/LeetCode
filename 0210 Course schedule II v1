@@ -1,0 +1,31 @@
+class Solution {
+public:
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<int> ans;
+        vector<int> indegrees(numCourses);
+
+        vector<vector<int>> neighbors(numCourses);
+        for(auto e: prerequisites) {
+            indegrees[e[0]]++;
+            neighbors[e[1]].push_back(e[0]);
+        }
+        queue<int> q;
+        for(int i = 0; i < numCourses; i++) {
+            if(!indegrees[i]) q.push(i);
+        }
+        
+        int count = 0;
+        while(!q.empty()) {
+            int prereq = q.front();
+            ans.push_back(prereq);
+            count++;
+            q.pop();
+            for(int n: neighbors[prereq]) {
+                if(--indegrees[n] == 0) q.push(n);
+            }
+        }
+
+        if(count == numCourses) return ans;
+        else return vector<int> ();
+    }
+};
