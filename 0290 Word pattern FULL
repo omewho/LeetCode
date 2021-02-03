@@ -1,0 +1,78 @@
+class Solution {
+public:
+    bool wordPattern(string pattern, string s) {
+        stringstream ss(s);
+
+        int idx = 0;
+        unordered_map<string, int> word2idx;
+        vector<string> strvec;
+        string word;
+        while(ss>>word) {
+            if(word2idx.find(word) == word2idx.end()) word2idx[word] = idx++;
+            strvec.push_back(word);
+        }
+
+        //for(auto [k, idx] : word2idx) printf("k = %s, idx = %d\n", k.c_str(), idx);
+
+        idx = 0;
+        unordered_map<char, int> char2idx;
+        for(char ch: pattern) if(char2idx.find(ch) == char2idx.end()) char2idx[ch] = idx++;
+
+        bool ans = true;
+        if(pattern.size() != strvec.size()) ans = false;
+        else {
+            for(int i = 0; i < pattern.size(); i++){
+                if(char2idx[pattern[i]] != word2idx[strvec[i]]) {
+                    ans = false;
+                    break;
+                }
+            }
+        }
+        return ans;
+    }
+};
+
+string stringToString(string input) {
+    assert(input.length() >= 2);
+    string result;
+    for (int i = 1; i < input.length() -1; i++) {
+        char currentChar = input[i];
+        if (input[i] == '\\') {
+            char nextChar = input[i+1];
+            switch (nextChar) {
+                case '\"': result.push_back('\"'); break;
+                case '/' : result.push_back('/'); break;
+                case '\\': result.push_back('\\'); break;
+                case 'b' : result.push_back('\b'); break;
+                case 'f' : result.push_back('\f'); break;
+                case 'r' : result.push_back('\r'); break;
+                case 'n' : result.push_back('\n'); break;
+                case 't' : result.push_back('\t'); break;
+                default: break;
+            }
+            i++;
+        } else {
+          result.push_back(currentChar);
+        }
+    }
+    return result;
+}
+
+string boolToString(bool input) {
+    return input ? "True" : "False";
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        string pattern = stringToString(line);
+        getline(cin, line);
+        string s = stringToString(line);
+        
+        bool ret = Solution().wordPattern(pattern, s);
+
+        string out = boolToString(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
