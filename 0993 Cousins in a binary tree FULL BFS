@@ -1,0 +1,151 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* fx, * fy;
+    int dx, dy;
+
+    void bfs(TreeNode* root, int value, int& d, TreeNode*& f) {
+
+        int currDepth = 0;
+        queue<TreeNode*> q;
+
+        q.push(root);
+
+        while(!q.empty()) {
+
+            int size = q.size();
+            while(size) {
+                TreeNode* tn = q.front();
+                q.pop();
+
+                if(tn->val == value) {
+                    if(tn == root) f = new TreeNode(0);
+                    d = currDepth - 1;
+                    break;
+                }
+
+                if(tn->left) {
+                    if(tn->left->val == value) {
+                        f = tn;
+                        d = currDepth;
+                        break;
+                    }
+                    q.push(tn->left);
+                }
+                if(tn->right) {
+                    if(tn->right->val == value) {
+                        f = tn;
+                        d = currDepth;
+                        break;
+                    }
+                    q.push(tn->right);
+                }
+
+                size--;
+            }
+            currDepth++;
+        }
+    }
+
+    bool isCousins(TreeNode* root, int x, int y) {
+        bfs(root, x, dx, fx);
+        bfs(root, y, dy, fy);
+        // printf(" fx = %d, dx = %d\n", fx->val, dx);
+        // printf(" fy = %d, dy = %d\n", fy->val, dy);
+
+        return dx == dy && fx != fy;
+    }
+};
+
+void trimLeftTrailingSpaces(string &input) {
+    input.erase(input.begin(), find_if(input.begin(), input.end(), [](int ch) {
+        return !isspace(ch);
+    }));
+}
+
+void trimRightTrailingSpaces(string &input) {
+    input.erase(find_if(input.rbegin(), input.rend(), [](int ch) {
+        return !isspace(ch);
+    }).base(), input.end());
+}
+
+TreeNode* stringToTreeNode(string input) {
+    trimLeftTrailingSpaces(input);
+    trimRightTrailingSpaces(input);
+    input = input.substr(1, input.length() - 2);
+    if (!input.size()) {
+        return nullptr;
+    }
+
+    string item;
+    stringstream ss;
+    ss.str(input);
+
+    getline(ss, item, ',');
+    TreeNode* root = new TreeNode(stoi(item));
+    queue<TreeNode*> nodeQueue;
+    nodeQueue.push(root);
+
+    while (true) {
+        TreeNode* node = nodeQueue.front();
+        nodeQueue.pop();
+
+        if (!getline(ss, item, ',')) {
+            break;
+        }
+
+        trimLeftTrailingSpaces(item);
+        if (item != "null") {
+            int leftNumber = stoi(item);
+            node->left = new TreeNode(leftNumber);
+            nodeQueue.push(node->left);
+        }
+
+        if (!getline(ss, item, ',')) {
+            break;
+        }
+
+        trimLeftTrailingSpaces(item);
+        if (item != "null") {
+            int rightNumber = stoi(item);
+            node->right = new TreeNode(rightNumber);
+            nodeQueue.push(node->right);
+        }
+    }
+    return root;
+}
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+string boolToString(bool input) {
+    return input ? "True" : "False";
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        TreeNode* root = stringToTreeNode(line);
+        getline(cin, line);
+        int x = stringToInteger(line);
+        getline(cin, line);
+        int y = stringToInteger(line);
+        
+        bool ret = Solution().isCousins(root, x, y);
+
+        string out = boolToString(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
