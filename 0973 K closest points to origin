@@ -1,0 +1,17 @@
+class Solution {
+public:
+    void printVec(vector<vector<int>> points) {
+        for(auto p: points) {
+            printf("%d %d\n", p[0], p[1]);
+        }
+    }
+    vector<vector<int>> kClosest(vector<vector<int>>& points, int K) {
+
+        sort(points.begin(), points.end(), [](const vector<int>& pa, const vector<int>& pb) {
+            return sqrt(pa[0] * pa[0] + pa[1] * pa[1]) < sqrt( pb[0] * pb[0] + pb[1] * pb[1] );
+        });
+        //printVec(points);
+
+        return vector<vector<int>>(points.begin(), points.begin() + K);
+    }
+};
