@@ -1,0 +1,41 @@
+class Solution {
+public:
+    bool isAlienSorted(vector<string>& words, string order) {
+        unordered_map<char, int> char2idx;
+        for(int i = 0; i < 26; i++) {
+            char2idx[order[i]] = i;
+        }
+
+        int n = words.size();
+        bool letterinorder = true, areequal = true;
+        for(int i = 1; i < n; i++) {
+            string prev = words[i - 1];
+            string curr = words[i];
+            
+            int l1 = prev.length(), l2 = curr.length();
+            //printf("l1 = %d, l2 = %d\n", l1, l2);
+            int j = 0;
+            while(j < l1 && j < l2) {
+                // printf("j = %d\n", j);
+                // printf("prev = %c, curr = %c, prev = %d, curr = %d\n", prev[j], curr[j], char2idx[prev[j]], char2idx[curr[j]]);
+                
+                if(char2idx[prev[j]] > char2idx[curr[j]])  {
+                    //printf("prev = %c, curr = %c\n", prev[j], curr[j]);
+                    letterinorder = false;
+                    areequal = false;
+                    break;
+                }
+                else if(char2idx[prev[j]] == char2idx[curr[j]]) j++;
+                else {
+                    areequal = false;
+                    break;
+                }
+            }
+            if(areequal) letterinorder = l1 <= l2;
+
+        }
+
+        return letterinorder;
+
+    }
+};
