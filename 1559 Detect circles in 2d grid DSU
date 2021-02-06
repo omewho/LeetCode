@@ -1,0 +1,56 @@
+class DesjointSetUnion {
+private:
+    vector<int> parent;
+
+
+public:
+    DesjointSetUnion(int n): parent(vector<int>(n, -1)) {}
+
+    int findRoot(int idx) {
+        if(parent[idx] < 0) return idx;
+        return parent[idx] = findRoot(parent[idx]);
+    }
+
+    bool unionMerge(int x, int y) {
+        int _x = findRoot(x), _y = findRoot(y);
+
+        if(_x == _y) return false;
+
+        if(parent[_x] < parent[_y]) {
+            parent[_x] += parent[_y];
+            parent[_y] = _x;
+        }
+        else {
+            parent[_y] += parent[_x];
+            parent[_x] = _y;
+        }
+
+        return true;
+
+    }
+};
+
+class Solution {
+public:
+    bool containsCycle(vector<vector<char>>& grid) {
+
+        int m = grid.size(), n = grid[0].size();
+        DesjointSetUnion dsu(m * n);
+
+        for(int row = 0; row < m; row++) {
+            for(int col = 0; col < n; col++) {
+                char self = grid[row][col];
+                if(row > 0) {
+                    if(grid[row - 1][col] == self) if(!dsu.unionMerge(row * n + col, row * n + col - n)) \
+                    return true;
+                }
+                if(col > 0) {
+                    if(grid[row][col - 1] == self) if(!dsu.unionMerge(row * n + col, row * n + col - 1)) \
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+};
