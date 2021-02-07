@@ -1,0 +1,22 @@
+class Solution {
+public:
+    vector<int> sumEvenAfterQueries(vector<int>& A, vector<vector<int>>& queries) {
+        
+        vector<int> ans;
+        int sum = 0;
+        
+        for(int n : A) {
+            if( n % 2 == 0) sum += n;
+        }
+        for(auto q: queries) {
+            int val = q[0], index = q[1];
+
+            int origin = A[index];
+            A[index] += val;
+            if(A[index] % 2 == 0) sum += A[index];
+            if(origin % 2 == 0) sum -= origin;
+            ans.push_back(sum);
+        }
+        return ans;
+    }
+};
