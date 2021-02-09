@@ -1,0 +1,73 @@
+class Solution {
+public:
+    int atMostK(vector<int>& A, int K) {
+        int n = A.size();
+
+        int ans = 0, left = 0, right = 0;
+        unordered_map<int, int> numfreq;
+        while(right < n) {
+            //printf("right = %d\n", right);
+            numfreq[A[right]]++;
+            while( numfreq.size() > K) {
+                numfreq[A[left]]--;
+                if(!numfreq[A[left]]) numfreq.erase(A[left]);
+                left++;
+            }
+            
+            ans += right - left + 1;
+            //printf("ans = %d now\n", ans);
+            right++;
+        }
+        //printf("ans = %d\n", ans);
+        return ans;
+    }
+    int subarraysWithKDistinct(vector<int>& A, int K) {
+        return atMostK(A, K) - atMostK(A, K - 1);
+    }
+};
+
+void trimLeftTrailingSpaces(string &input) {
+    input.erase(input.begin(), find_if(input.begin(), input.end(), [](int ch) {
+        return !isspace(ch);
+    }));
+}
+
+void trimRightTrailingSpaces(string &input) {
+    input.erase(find_if(input.rbegin(), input.rend(), [](int ch) {
+        return !isspace(ch);
+    }).base(), input.end());
+}
+
+vector<int> stringToIntegerVector(string input) {
+    vector<int> output;
+    trimLeftTrailingSpaces(input);
+    trimRightTrailingSpaces(input);
+    input = input.substr(1, input.length() - 2);
+    stringstream ss;
+    ss.str(input);
+    string item;
+    char delim = ',';
+    while (getline(ss, item, delim)) {
+        output.push_back(stoi(item));
+    }
+    return output;
+}
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        vector<int> A = stringToIntegerVector(line);
+        getline(cin, line);
+        int K = stringToInteger(line);
+        
+        int ret = Solution().subarraysWithKDistinct(A, K);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
