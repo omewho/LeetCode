@@ -1,0 +1,85 @@
+class Solution {
+public:
+    void printArr(int *arr, int num) {
+        for(int i = 0; i < num; i++) {
+            if(i) printf(" ");
+            printf("%d", arr[i]);
+        }
+        printf("\n");
+    }
+    bool checkInclusion(string s1, string s2) {
+        bool ans = false;
+        int l1 = s1.length(), l2 = s2.length();
+        if(l1 > l2) return ans;
+
+        int charfreq[26] = {0};
+        for(char ch: s1) charfreq[ch - 'a']--;
+
+        //printArr(charfreq, 26);
+        int left = 0, right = 0;
+        while(right < l2) {
+            charfreq[s2[right] - 'a']++;
+
+            while(charfreq[s2[right] - 'a'] > 0) {
+                //printf("s2[%d] = %c\n", left, s2[left]);
+                charfreq[s2[left] - 'a']--;
+                left++;
+            }
+
+            if(right - left + 1 == l1) {
+                ans = true;
+                break;
+            }
+            right++;
+        }
+
+
+        return ans;
+
+    }
+};
+
+string stringToString(string input) {
+    assert(input.length() >= 2);
+    string result;
+    for (int i = 1; i < input.length() -1; i++) {
+        char currentChar = input[i];
+        if (input[i] == '\\') {
+            char nextChar = input[i+1];
+            switch (nextChar) {
+                case '\"': result.push_back('\"'); break;
+                case '/' : result.push_back('/'); break;
+                case '\\': result.push_back('\\'); break;
+                case 'b' : result.push_back('\b'); break;
+                case 'f' : result.push_back('\f'); break;
+                case 'r' : result.push_back('\r'); break;
+                case 'n' : result.push_back('\n'); break;
+                case 't' : result.push_back('\t'); break;
+                default: break;
+            }
+            i++;
+        } else {
+          result.push_back(currentChar);
+        }
+    }
+    return result;
+}
+
+string boolToString(bool input) {
+    return input ? "True" : "False";
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        string s1 = stringToString(line);
+        getline(cin, line);
+        string s2 = stringToString(line);
+        
+        bool ret = Solution().checkInclusion(s1, s2);
+
+        string out = boolToString(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
