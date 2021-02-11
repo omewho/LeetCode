@@ -1,0 +1,103 @@
+class Solution {
+public:
+    int deleteAndEarn(vector<int>& nums) {
+
+        map<int, int> numfreq;       
+        
+        for(int n: nums) {
+            numfreq[n]++;
+            //maxNum = max(n, maxNum);
+        }
+        auto mpit = numfreq.rbegin();
+        int maxNum = mpit->first;
+
+        vector<int> dp(maxNum + 1, 0);
+        printf("maxNum = %d\n", maxNum);
+
+        int maxCost = -1;
+
+        for(int i = 1; i < maxNum + 1; i++) {
+            if(numfreq.find(i - 2) != numfreq.end()) dp[i] = max(dp[i - 2] + i * numfreq[i], dp[i - 1]);
+            else dp[i] = max(i * numfreq[i], dp[i - 1]);
+            maxCost = max(maxCost, dp[i]);
+        }
+
+        return maxCost;
+
+
+/*****
+        map<int, int> numfreq;
+        for(int n: nums) numfreq[n]++;
+
+        int maxNum = numfreq.rbegin()->first;
+
+        int notselected = 0, notselectedprev = 0, selected = 0, selectedprev = 0, prevNum = -1, ans = 0;
+
+        for(auto [n, freq]: numfreq) {
+            if( prevNum == n - 1) {
+                printf("previously selected = %d, notselected = %d\n", selected, notselected);
+                selected = notselectedprev + n * freq;
+                notselected = selectedprev;
+                printf("now selected = %d, notselected = %d\n", selected, notselected);
+            }
+            else {
+                selected = max(selectedprev, notselectedprev) + n * freq;
+                notselected = max(selectedprev, notselectedprev);
+                printf("selected = %d, notselected = %d\n", selected, notselected);
+            }
+
+            
+
+            selectedprev = selected;
+            notselectedprev = notselected;
+
+            prevNum = n;
+            printf("prev = %d\n", prevNum);
+
+            ans = max(ans, max(selected, notselected));
+        }
+
+        return ans;
+****/
+    }
+};
+
+void trimLeftTrailingSpaces(string &input) {
+    input.erase(input.begin(), find_if(input.begin(), input.end(), [](int ch) {
+        return !isspace(ch);
+    }));
+}
+
+void trimRightTrailingSpaces(string &input) {
+    input.erase(find_if(input.rbegin(), input.rend(), [](int ch) {
+        return !isspace(ch);
+    }).base(), input.end());
+}
+
+vector<int> stringToIntegerVector(string input) {
+    vector<int> output;
+    trimLeftTrailingSpaces(input);
+    trimRightTrailingSpaces(input);
+    input = input.substr(1, input.length() - 2);
+    stringstream ss;
+    ss.str(input);
+    string item;
+    char delim = ',';
+    while (getline(ss, item, delim)) {
+        output.push_back(stoi(item));
+    }
+    return output;
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        vector<int> nums = stringToIntegerVector(line);
+        
+        int ret = Solution().deleteAndEarn(nums);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
