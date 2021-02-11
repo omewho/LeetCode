@@ -1,0 +1,39 @@
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        vector<vector<int>> ans;
+        int n = nums.size();
+        if( n < 3) return ans;
+
+        sort(nums.begin(), nums.end());
+        // for(int i = 0; i < n; i++) printf(" %d", nums[i]);
+        // printf("\n");
+
+        for(int first = 0; first < n - 2; first++) {
+            if(nums[first] > 0) break;
+            if(first >= 1 && nums[first] == nums[first - 1]) continue;
+            int second = first + 1, third = n - 1, target = -nums[first];
+            //printf("first = %d, second = %d, third = %d\n", first, second, third);
+
+            while(second < third) {
+                
+                int sum = nums[second] + nums[third];
+                //printf("target = %d, sum = %d\n", target, sum);
+                if(sum < target) second++;
+                else if(sum > -nums[first]) third--;
+                else {
+                    ans.push_back({nums[first], nums[second], nums[third]});
+                    int snum = nums[second], tnum = nums[third];
+                    while(second < third && nums[second] == snum) second++;
+                    while(third > second && nums[third] == tnum) third--;
+
+                }
+                //printf("first = %d, second = %d, third = %d\n", first, second, third);
+            }
+            //printf("\n");
+
+        }
+
+        return ans;
+    }
+};
