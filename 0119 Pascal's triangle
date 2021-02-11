@@ -10,7 +10,13 @@ public:
                 ans[j] = ans[j] + ans[j - 1];
             }
         }
-
+/*****        
+         for(int row = 2; row < rowIndex + 1; row++) {
+            for(int col = row - 1; col > 0; col--) {
+                ans[col] = ans[col] + ans[col - 1];
+            }
+        }
+*******/
         return ans;
     }
 };
