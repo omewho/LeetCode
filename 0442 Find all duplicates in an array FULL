@@ -10,6 +10,14 @@ public:
             if(nums[idx - 1] > 0) nums[idx - 1] *= -1;
             else ans.emplace_back(idx);
         }
+        
+/*****
+        for(int n: nums) {
+            n = abs(n);
+            if(nums[n - 1] > 0) nums[n - 1] *= -1;
+            else ans.emplace_back(n); 
+        }
+*****/
 
         return ans;
     }
