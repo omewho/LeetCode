@@ -1,0 +1,51 @@
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        int n = nums.size();
+        vector<vector<int>> ans;
+
+        sort(nums.begin(), nums.end());
+        for(int i = 0; i < n - 3; i++) {
+            if(nums[i] + nums[i + 1] + nums[i + 2] + nums[i + 3] > target) break;
+            if(nums[i] + nums[n - 1] + nums[n - 2] + nums[n - 3] < target) continue;
+            if(i > 0 && nums[i] == nums[i - 1]) continue;
+            for(int j = i + 1; j < n - 2; j++) {
+                if(nums[i] + nums[j] + nums[j + 1] + nums[j + 2] > target) break;
+                if(nums[i] + nums[j] + nums[n - 1] + nums[n - 2] < target) continue;
+
+                if(j > i + 1 && nums[j] == nums[j - 1]) continue;
+
+                int k = j + 1, l = n - 1;
+                while(k < l) {
+
+                    int sum = nums[i] + nums[j] + nums[k] + nums[l];
+
+                    if(sum == target) {
+                        ans.push_back({nums[i], nums[j], nums[k], nums[l]});
+
+                        int _k = k + 1;
+                        while(_k < l && nums[_k] == nums[k]) _k++;
+                        k = _k;
+
+                        int _l = l - 1;
+                        while(_l > k && nums[_l] == nums[l]) _l--;
+                        l = _l;
+                    }
+
+                    else if( sum > target ) {
+                        int _l = l - 1;
+                        while( _l > k && nums[_l] == nums[l] ) _l--;
+                        l = _l;
+                    }
+                    else {
+                        int _k = k + 1;
+                        while( _k < l && nums[_k] == nums[k]) _k++;
+                        k = _k;
+                    }
+                }
+            }
+        }
+
+        return ans;
+    }
+};
