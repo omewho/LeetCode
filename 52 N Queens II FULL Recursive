@@ -1,0 +1,50 @@
+class Solution {
+public:
+    int ans = 0;
+    vector<int> pos = vector<int>(9, -1);
+
+    void NQueens(int k, int n) {
+        if(k == n) {
+            // for(int row = 0; row < n; row++) {
+            //     printf(" %d ", pos[row]);
+            // }
+            ans++;
+        }
+
+        for(int col = 0; col < n; col++) {
+
+            int row;
+            for(row = 0; row < k; row++) {
+                //printf("k = %d, row = %d\n", k, row);
+                if(col == pos[row] || k - row == abs(col - pos[row])) break;
+            }
+            if(row == k) {
+                pos[k] = col;
+                NQueens(k + 1, n);
+            }         
+        }
+    }
+
+    int totalNQueens(int n) {
+        NQueens(0, n);
+
+        return ans;
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int n = stringToInteger(line);
+        
+        int ret = Solution().totalNQueens(n);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
