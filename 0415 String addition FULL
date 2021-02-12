@@ -1,0 +1,81 @@
+class Solution {
+public:
+    string addStrings(string num1, string num2) {
+        string ans = "";
+
+        int l1 = num1.length(), l2 = num2.length();
+
+        int i1 = l1 - 1, i2 = l2 - 1, carry = 0, sum;
+        while(i1 >= 0 && i2 >= 0) {
+            sum = num1[i1] + num2[i2] - 2 * '0' + carry;
+            //printf("sum = %d\n", sum);
+            ans += to_string( sum % 10 );
+            carry = sum / 10;
+            i1--;
+            i2--;
+        }
+        while(i1 >= 0) {
+            sum = carry + num1[i1] - '0';
+            ans += to_string( sum % 10);
+            carry = sum / 10;
+            i1--;
+        }
+        while(i2 >= 0 ) {
+            //printf("hello\n");
+            sum = carry + num2[i2] - '0';
+            //printf("sum = %d", sum);
+            ans += to_string( sum % 10);
+            carry = sum / 10;
+            i2--;
+        }
+
+        while(carry) {
+            ans += to_string(carry);
+            carry /= 10;
+        }
+
+        reverse(ans.begin(), ans.end());
+        return ans;
+    }
+};
+
+string stringToString(string input) {
+    assert(input.length() >= 2);
+    string result;
+    for (int i = 1; i < input.length() -1; i++) {
+        char currentChar = input[i];
+        if (input[i] == '\\') {
+            char nextChar = input[i+1];
+            switch (nextChar) {
+                case '\"': result.push_back('\"'); break;
+                case '/' : result.push_back('/'); break;
+                case '\\': result.push_back('\\'); break;
+                case 'b' : result.push_back('\b'); break;
+                case 'f' : result.push_back('\f'); break;
+                case 'r' : result.push_back('\r'); break;
+                case 'n' : result.push_back('\n'); break;
+                case 't' : result.push_back('\t'); break;
+                default: break;
+            }
+            i++;
+        } else {
+          result.push_back(currentChar);
+        }
+    }
+    return result;
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        string num1 = stringToString(line);
+        getline(cin, line);
+        string num2 = stringToString(line);
+        
+        string ret = Solution().addStrings(num1, num2);
+
+        string out = (ret);
+        cout << out << endl;
+    }
+    return 0;
+}
