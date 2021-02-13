@@ -16,8 +16,11 @@ public:
         }
 
         if(!child_cost && !hasApple[curNode]) return 0;
-
         return child_cost + curCost;
+/***
+        if(child_cost || hasApple[curNode]) return child_cost + curCost;
+        return 0;
+***/
     }
 
     int minTime(int n, vector<vector<int>>& edges, vector<bool>& hasApple) {
