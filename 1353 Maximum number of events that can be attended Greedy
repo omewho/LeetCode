@@ -1,0 +1,33 @@
+class Solution {
+public:
+    typedef pair<int, int> PII;
+    vector<int> start[100005], end[100005];
+    multiset<PII> endidx;
+
+    int maxEvents(vector<vector<int>>& events) {
+        int n = events.size(), daymax = 0, ans = 0;
+
+        for(int i = 0; i < n; i++) {
+            start[events[i][0]].emplace_back(i);
+            end[events[i][1] + 1].emplace_back(i);
+            daymax = max(daymax, events[i][1]);
+        }
+
+        for(int day = 1; day < daymax + 1; day++) {
+
+            for(auto s: start[day]) endidx.insert(make_pair(events[s][1], s));
+
+            for(auto e: end[day]) { // e stands for index
+                auto iter = endidx.find(make_pair(events[e][1], e));
+                if( iter != endidx.end() ) endidx.erase(iter);
+            }
+
+            if(!endidx.empty()) {
+                endidx.erase(endidx.begin());
+                ans++;
+            }
+        }
+
+        return ans;
+    }
+};
