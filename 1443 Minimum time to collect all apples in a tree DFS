@@ -1,0 +1,35 @@
+class Solution {
+public:
+    //vector<int> visited = vector<int>(100005, 0);
+
+    int dfs(vector<vector<int>>& neighbors, vector<int>& visited, vector<bool>& hasApple, int curNode, int curCost){
+        if(visited[curNode]) return 0;
+
+        visited[curNode] = 1;
+
+        int child_cost = 0;
+        for(int n: neighbors[curNode]) {
+            //if(hasApple[curNode]) printf("hasApple = True\n");
+            //printf("curNode = %d, n = %d\n", curNode, n);
+            child_cost += dfs(neighbors, visited, hasApple, n, 2); 
+            //printf("child_cost = %d\n", child_cost);
+        }
+
+        if(!child_cost && !hasApple[curNode]) return 0;
+
+        return child_cost + curCost;
+    }
+
+    int minTime(int n, vector<vector<int>>& edges, vector<bool>& hasApple) {
+
+        vector<vector<int>> neighbors(n);
+        vector<int> visited(n);
+
+        for(auto e: edges) {
+            neighbors[e[0]].emplace_back(e[1]);
+            neighbors[e[1]].emplace_back(e[0]);
+        }
+
+        return dfs(neighbors, visited, hasApple, 0, 0);
+    }
+};
