@@ -1,0 +1,91 @@
+class DesjointUnionSet {
+private:
+    vector<int> parent;
+    int setCount;
+
+public:
+
+    DesjointUnionSet(int n): parent(vector<int>(n, -1)), setCount(n) {}
+
+    int unionFind(int idx) {
+        if(parent[idx] < 0) return idx;
+        return parent[idx] = unionFind(parent[idx]);
+    }
+
+    bool unionMerge(int x, int y) {
+        int _x = unionFind(x), _y = unionFind(y);
+        if(_x == _y) return false;
+
+        if(parent[_x] < parent[_y]) {
+            parent[_x] += parent[_y];
+            parent[_y] = _x;
+        }
+        else {
+            parent[_y] += parent[_x];
+            parent[_y] = _x;
+        }
+        setCount--;
+
+        return true;
+    }
+
+    int getSetCount() {
+        return setCount;
+    }
+};
+
+
+class Solution {
+public:
+    int minSwapsCouples(vector<int>& row) {
+        int n = row.size() / 2;
+
+        DesjointUnionSet dsu(n);
+
+        for(int i = 0; i < n; i++) {
+            dsu.unionMerge(row[2 * i] / 2, row[2 * i + 1] / 2);
+        }
+
+        return n - dsu.getSetCount();
+    }
+};
+
+void trimLeftTrailingSpaces(string &input) {
+    input.erase(input.begin(), find_if(input.begin(), input.end(), [](int ch) {
+        return !isspace(ch);
+    }));
+}
+
+void trimRightTrailingSpaces(string &input) {
+    input.erase(find_if(input.rbegin(), input.rend(), [](int ch) {
+        return !isspace(ch);
+    }).base(), input.end());
+}
+
+vector<int> stringToIntegerVector(string input) {
+    vector<int> output;
+    trimLeftTrailingSpaces(input);
+    trimRightTrailingSpaces(input);
+    input = input.substr(1, input.length() - 2);
+    stringstream ss;
+    ss.str(input);
+    string item;
+    char delim = ',';
+    while (getline(ss, item, delim)) {
+        output.push_back(stoi(item));
+    }
+    return output;
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        vector<int> row = stringToIntegerVector(line);
+        
+        int ret = Solution().minSwapsCouples(row);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
