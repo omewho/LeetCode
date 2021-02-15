@@ -1,0 +1,30 @@
+class Solution {
+    typedef pair<string, int> PSI;
+public:
+    vector<string> findRestaurant(vector<string>& list1, vector<string>& list2) {
+        map<string, int> nameidx;
+        
+        vector<string> ans;
+        int idx = 0, minsum = 2000;
+        for(auto name: list1) {
+            nameidx[name] = idx++;
+        }
+        idx = 0;
+        for(auto name: list2) {
+            if(nameidx.find(name) != nameidx.end()) {
+                //printf("name = %s, idx = %d\n", name.c_str(), idx);
+                nameidx[name] += idx;
+                if(nameidx[name] < minsum) {
+                    minsum = nameidx[name];
+                    //printf("name = %s\n", name.c_str());
+                    ans.clear();
+                    ans.emplace_back(name);
+                }
+                else if(nameidx[name] == minsum) ans.emplace_back(name);    
+            }
+            idx++;
+        }
+
+        return ans;
+    }
+};
