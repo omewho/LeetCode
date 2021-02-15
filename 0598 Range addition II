@@ -1,0 +1,15 @@
+class Solution {
+public:
+    int maxCount(int m, int n, vector<vector<int>>& ops) {
+        int x = m, y = n;
+        for(auto o: ops) {
+            //printf(" %d, %d\n", o[0], o[1]);
+            x = min(x, o[0]);
+            y = min(y, o[1]);
+            //printf("x = %d, y = %d\n", x, y);
+        }
+        //printf("x = %d, y = %d\n", x, y);
+
+        return x * y;
+    }
+};
