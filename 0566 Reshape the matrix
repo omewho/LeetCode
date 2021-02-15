@@ -1,0 +1,21 @@
+class Solution {
+public:
+    vector<vector<int>> matrixReshape(vector<vector<int>>& nums, int r, int c) {
+        int m = nums.size(), n = nums[0].size();
+        if(r * c != m * n) return nums;
+
+        vector<vector<int>> ans(r, vector<int>(c));
+
+        for(int i = 0; i < r; i++) {
+            for(int j = 0; j < c; j++) {
+                //printf("i = %d, j = %d\n", i, j);
+                int id = i * c + j;
+                int row = id / n, col = id % n;
+                //printf("id = %d, row = %d, col = %d\n", id, row, col);
+                ans[i][j] = nums[row][col];
+            }
+        }
+
+        return ans;
+    }
+};
