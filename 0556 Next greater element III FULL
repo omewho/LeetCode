@@ -1,0 +1,59 @@
+class Solution {
+public:
+    int nextGreaterElement(int n) {
+        string strnum = to_string(n);
+
+        int len = strnum.length();
+        int pos = len - 1, i, j, ans;
+
+        //stack<int> monostk;
+        while( pos > 0 ) {
+            if(strnum[pos - 1] < strnum[pos]) {
+                i = pos - 1;
+                printf("i = %d\n", i);
+                break;
+            }
+            pos--;
+        }
+        if(pos == 0) return -1;
+
+        //monostk.push(strnum[i] - '0');
+
+        while(pos < n && strnum[pos] > strnum[i] ) pos++;
+        j = pos - 1;
+
+        printf("j = %d\n", j);
+        swap(strnum[i], strnum[j]);
+        
+        
+        sort(strnum.begin() + i + 1, strnum.end());
+
+        string onetenthstr = strnum.substr(0, len - 1);
+        int onetenth = stoi(onetenthstr);
+        if( onetenth <= INT_MAX / 10) {
+            if(onetenth == INT_MAX / 10 && strnum[len - 1] > '7') ans = -1;
+            else ans = stoi(strnum);
+        }
+        else ans = -1;
+        
+        //printf("%s\n", strnum.c_str());
+        return ans;
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int n = stringToInteger(line);
+        
+        int ret = Solution().nextGreaterElement(n);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
