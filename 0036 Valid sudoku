@@ -1,0 +1,22 @@
+class Solution {
+public:
+    bool isValidSudoku(vector<vector<char>>& board) {
+        int rowfreq[9][9] = {0}, colfreq[9][9] = {0}, subfreq[9][9] = {0};
+        
+        for(int row = 0; row < 9; row++) {
+            for(int col = 0; col < 9; col++) {
+
+                if(board[row][col] == '.') continue;
+                
+                int currnum = board[row][col] - '0' - 1;
+
+                if(rowfreq[row][currnum] || colfreq[col][currnum] || subfreq[ row / 3 * 3 + col / 3][ currnum ]) return false;
+                rowfreq[row][currnum]++;
+                colfreq[col][currnum]++;
+                subfreq[row / 3 * 3 + col / 3][currnum]++;
+            }
+        }
+
+        return true;
+    }
+};
