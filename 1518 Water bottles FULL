@@ -1,0 +1,32 @@
+class Solution {
+public:
+    int numWaterBottles(int numBottles, int numExchange) {
+        int ans = numBottles;
+        while(numBottles >= numExchange) {
+            ans += numBottles / numExchange;
+
+            numBottles = numBottles / numExchange + numBottles % numExchange;
+        }
+
+        return ans;
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int numBottles = stringToInteger(line);
+        getline(cin, line);
+        int numExchange = stringToInteger(line);
+        
+        int ret = Solution().numWaterBottles(numBottles, numExchange);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
