@@ -1,0 +1,63 @@
+class Solution {
+public:
+    int rowPresent[9][9], colPresent[9][9], subPresent[9][9];
+
+    void printvec() {
+        for(int i = 0; i < 9; i++) {
+            for(int j = 0; j < 9; j++) {
+                if(j) printf(" ");
+                printf("%d", rowPresent[i][j]);
+            }
+            printf("\n");
+        }
+    }
+    void init(vector<vector<char>>& board) {
+        for(int row = 0; row < 9; row++) {
+            for(int col = 0; col < 9; col++) {
+                if(board[row][col] != '.') {
+                    int currnum = board[row][col] - '0' - 1;
+                    rowPresent[row][currnum] = 1;
+                    colPresent[col][currnum] = 1;
+                    subPresent[row / 3 * 3 + col / 3][currnum] = 1;
+                }                
+            }
+        }
+    }
+
+    bool backtracking(vector<vector<char>>& board, int row, int col) {
+        if(col == 9) {
+            col = 0;
+            row++;
+        }
+        if(row == 9) return true;
+
+        if(board[row][col] =='.') {
+            for(int i = 0; i < 9; i++) {
+                if( !(rowPresent[row][i] || colPresent[col][i] || subPresent[row / 3 * 3 + col / 3][i] )) {
+                    board[row][col] = '0' + i + 1;
+                    rowPresent[row][i] = 1;
+                    colPresent[col][i] = 1;
+                    subPresent[row / 3 * 3 + col / 3][i] = 1;
+
+                    if(backtracking(board, row, col + 1)) return true ;
+                    board[row][col] = '.';
+                    rowPresent[row][i] = 0;
+                    colPresent[col][i] = 0;
+                    subPresent[row / 3 * 3 + col / 3][i] = 0;                    
+
+                }                
+            }    
+        }
+        else return backtracking(board, row, col + 1);
+        
+        return false;
+
+    }
+
+    void solveSudoku(vector<vector<char>>& board) {
+        init(board);
+        //printvec();
+        backtracking(board, 0, 0);
+
+    }
+};
