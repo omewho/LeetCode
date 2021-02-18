@@ -1,0 +1,49 @@
+class Solution {
+public:
+    vector<int> findSubstring(string s, vector<string>& words) {
+        vector<int> ans;
+
+        int m = s.length(), n = words.size(), len = words[0].length();
+        if( !n ) return ans;
+
+        unordered_map<string, int> word2freq;
+        for(auto w : words) word2freq[w]++;
+
+        int left , right, total = 0;
+        for(int i = 0; i < len; i++) {
+            left = i;
+            right = left;
+            total = 0;
+
+            unordered_map<string, int> currword2freq;
+            while(left + len * n <= m ) {
+                string temp = "";
+                
+                while(total < n) {
+                    temp = s.substr(right, len);
+                    //printf(" left = %d, temp = %s\n", left, temp.c_str());
+                    if( word2freq.find(temp) == word2freq.end() || currword2freq[temp] >= word2freq[temp] ) break;
+                    currword2freq[temp]++;
+                    total++;
+                    right += len;                    
+                }
+
+                if( currword2freq == word2freq ) ans.emplace_back( left );
+
+                if(word2freq.find(temp) != word2freq.end()) {
+                    currword2freq[s.substr(left, len)]--;
+                    total--;
+                    left += len;
+                }
+                else {
+                    right += len;
+                    left = right;
+                    total = 0;
+                    currword2freq.clear();
+                }
+            }
+        }
+
+        return ans;
+    }
+};
