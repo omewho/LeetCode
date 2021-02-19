@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int findComplement(int num) {
+        int n = num, ones = 0;
+        while(n) {
+            ones++;
+            n = (n >> 1);
+        }
+        return num ^ ( (long )( 1 << ones ) - 1 );
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int num = stringToInteger(line);
+        
+        int ret = Solution().findComplement(num);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
