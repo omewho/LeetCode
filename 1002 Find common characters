@@ -1,0 +1,26 @@
+class Solution {
+public:
+    vector<string> commonChars(vector<string>& A) {
+        int n = A.size();
+        vector<vector<int>> charfreq(n, vector<int>(26, 0));
+
+        vector<string> ans;
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < A[i].length(); j++) charfreq[i][A[i][j] - 'a']++;
+        }
+
+        for(int ch = 0; ch < 26; ch++) {
+            int minfreq = 101;
+            for(int w = 0; w < n; w++) {
+                minfreq = min(minfreq, charfreq[w][ch]);
+            }
+            for(int i = 0; i < minfreq; i++) {
+                string s(1, 'a' + ch);
+                ans.emplace_back( s );
+            }
+        }
+
+        return ans;
+
+    }
+};
