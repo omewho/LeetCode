@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int bitwiseComplement(int N) {
+        int temp = 1;
+        while(temp < N) {
+            temp <<= 1;
+            temp += 1;
+        }
+        return temp^N;
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int N = stringToInteger(line);
+        
+        int ret = Solution().bitwiseComplement(N);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
