@@ -1,0 +1,84 @@
+class Solution {
+public:
+    int longestSubarray(vector<int>& nums, int limit) {
+        int ans = 0, n = nums.size();
+/***
+        map<int, int> numfreq;
+
+        int left = 0, right = 0;
+        while(right < n) {
+            
+            numfreq[nums[right]]++;
+
+            while( numfreq.rbegin()->first - numfreq.begin()->first > limit ) {
+                numfreq[nums[left]]--;
+                if(numfreq[nums[left]] == 0) numfreq.erase(nums[left]);
+                left++;
+            }
+            ans = max(ans, right - left + 1);
+
+            right++; 
+        }
+***/
+        int left = 0, right = 0;
+        multiset<int> window;
+
+        while( right < n) {
+            window.insert(nums[right]);
+
+            while( *window.rbegin() - *window.begin() > limit) {
+                window.erase(window.find(nums[left]));
+                left++;
+            }
+            ans = max(ans, right - left + 1);
+            right++;
+        }
+        return ans;
+    }
+};
+
+void trimLeftTrailingSpaces(string &input) {
+    input.erase(input.begin(), find_if(input.begin(), input.end(), [](int ch) {
+        return !isspace(ch);
+    }));
+}
+
+void trimRightTrailingSpaces(string &input) {
+    input.erase(find_if(input.rbegin(), input.rend(), [](int ch) {
+        return !isspace(ch);
+    }).base(), input.end());
+}
+
+vector<int> stringToIntegerVector(string input) {
+    vector<int> output;
+    trimLeftTrailingSpaces(input);
+    trimRightTrailingSpaces(input);
+    input = input.substr(1, input.length() - 2);
+    stringstream ss;
+    ss.str(input);
+    string item;
+    char delim = ',';
+    while (getline(ss, item, delim)) {
+        output.push_back(stoi(item));
+    }
+    return output;
+}
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        vector<int> nums = stringToIntegerVector(line);
+        getline(cin, line);
+        int limit = stringToInteger(line);
+        
+        int ret = Solution().longestSubarray(nums, limit);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
