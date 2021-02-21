@@ -1,0 +1,35 @@
+class Solution {
+public:
+    bool robot(string command, vector<vector<int>>& obstacles, int x, int y) {
+        int x_dist = 0, y_dist = 0;
+        unordered_set<long long> points;
+        points.insert(0);
+        for(char ch: command) {
+            if(ch == 'U') y_dist++;
+            else if(ch == 'R') x_dist++;
+            //printf(" x_dist = %d y_dixt = %d\n", x_dist, y_dist);
+            points.insert(  ( (long long) (x_dist) << 30 ) | y_dist  ) ;
+        }
+
+        int loop_num = min(x / x_dist, y / y_dist);
+
+        if( points.find( ( (long long) (x - loop_num * x_dist) << 30 ) | ( y - loop_num * y_dist) ) == points.end() ) {
+            //printf("terminal not reachable\n");
+            return false;
+        }
+        //printf("loopNum = %d\n", loop_num);
+
+        for(auto obs: obstacles) {
+            //printf("x = %d, y = %d\n", obs[0], obs[1]);
+            if(obs[0] > x || obs[1] > y ) continue;
+            loop_num = min(obs[0] / x_dist, obs[1] / y_dist);
+
+            if( points.find(( (long long) (obs[0] - loop_num * x_dist) << 30 ) | ( obs[1] - loop_num * y_dist)) != points.end() ) {
+                //printf("obstacle\n");
+                return false;
+            }
+        }
+
+        return true;
+    }
+};
