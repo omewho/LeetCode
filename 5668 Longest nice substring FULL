@@ -1,0 +1,60 @@
+class Solution {
+public:
+    string longestNiceSubstring(string s) {
+        string ans = "";
+        int n = s.length();
+
+        int i, j;
+        for(i = 0; i < n - 1; i++) {
+            int low = 0, cap = 0;
+            for(j = i; j < n; j++) {
+                if(s[j] >= 'a' && s[j] <= 'z') low |= ( 1 << (s[j] - 'a'));
+                else cap |= ( 1 << ( s[j] - 'A'));
+                
+                if( low == cap && j - i + 1 > ans.length() ) ans = s.substr(i, j - i + 1 );
+            }
+            
+        }
+
+        return ans;
+    }
+};
+
+string stringToString(string input) {
+    assert(input.length() >= 2);
+    string result;
+    for (int i = 1; i < input.length() -1; i++) {
+        char currentChar = input[i];
+        if (input[i] == '\\') {
+            char nextChar = input[i+1];
+            switch (nextChar) {
+                case '\"': result.push_back('\"'); break;
+                case '/' : result.push_back('/'); break;
+                case '\\': result.push_back('\\'); break;
+                case 'b' : result.push_back('\b'); break;
+                case 'f' : result.push_back('\f'); break;
+                case 'r' : result.push_back('\r'); break;
+                case 'n' : result.push_back('\n'); break;
+                case 't' : result.push_back('\t'); break;
+                default: break;
+            }
+            i++;
+        } else {
+          result.push_back(currentChar);
+        }
+    }
+    return result;
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        string s = stringToString(line);
+        
+        string ret = Solution().longestNiceSubstring(s);
+
+        string out = (ret);
+        cout << out << endl;
+    }
+    return 0;
+}
