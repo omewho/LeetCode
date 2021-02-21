@@ -1,0 +1,22 @@
+class Solution {
+public:
+    
+    bool canChoose(vector<vector<int>>& groups, vector<int>& nums) {
+        int m = groups.size(), n = nums.size();
+        int gi = 0, ni = 0;
+        while(gi < m && ni < n) {
+
+            bool found = true;
+            int len = groups[gi].size(), idx = 0;
+
+            while( idx < len && ni + idx < n && groups[gi][idx] == nums[ni + idx] ) idx++;
+            if(idx == len) {
+                gi++;
+                ni += len;
+            }
+            else ni++;
+        }
+
+        return gi == m;
+    }
+};
