@@ -1,0 +1,32 @@
+class Solution {
+public:
+    int countPrimeSetBits(int L, int R) {
+        int ans = 0;
+        //unordered_set<int> ust = {2, 3, 5, 7, 11, 13, 17, 19};
+        // for(int i = L; i <= R; i++) {
+        //     ans += ust.count(__builtin_popcount(i));
+        // }
+        for(int i = L; i <= R; i++) ans += (665772 >> __builtin_popcount(i)) & 1;
+
+        return ans;
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int L = stringToInteger(line);
+        getline(cin, line);
+        int R = stringToInteger(line);
+        
+        int ret = Solution().countPrimeSetBits(L, R);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
