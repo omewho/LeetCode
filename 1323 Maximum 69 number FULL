@@ -1,0 +1,31 @@
+class Solution {
+public:
+    int maximum69Number (int num) {
+        string strnum = to_string(num);
+        for(int i = 0; i < strnum.length(); i++) {
+            if(strnum[i] == '6') {
+                strnum[i] = '9';
+                break;
+            }
+        }
+
+        return stoi(strnum);
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int num = stringToInteger(line);
+        
+        int ret = Solution().maximum69Number (num);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
