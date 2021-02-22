@@ -1,0 +1,57 @@
+class Solution {
+public:
+    vector<string> printVertically(string s) {
+        stringstream ss(s);
+        string words;
+        vector<string> strvec;
+        while(ss >> words) strvec.emplace_back(words);
+
+        int n = strvec.size();
+        //for(string str: strvec) printf("%s\n", str.c_str());
+
+        vector<int> strlens;
+        for(string str: strvec) strlens.emplace_back(str.length());
+
+        stack<int> stk;
+        stk.push(strlens[n - 1]);
+        for(int i = n - 2; i >= 0; i--) {
+            if(strlens[i] > stk.top()) stk.push(strlens[i]);
+            else strlens[i] = stk.top();
+        }
+
+        //for(int len: strlens) printf("%d\n", len);
+
+        // int i = 0;
+        // for(string str: strvec) {
+        //     printf(" strlens[%d] = %d, str = %s\n", i, strlens[i], str.c_str());
+        //     int len = str.length();
+        //     printf(" length is %d\n", strlens[i] - len);
+        //     str = str + string(strlens[i] - len, ' ');
+        //     i++;
+        // }
+
+
+        for(int i = 0; i < n; i++) {
+            //printf(" strlens[%d] = %d\n", i, strlens[i]);
+            int len = strvec[i].length();
+            //printf(" len = %d\n", len);
+            strvec[i] += string(strlens[i] - len, ' ');
+        }
+
+        // for(string str: strvec) {
+        //     printf(" %s %d\n", str.c_str(), str.length());
+        // }
+
+        vector<string> ans(stk.top());
+        //printf("stktop is %d\n", stk.top());
+        int idx = 0;
+        while(idx < stk.top()) {
+            for(int i = 0; i < n; i++) {
+                if(idx < strvec[i].length()) ans[idx] += strvec[i][idx];    
+            }
+            idx++;            
+        }
+
+        return ans;
+    }
+};
