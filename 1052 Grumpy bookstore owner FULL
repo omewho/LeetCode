@@ -1,0 +1,68 @@
+class Solution {
+public:
+    int maxSatisfied(vector<int>& customers, vector<int>& grumpy, int X) {
+        int n = customers.size();
+        int total = 0, curr = 0, maxIncrease;
+
+        for(int i = 0; i < n; i++) total += (grumpy[i] ^ 1) * customers[i];
+
+        for(int i = 0; i < X; i++) curr += grumpy[i] * customers[i];
+
+        maxIncrease = curr;
+
+        for(int i = X; i < n; i++ ) {
+            curr = curr - grumpy[i - X] * customers[i - X] + grumpy[i] * customers[i];
+            maxIncrease = max(curr, maxIncrease);
+        }
+
+        return total + maxIncrease;
+    }
+};
+
+void trimLeftTrailingSpaces(string &input) {
+    input.erase(input.begin(), find_if(input.begin(), input.end(), [](int ch) {
+        return !isspace(ch);
+    }));
+}
+
+void trimRightTrailingSpaces(string &input) {
+    input.erase(find_if(input.rbegin(), input.rend(), [](int ch) {
+        return !isspace(ch);
+    }).base(), input.end());
+}
+
+vector<int> stringToIntegerVector(string input) {
+    vector<int> output;
+    trimLeftTrailingSpaces(input);
+    trimRightTrailingSpaces(input);
+    input = input.substr(1, input.length() - 2);
+    stringstream ss;
+    ss.str(input);
+    string item;
+    char delim = ',';
+    while (getline(ss, item, delim)) {
+        output.push_back(stoi(item));
+    }
+    return output;
+}
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        vector<int> customers = stringToIntegerVector(line);
+        getline(cin, line);
+        vector<int> grumpy = stringToIntegerVector(line);
+        getline(cin, line);
+        int X = stringToInteger(line);
+        
+        int ret = Solution().maxSatisfied(customers, grumpy, X);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
