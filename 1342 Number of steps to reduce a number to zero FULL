@@ -1,0 +1,43 @@
+class Solution {
+public:
+    int numberOfSteps (int num) {
+        // int steps = 0;
+        // while(num) {
+        //     if(num % 2) num--;
+        //     else num >>= 1;
+        //     steps++;
+        // }
+
+        // return steps;
+/***
+        if(num == 0) return 0;
+
+        if( num & 1 ) return 1 + numberOfSteps( num - 1 );
+        return 1 + numberOfSteps(num / 2);
+***/    
+        //if(!n) return 
+        int n = __builtin_popcount(num) - 1;
+        while(num) {
+            num >>= 1;
+            n++;
+        }
+        return max(n, 0);
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int num = stringToInteger(line);
+        
+        int ret = Solution().numberOfSteps (num);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
