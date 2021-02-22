@@ -1,0 +1,54 @@
+class Solution {
+public:
+    double trimMean(vector<int>& arr) {
+        int sum = 0, total = 0, n = arr.size();
+        for(int i = 0; i < arr.size(); i++) sum += arr[i];
+
+        sort(arr.begin(), arr.end());
+
+        int remove = arr.size() / 20;
+        for(int i = 0; i < remove; i++) total += arr[i] + arr[n - 1 - i];
+
+        return (sum - total) * 1.0 / ( n - 2 * remove);
+    }
+};
+
+void trimLeftTrailingSpaces(string &input) {
+    input.erase(input.begin(), find_if(input.begin(), input.end(), [](int ch) {
+        return !isspace(ch);
+    }));
+}
+
+void trimRightTrailingSpaces(string &input) {
+    input.erase(find_if(input.rbegin(), input.rend(), [](int ch) {
+        return !isspace(ch);
+    }).base(), input.end());
+}
+
+vector<int> stringToIntegerVector(string input) {
+    vector<int> output;
+    trimLeftTrailingSpaces(input);
+    trimRightTrailingSpaces(input);
+    input = input.substr(1, input.length() - 2);
+    stringstream ss;
+    ss.str(input);
+    string item;
+    char delim = ',';
+    while (getline(ss, item, delim)) {
+        output.push_back(stoi(item));
+    }
+    return output;
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        vector<int> arr = stringToIntegerVector(line);
+        
+        double ret = Solution().trimMean(arr);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
