@@ -1,0 +1,26 @@
+class Solution {
+public:
+    vector<int> kWeakestRows(vector<vector<int>>& mat, int k) {
+        int m = mat.size(), n = mat[0].size();
+        vector<int> totalofones(m, 0);
+
+        for(int row = 0; row < m; row++) {
+            for(int col = 0; col < n; col++) {
+                if(mat[row][col]) totalofones[row]++;
+            }
+        }
+
+        //for(int n: totalofones) printf("%d\n", n);
+        vector<pair<int, int>> vec;
+        for(int i = 0; i < m; i++) vec.emplace_back(make_pair(i, totalofones[i]));
+
+        sort(vec.begin(), vec.end(), [](const auto& l, const auto& r) {
+            if(l.second != r.second) return l.second < r.second; 
+            return l.first < r.first;});
+        //for(auto v: vec) printf("%d %d\n", v.first, v.second);
+        vector<int> ans;
+        for(int i = 0; i < k; i++) ans.emplace_back(vec[i].first);
+
+        return ans;
+    }
+};
