@@ -1,0 +1,72 @@
+class Solution {
+public:
+    int minMoves(vector<int>& nums, int k) {
+        int n = nums.size();
+        int total = INT_MAX, count = 0;
+
+        vector<int> g;
+        vector<int> sum = {0};
+
+        for(int i = 0; i < n; i++) {
+            if(nums[i]) {
+                g.emplace_back(i - count);
+                count++;
+                sum.emplace_back(sum.back() + g.back());
+            }
+        }
+
+        int m = g.size();
+        for(int i = 0; i + k <= m; i++) {
+            int mid = (2 * i + k - 1) / 2, q = g[mid];
+            total = min(total, ( 2 * (mid - i) - ( k - 1)) * q + ( sum[i + k] - sum[mid + 1]) - (sum[mid] - sum[i]));
+        }
+
+        return total;
+    }
+};
+
+void trimLeftTrailingSpaces(string &input) {
+    input.erase(input.begin(), find_if(input.begin(), input.end(), [](int ch) {
+        return !isspace(ch);
+    }));
+}
+
+void trimRightTrailingSpaces(string &input) {
+    input.erase(find_if(input.rbegin(), input.rend(), [](int ch) {
+        return !isspace(ch);
+    }).base(), input.end());
+}
+
+vector<int> stringToIntegerVector(string input) {
+    vector<int> output;
+    trimLeftTrailingSpaces(input);
+    trimRightTrailingSpaces(input);
+    input = input.substr(1, input.length() - 2);
+    stringstream ss;
+    ss.str(input);
+    string item;
+    char delim = ',';
+    while (getline(ss, item, delim)) {
+        output.push_back(stoi(item));
+    }
+    return output;
+}
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        vector<int> nums = stringToIntegerVector(line);
+        getline(cin, line);
+        int k = stringToInteger(line);
+        
+        int ret = Solution().minMoves(nums, k);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
