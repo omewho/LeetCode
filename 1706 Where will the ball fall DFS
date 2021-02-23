@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int dfs(vector<vector<int>>& grid, int row, int col) {
+        if( row == grid.size() ) return col;
+
+        int next_col;
+        if( grid[row][col] == 1) next_col = col + 1;
+        else next_col = col - 1;
+
+        if(next_col >= 0 && next_col < grid[0].size() && grid[row][col] == grid[row][next_col] ) return dfs(grid, row + 1, next_col);
+        return -1;
+    }
+
+    vector<int> findBall(vector<vector<int>>& grid) {
+        int n = grid[0].size();
+
+        vector<int> ans(n);
+        for(int i = 0; i < n; i++) ans[i] = dfs(grid, 0, i);
+
+        return ans;
+    }
+};
