@@ -1,0 +1,19 @@
+class Solution {
+public:
+    vector<vector<int>> flipAndInvertImage(vector<vector<int>>& A) {
+        int m = A.size(), n = A[0].size();
+        for(int row = 0; row < m; row++ ) {
+            int left = 0, right = n - 1;
+            while(left < right) {
+                if(A[row][left] == A[row][right]) {
+                    A[row][left] ^= 1;
+                    A[row][right] ^= 1;
+                }
+                left++;
+                right--;
+            }
+            if(left == right) A[row][left] ^= 1;
+        }
+        return A;
+    }
+};
