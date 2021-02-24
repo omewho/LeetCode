@@ -1,0 +1,18 @@
+class Solution {
+public:
+    int uniqueMorseRepresentations(vector<string>& words) {
+        vector<string> morse_code = {".-","-...","-.-.","-..",".","..-.","--.","....","..",".---","-.-",".-..","--","-.","---",".--.","--.-",".-.","...","-","..-","...-",".--","-..-","-.--","--.."};
+
+        unordered_map<string, int> strfreq;
+        for(string w: words) {
+            string temp = "";
+            for(char c: w) {
+                temp += morse_code[c - 'a'];
+            }
+            strfreq[temp]++;
+        }
+
+        return strfreq.size();
+
+    }
+};
