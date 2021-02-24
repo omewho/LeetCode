@@ -1,0 +1,29 @@
+class Solution {
+public:
+    vector<string> subdomainVisits(vector<string>& cpdomains) {
+        unordered_map<string, int> strfreq;
+    
+        for(string s: cpdomains) {
+            int spaceindex = s.find(" ");
+            int f = stoi(s.substr(0, spaceindex));
+            //printf("f = %d\n", f);
+            
+            int pos = spaceindex + 1;
+            string domain = s.substr(pos);
+            while(pos > 0) {
+                //printf("domain = %s\n", domain.c_str());
+                strfreq[domain] += f;
+                pos = domain.find(".");
+                //printf("pos = %d\n", pos);
+                domain = domain.substr(pos + 1);
+                //printf("here domain = %s\n", domain.c_str());
+            }
+
+        }
+
+        vector<string> ans;
+        for(auto [str, f]: strfreq) ans.emplace_back(to_string(f) + " " + str);
+
+        return ans;
+    }
+};
