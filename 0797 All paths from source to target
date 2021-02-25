@@ -22,24 +22,20 @@ public:
                 curr_path.push_back(neighbor);
                 if( neighbor == n - 1) {
                     ans.emplace_back(curr_path);
-                    curr_path.pop_back();
                 }
                 else {
                     que.push(neighbor);
-                    prev_path.push(curr_path);
-                    curr_path.pop_back();
+                    prev_path.push(curr_path);    
                 }
-            }
-            
+                curr_path.pop_back();
+            } 
         }
     }
 
     vector<vector<int>> allPathsSourceTarget(vector<vector<int>>& graph) {
         int n = graph.size();
-        vector<int> visited(n, 0);
 
         bfs(graph);
-
 
         return ans;
     }
