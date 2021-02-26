@@ -1,0 +1,100 @@
+class Solution {
+public:
+    int slidingWindow(string s, int k, int chartotal) {
+        int left = 0, right = 0, ret = 0;
+        
+        vector<int> charfreq(26, 0);
+        int currtotal = 0, notenough = 0;
+        while(right < s.length()) {
+            int rightidx = s[right] - 'a';
+            //printf(" rightidx = %d\n", rightidx);
+            
+            if( charfreq[rightidx] == 0 ) {
+                currtotal++;
+                notenough++;
+            } 
+            charfreq[rightidx]++;
+            if( charfreq[rightidx] == k ) notenough--;
+
+            while( currtotal > chartotal ) {
+                //printf("curr = %d, total = %d\n", currtotal, chartotal);
+                int leftidx = s[left] - 'a';
+                if( charfreq[leftidx] == k ) notenough++;
+                charfreq[leftidx]--;
+                if( charfreq[leftidx] == 0 ) {
+                    currtotal--;
+                    notenough--;
+                }
+                left++;
+            }
+            
+
+            if( !notenough ) {
+                //printf("hh right = %d, left = %d\n", right, left);
+                ret = max(ret, right - left + 1);
+            }
+
+            right++;
+        }
+
+        return ret;
+    }
+
+    int longestSubstring(string s, int k) {
+        int n = s.length();
+
+        unordered_set<char> ust;
+        for(char ch: s) ust.insert(ch);
+        
+        int total = ust.size(), ans = 0;
+
+        for(int i = 1; i <= total; i++) ans = max(ans, slidingWindow(s, k, i));
+
+        return ans;
+    }
+};
+
+string stringToString(string input) {
+    assert(input.length() >= 2);
+    string result;
+    for (int i = 1; i < input.length() -1; i++) {
+        char currentChar = input[i];
+        if (input[i] == '\\') {
+            char nextChar = input[i+1];
+            switch (nextChar) {
+                case '\"': result.push_back('\"'); break;
+                case '/' : result.push_back('/'); break;
+                case '\\': result.push_back('\\'); break;
+                case 'b' : result.push_back('\b'); break;
+                case 'f' : result.push_back('\f'); break;
+                case 'r' : result.push_back('\r'); break;
+                case 'n' : result.push_back('\n'); break;
+                case 't' : result.push_back('\t'); break;
+                default: break;
+            }
+            i++;
+        } else {
+          result.push_back(currentChar);
+        }
+    }
+    return result;
+}
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        string s = stringToString(line);
+        getline(cin, line);
+        int k = stringToInteger(line);
+        
+        int ret = Solution().longestSubstring(s, k);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
