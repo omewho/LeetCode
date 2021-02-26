@@ -1,0 +1,39 @@
+class Solution {
+public:
+    vector<int> findNumOfValidWords(vector<string>& words, vector<string>& puzzles) {
+        
+        vector<int> ans;
+        unordered_map<int, int> bitset2freq;
+
+        for(string word: words) {
+            int mask = 0;
+            for(char ch: word) {
+                mask |= ( 1 << (ch - 'a'));
+            }
+            //printf("popcount = %d\n", __builtin_popcount(mask));
+            if(__builtin_popcount(mask) <= 7 ) bitset2freq[mask]++;
+        }
+
+        //for(auto [k, f] : bitset2freq) printf(" %d %d\n", k, f);
+
+        for(auto puzzle: puzzles) {
+
+            int total = 0, mask = 0;
+            //printf("mask = %o\n", mask);
+            for(int i = 1; i < 7; i++) mask |= ( 1 << (puzzle[i] - 'a'));
+            
+            int subset = mask;
+
+            do{
+                int currsub = subset | ( 1 << ( puzzle[0] - 'a'));
+                if(bitset2freq.find(currsub) != bitset2freq.end()) total += bitset2freq[currsub];
+                subset = ( subset - 1) & mask;
+            } while(subset != mask); // The scenario of word consisting only of the first letter of puzzle must be considered. 
+            
+            ans.emplace_back(total);
+
+        }
+
+        return ans;
+    }
+};
