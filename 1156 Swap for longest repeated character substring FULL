@@ -1,0 +1,51 @@
+class Solution {
+public:
+    int dp[31][1001];
+    int numRollsToTarget(int d, int f, int target) {
+
+        //vector<vector<int>> dp(d + 1, vector<int>(target + 1, 0));
+        constexpr int modula = 1e9 + 7;
+        dp[0][0] = 1;
+
+        for(int dice_num = 1; dice_num < d + 1; dice_num++) {
+            for(int targeted_sum = dice_num; targeted_sum < target + 1; targeted_sum++) {
+                //printf(" dice_num = %d, targeted_sum = %d\n", dice_num, targeted_sum);
+                for(int last_sum = 1; last_sum <= f && targeted_sum - last_sum >= 0; last_sum++ ) {
+                    dp[dice_num][targeted_sum] = (dp[dice_num][targeted_sum] + dp[dice_num - 1][targeted_sum - last_sum] ) % modula;
+                    //printf("dp[%d][%d] = %d\n", dice_num, targeted_sum, dp[dice_num][targeted_sum]);
+                }
+            }
+        }
+
+        // for(auto v: dp){
+        //     for(int i = 0; i < v.size(); i++) {
+        //         if(i) printf(" ");
+        //         printf("%d", v[i]);
+        //     }
+        //     printf("\n");
+        // }
+        
+        return dp[d][target];
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int d = stringToInteger(line);
+        getline(cin, line);
+        int f = stringToInteger(line);
+        getline(cin, line);
+        int target = stringToInteger(line);
+        
+        int ret = Solution().numRollsToTarget(d, f, target);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
