@@ -1,0 +1,19 @@
+class Solution {
+public:
+    char firstUniqChar(string s) {
+
+        /***
+        int n = s.length();
+        if(!n) return ' ';
+
+        unordered_map<char, int> charfreq;
+        for(char ch: s) charfreq[ch]++;
+        for(char ch: s) if(charfreq[ch] == 1) return ch;
+        ***/
+
+        int charfreq[128] = {0};
+        for(char ch: s) charfreq[ch]++;
+        for(char ch: s) if(charfreq[ch] == 1) return ch;
+        return ' ';
+    }
+};
