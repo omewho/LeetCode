@@ -1,0 +1,30 @@
+class Solution {
+public:
+    vector<vector<int>> findContinuousSequence(int target) {
+        int sum;
+        vector<vector<int>> ans;
+
+        vector<int> vec;
+
+        for(int start = 1; start <= (target - 1) / 2; start++) {
+            sum = 0;
+
+            int end = start;
+            sum += end;
+            while(sum < target) {
+                end++;
+                sum += end;
+            }
+            //printf("start = %d, sum = %d\n",start, sum);
+            if(sum == target) {
+                vec.clear();
+                for(int num = start; num <= end; num++) vec.emplace_back(num);
+                ans.emplace_back(vec);
+                
+            }
+            
+        }
+
+        return ans;
+    }
+};
