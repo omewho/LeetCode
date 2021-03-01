@@ -1,0 +1,67 @@
+class NumMatrix {
+public:
+    vector<vector<int>> presum;
+    
+    NumMatrix(vector<vector<int>>& matrix) {
+        int m = matrix.size();
+
+        /***
+        if(m) {
+            int n = matrix[0].size();
+            presum = vector<vector<int>>(m, vector<int>(n + 1));
+            for(int row = 0; row < m; row++) {
+                for(int col = 1; col < n + 1; col++) {
+                    presum[row][col] = matrix[row][col - 1] + presum[row][col - 1];
+                }
+            }
+        }
+        ***/
+
+        if( m ) {
+            int n = matrix[0].size();
+            presum = vector<vector<int>>(m + 1, vector<int>(n + 1, 0));
+            // for(int row = 0; row < m + 1; row++) {
+            //     for(int col = 0; col < n + 1; col++) {
+            //         if(col) printf(" ");
+            //         printf("%d", presum[row][col]);
+            //     }
+            //     printf("\n");
+            // }
+
+            for(int row = 1; row < m + 1; row++) {
+                for(int col = 1; col < n + 1; col++) {
+                    presum[row][col] = presum[row - 1][col] + presum[row][col - 1] + matrix[row - 1][col - 1] - presum[row - 1][col - 1];
+                }
+            }
+
+            // printf("\n");
+            // for(int row = 0; row < m + 1; row++) {
+            //     for(int col = 0; col < n + 1; col++) {
+            //         if(col) printf(" ");
+            //         printf("%d", presum[row][col]);
+            //     }
+            //     printf("\n");
+            // }
+        }
+    }
+    
+    int sumRegion(int row1, int col1, int row2, int col2) {
+
+        /***
+        int sum = 0;
+        for(int row = row1; row <= row2; row++) {
+            sum += presum[row][col2 + 1] - presum[row][col1];
+        }
+        ***/
+        int sum = presum[row2 + 1][col2 + 1] - presum[row1][col2 + 1] - presum[row2 + 1][col1] + presum[row1][col1];
+        
+
+        return sum;
+    }
+};
+
+/**
+ * Your NumMatrix object will be instantiated and called as such:
+ * NumMatrix* obj = new NumMatrix(matrix);
+ * int param_1 = obj->sumRegion(row1,col1,row2,col2);
+ */
