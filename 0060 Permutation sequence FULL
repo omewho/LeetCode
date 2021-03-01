@@ -1,0 +1,60 @@
+class Solution {
+public:
+    string getPermutation(int n, int k) {
+
+        int factorial[n + 1];
+        factorial[0] = 1;
+        for(int i = 1; i < n + 1; i++) factorial[i] = i * factorial[i - 1];
+
+        k--;
+
+        string ans = "";
+        vector<int> notused(n + 1, 1);
+
+        int _n = n;
+        while(_n > 0) {
+            int position = k / factorial[_n - 1] + 1;
+            //printf("position = %d\n", position);
+
+            int idx = 1;
+            while( idx < n + 1 ) {
+                position -= notused[idx];
+                //printf("idx = %d, position = %d\n", idx, position);
+                if(position == 0) {
+                    ans += ( idx + '0' );
+                    notused[idx] = 0;
+                    //printf("idx = %d, notused[%d] = %d\n", idx, idx, notused[idx]);
+                    break;
+                }
+                idx++;
+                
+            }
+            
+            k %= factorial[_n - 1];
+            //printf("k = %d\n", k);
+            _n--;
+        }
+        
+        return ans;
+
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int n = stringToInteger(line);
+        getline(cin, line);
+        int k = stringToInteger(line);
+        
+        string ret = Solution().getPermutation(n, k);
+
+        string out = (ret);
+        cout << out << endl;
+    }
+    return 0;
+}
