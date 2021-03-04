@@ -1,0 +1,44 @@
+class Solution {
+public:
+    int mySqrt(int x) {
+        /***
+        int root = 1;
+        while((long long)root * root < x) {
+            root++;
+        }
+        printf("root = %d\n", root);
+        return (long long )root * root == x ? root: root - 1;
+        ***/
+
+        int left = 1, right = x, mid, ans = 0;
+        
+        while(left <= right) {
+            mid = left + (right - left) / 2;
+
+            if( (long long) mid * mid <= x ) {
+                ans = mid;
+                left = mid + 1;
+            }
+            else right = mid - 1;
+        }
+
+        return ans;
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int x = stringToInteger(line);
+        
+        int ret = Solution().mySqrt(x);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
