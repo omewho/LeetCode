@@ -1,0 +1,29 @@
+class Solution {
+public:
+    string shortestCompletingWord(string licensePlate, vector<string>& words) {
+        string letters = "";
+        for(char ch: licensePlate) if(isalpha(ch)) letters += tolower(ch);
+
+        int scharfreq[26] = {0};
+        for(char ch: letters) scharfreq[ch - 'a']++;
+        
+        string ans;
+        int minlen = 20;
+        for(string w: words) {
+            bool allfull = true;
+
+            int dcharfreq[26] = {0};
+            for(char ch: w) dcharfreq[ch - 'a']++;
+
+            for(char ch: letters) if( scharfreq[ch - 'a'] > dcharfreq[ch - 'a'] ) allfull = false;
+            if(allfull) {
+                if(w.length() < minlen) {
+                    minlen = w.length();
+                    ans = w;
+                }
+            }
+        }
+
+        return ans;
+    }
+};
