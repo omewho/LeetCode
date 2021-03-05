@@ -1,0 +1,55 @@
+class WordDictionary {
+private:
+    bool isEnd;
+    WordDictionary* children[26];
+public:
+
+    // struct TrieNode {
+    //     bool isEnd;
+    //     vector<struct TrieNode*> children;
+    // }
+    /** Initialize your data structure here. */
+    WordDictionary() {
+        isEnd = false;
+        for(auto& child : children) child = nullptr;
+    }
+
+    ~WordDictionary() {
+        for(auto child: children) if( child ) delete child;
+    }
+    
+    void addWord(string word) {
+        WordDictionary* wd = this;
+        for(char ch : word) {
+            //printf("%c\n", ch);
+            if( !wd->children[ch - 'a'] ) wd->children[ch - 'a'] = new WordDictionary();
+            wd = wd->children[ch - 'a'];
+        }
+        wd->isEnd = true;
+    }
+    
+    bool search(string word) {
+        
+        return dfs(word, this, 0);
+    }
+
+    bool dfs(string word, WordDictionary* wd, int idx) {
+        if( idx == word.length() ) return wd->isEnd;
+        char ch = word[idx];
+        if( ch == '.') {
+            for(auto child : wd->children) if( child && dfs(word, child, idx + 1)) return true;
+        }
+        
+        //printf("%c\n", ch);
+        else if( wd->children[ch - 'a'] ) return dfs(word, wd->children[ch - 'a'], idx + 1); 
+        
+        return false;
+    }
+};
+
+/**
+ * Your WordDictionary object will be instantiated and called as such:
+ * WordDictionary* obj = new WordDictionary();
+ * obj->addWord(word);
+ * bool param_2 = obj->search(word);
+ */
