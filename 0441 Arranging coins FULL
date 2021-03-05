@@ -1,0 +1,36 @@
+class Solution {
+public:
+    int arrangeCoins(int n) {
+        int left = 1, right = n, mid, ans;
+        while(left <= right) {
+            mid = left + ( right - left ) / 2;
+            if( ( (long long) ( mid + 1) * mid / 2) <= n ) {
+                 ans = mid;
+                 left = mid + 1;
+            }
+            else {
+                //ans = mid;
+                right = mid - 1;
+            }
+        }
+
+        return ans;
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int n = stringToInteger(line);
+        
+        int ret = Solution().arrangeCoins(n);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
