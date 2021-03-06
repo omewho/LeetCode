@@ -1,0 +1,34 @@
+class Solution {
+public:
+    bool checkPowersOfThree(int n) {
+        vector<int> powers{1};
+        while(powers.back() < n) powers.emplace_back(powers.back() * 3);
+
+        for(int i = powers.size() - 1; i >= 0; i--) {
+            if( powers[i] <= n) n -= powers[i];
+        }
+
+        return n == 0;
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+string boolToString(bool input) {
+    return input ? "True" : "False";
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int n = stringToInteger(line);
+        
+        bool ret = Solution().checkPowersOfThree(n);
+
+        string out = boolToString(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
