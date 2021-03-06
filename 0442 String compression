@@ -1,0 +1,35 @@
+class Solution {
+public:
+    int compress(vector<char>& chars) {
+        // unordered_map<char, int> charfreq;
+        // for(char ch: chars) chafreq[ch]++;
+
+        // for(auto [_, freq]: charfreq) {
+        //     int digit_num = 0;
+        //     while(freq) {
+        //         digit_num++;
+        //     }
+        // }
+
+        int left = 0, right = 0, total, curr = 0;
+
+        while(right < chars.size()) {
+            right = left;
+
+            while( right < chars.size() && chars[right] == chars[left] ) right++;
+            chars[curr++] = chars[left];
+
+            total = right - left;
+            //printf("total = %d\n", total);
+            if( total > 1 ) {
+                string numstr = to_string(total);
+                for(char ch: numstr) chars[curr++] = ch;
+            }
+            
+            left = right;
+        }
+
+        return curr;
+
+    }
+};
