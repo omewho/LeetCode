@@ -1,0 +1,35 @@
+class Solution {
+public:
+    vector<bool> canMakePaliQueries(string s, vector<vector<int>>& queries) {
+        int n = queries.size(), len = s.length();
+
+        vector<bool> ans;
+
+        vector<int> xorpresum( len + 1);
+        xorpresum[0] = 0;
+
+        for(int i = 1; i < len + 1; i++) {
+            xorpresum[i] = xorpresum[i - 1] ^ ( 1 << (s[i - 1] - 'a'));
+        }
+
+        int i = 0;
+
+        for( auto q: queries ) {
+            int l = q[0], r = q[1], k = q[2], ones;
+            ones = __builtin_popcount(xorpresum[l] ^ xorpresum[r + 1]);
+            //printf("%d\n", __builtin_popcount(xorpresum[l] ^ xorpresum[r + 1]) );
+            
+            /***
+            int xory = xorpresum[l] ^ xorpresum[r + 1];
+            while(xory) {
+                ones++;
+                xory &= ( xory - 1);
+            }
+            ***/
+
+            ans.emplace_back( k >= ones / 2);
+        }
+
+        return ans;
+    }
+};
