@@ -1,0 +1,66 @@
+class Solution {
+public:
+    int minCut(string s) {
+
+        int n = s.length();
+        vector<vector<bool>> isPanlindromic(n, vector<bool> (n));
+
+        for(int row = n - 1; row >= 0; row--) {
+            for(int col = row; col < n; col++) {
+                isPanlindromic[row][col] = \
+                ( s[row] == s[col] && ( col - row < 3 || isPanlindromic[row + 1][col - 1])); 
+            }
+        }
+
+        vector<int> dp(n, INT_MAX >> 2);
+        for(int i = 0; i < n; i++) {
+            if(isPanlindromic[0][i]) dp[i] = 0;
+            else {
+                for(int j = 0; j < i; j++) {
+                    if(isPanlindromic[j + 1][i]) dp[i] = min(dp[i], dp[j] + 1);
+                }
+            }
+        }
+
+        return dp[ n - 1];
+    }
+};
+
+string stringToString(string input) {
+    assert(input.length() >= 2);
+    string result;
+    for (int i = 1; i < input.length() -1; i++) {
+        char currentChar = input[i];
+        if (input[i] == '\\') {
+            char nextChar = input[i+1];
+            switch (nextChar) {
+                case '\"': result.push_back('\"'); break;
+                case '/' : result.push_back('/'); break;
+                case '\\': result.push_back('\\'); break;
+                case 'b' : result.push_back('\b'); break;
+                case 'f' : result.push_back('\f'); break;
+                case 'r' : result.push_back('\r'); break;
+                case 'n' : result.push_back('\n'); break;
+                case 't' : result.push_back('\t'); break;
+                default: break;
+            }
+            i++;
+        } else {
+          result.push_back(currentChar);
+        }
+    }
+    return result;
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        string s = stringToString(line);
+        
+        int ret = Solution().minCut(s);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
