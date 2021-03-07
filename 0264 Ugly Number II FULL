@@ -1,0 +1,36 @@
+class Solution {
+public:
+    
+    int nthUglyNumber(int n) {
+        int uglyNumbers[n];
+        uglyNumbers[0] = 1;
+
+        int idx2 = 0, idx3 = 0, idx5 = 0;
+        for(int i = 1; i < n; i++) {
+            int mi = min(min( 2 * uglyNumbers[idx2], 3 * uglyNumbers[idx3]), 5 * uglyNumbers[idx5]);
+
+            if( mi == 2 * uglyNumbers[idx2] ) uglyNumbers[i] = 2 * uglyNumbers[idx2++];
+            if( mi == 3 * uglyNumbers[idx3] ) uglyNumbers[i] = 3 * uglyNumbers[idx3++];
+            if( mi == 5 * uglyNumbers[idx5] ) uglyNumbers[i] = 5 * uglyNumbers[idx5++];
+        }
+
+        return uglyNumbers[n - 1];
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int n = stringToInteger(line);
+        
+        int ret = Solution().nthUglyNumber(n);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
