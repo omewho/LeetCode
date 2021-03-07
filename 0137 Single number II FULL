@@ -1,0 +1,76 @@
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        /***
+        int res = 0;
+        for(int i = 0; i < 32; i++) {
+            int occurance = 0;
+            for(int n: nums) if( n >> i & 1 ) occurance++;
+            if( occurance % 3 ) res |= (1 << i);
+        }
+
+        return res;
+        ***/
+
+        /***
+        int seenonce = 0, seentwice = 0;
+
+        for(int n : nums) {
+            seenonce = ( ~seentwice ) & (seenonce ^ n);
+            seentwice = ( ~seenonce ) & (seentwice ^ n);
+        }
+        return seenonce;
+        ***/
+
+        int x0 = -1, x1 = 0, x2 = 0;
+        for(int n: nums) {
+            int newx1 = ( x1 & (~n)) | ( x0 & n);
+            int newx2 = ( x2 & (~n)) | ( x1 & n);
+            int newx0 = ( x0 & (~n)) | ( x2 & n);
+            x0 = newx0;
+            x1 = newx1;
+            x2 = newx2;
+        }
+        return x1;
+    }
+};
+
+void trimLeftTrailingSpaces(string &input) {
+    input.erase(input.begin(), find_if(input.begin(), input.end(), [](int ch) {
+        return !isspace(ch);
+    }));
+}
+
+void trimRightTrailingSpaces(string &input) {
+    input.erase(find_if(input.rbegin(), input.rend(), [](int ch) {
+        return !isspace(ch);
+    }).base(), input.end());
+}
+
+vector<int> stringToIntegerVector(string input) {
+    vector<int> output;
+    trimLeftTrailingSpaces(input);
+    trimRightTrailingSpaces(input);
+    input = input.substr(1, input.length() - 2);
+    stringstream ss;
+    ss.str(input);
+    string item;
+    char delim = ',';
+    while (getline(ss, item, delim)) {
+        output.push_back(stoi(item));
+    }
+    return output;
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        vector<int> nums = stringToIntegerVector(line);
+        
+        int ret = Solution().singleNumber(nums);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
