@@ -1,0 +1,53 @@
+class Solution {
+private:
+    vector<vector<int>> isPalindromic;
+    vector<string> curr;
+    vector<vector<string>> ans;
+public:
+
+    void prework(string s, vector<vector<int>>& isPalindromic) {
+        int n = s.length();
+        isPalindromic = vector(n, vector<int> (n, 0));
+
+        for( int col = 0; col < n; col++ ) {
+            for( int row = 0; row <= col; row++) {
+                isPalindromic[row][col] = ( s[row] == s[col] && (col - row <= 2 || isPalindromic[row + 1][col - 1] ) );
+            }
+        }        
+    }
+
+    void dfs(const string& s, int start) {
+        int n = s.length();
+        if(start == n) ans.emplace_back(curr);
+
+        for(int next_idx = start; next_idx < n; next_idx++) {
+            if(isPalindromic[start][next_idx]) {
+                curr.emplace_back(s.substr(start, next_idx - start + 1));
+                dfs(s, next_idx + 1);
+                curr.pop_back();
+            }
+        }
+    }
+
+    vector<vector<string>> partition(string s) {
+        //vector<vector<string>> ans;
+
+
+        int n = s.length();
+
+        prework( s, isPalindromic );
+        
+        // for(auto state: isPalindromic) {
+        //     int i = 0;
+        //     for(auto n: state) {
+        //         if(i) printf(" ");
+        //         printf("%d", n);
+        //         i++;                
+        //     }
+        //     printf("\n");
+        // }
+        dfs(s, 0);
+
+        return ans;
+    }
+};
