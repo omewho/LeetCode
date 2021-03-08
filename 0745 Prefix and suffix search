@@ -1,0 +1,57 @@
+class TrieNode {
+    //bool isEnd;
+    int weight = 0;
+    TrieNode* children[27] = {nullptr};
+public:
+    TrieNode(){}
+
+    void insert(string s, int weight) {
+        TrieNode* tn = this;
+        for(char ch : s) {
+            if( !(tn->children[ch - 'a']) ) tn->children[ch - 'a'] = new TrieNode(); 
+            tn = tn->children[ch - 'a'];
+            tn->weight = weight;
+        }
+        //tn->isEnd = true;
+    }
+
+    int search(string s) {
+        TrieNode* tn = this;
+        for(char ch: s) {
+            if( !tn->children[ch - 'a'] ) return -1;
+            tn = tn->children[ch - 'a'];
+        }
+        return tn->weight;
+    }
+};
+
+class WordFilter {
+TrieNode root;
+public:
+
+    WordFilter(vector<string>& words) {
+        int n = words.size();
+        for(int weight = 0; weight < n; weight++) {
+            string str = words[weight] + "{" + words[weight];
+            int len = str.length();
+            //TrieNode* tn = root;
+            for(int i = 0; i < str.length() / 2; i++) {
+                string temp = str.substr(i, len - i);
+                root.insert(temp, weight);
+            }
+        }
+    }
+    
+    int f(string prefix, string suffix) {
+
+        string str = suffix + "{" + prefix;
+
+        return root.search(str);
+    }
+};
+
+/**
+ * Your WordFilter object will be instantiated and called as such:
+ * WordFilter* obj = new WordFilter(words);
+ * int param_1 = obj->f(prefix,suffix);
+ */
