@@ -1,0 +1,91 @@
+class Solution {
+public:
+    unordered_set<string> word_ust;
+    vector<int> memo;
+    bool dfs(string s, int start) {
+
+        int n = s.length();
+
+        if(start == n) return true;
+        if( memo[start] != -1 ) return memo[start];
+
+        for( int i = start; i < n; i++) {
+            string prev = s.substr(start, i - start + 1);
+            if( word_ust.find( prev ) != word_ust.end() && dfs(s, i + 1) ) {
+                memo[start] = 1;
+                return true;
+            }
+        }
+        memo[start] = 0;
+        return false;       
+    }
+
+    bool bfs(string s) {
+        int n = s.length();
+
+        vector<bool> visited(n, false);
+        queue<int> q;
+        q.push(0);
+
+        while( !q.empty() ) {
+            int start = q.front();
+            q.pop();
+            if( visited[start] ) continue;
+
+            visited[start] = true;
+            for(int i = start + 1; i <= n; i++) {
+                string prev = s.substr(start, i - start);
+                if( word_ust.find( prev ) != word_ust.end() ) {
+                    if( i < n ) q.push(i);
+                    else return true;
+                }
+            }  
+        }
+        return false;
+    }
+
+    bool wordBreak(string s, vector<string>& wordDict) {
+
+        int n = s.length();
+        
+        word_ust = unordered_set<string>(wordDict.begin(), wordDict.end());
+        
+        /***
+        ______
+        //memo = vector<int> (n, -1);
+        //return dfs(s, 0);
+        ______
+
+        return bfs(s);
+        ***/
+        vector<bool> dp(n + 1, false);
+        dp[0] = true;
+
+        // for(int i = 1; i < n + 1; i++) {
+        //     for(int j = 0; j < i; j++) {
+        //         if( !dp[j] ) continue;
+        //         string word = s.substr(j, i - j);
+        //         if( word_ust.find(word) != word_ust.end() ) {
+        //             dp[i] = true;
+        //             break;
+        //         }
+        //     }
+        // }
+
+        int maxlen = 0, lastpos = 0;
+        for(string word: word_ust) {
+            if(word.length() > maxlen) maxlen = word.length();
+        }
+        for(int i = 1; i < n + 1; i++) {
+            for(int j = max(i - maxlen, 0); j < i; j++) {
+                string word = s.substr(j, i - j);
+                if( dp[j] && find(word_ust.begin(), word_ust.end(), word) != word_ust.end() ) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+
+        return dp[n];
+    }
+};
