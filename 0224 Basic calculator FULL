@@ -1,0 +1,85 @@
+class Solution {
+public:
+    int calculate(string s) {
+        int n = s.length(), sum = 0, sign = 1, num = 0, last_sign;
+        stack<int> stk;
+        
+        for(char ch : s) {
+            if( ch == ' ' ) continue;
+            else if( ch == '+' || ch == '-') {
+                sum += sign * num;
+                if( ch == '+' ) sign = 1;
+                else sign = -1;
+                num = 0;
+                //printf("sum = %d\n", sum);
+            }
+
+            else if( ch == '(' ) {
+                stk.emplace(sum);
+                stk.emplace(sign);
+                num = 0;
+                sign = 1;
+                //curr_sum = 0;
+                sum = 0;
+            }
+            else if( ch == ')' ) {
+                sum += sign * num;
+                //printf("now sum = %d\n", sum);
+                num = 0;
+                sum *= stk.top();
+                stk.pop();
+                
+                sum += stk.top();
+                stk.pop();
+                //printf("end of bracket, sum = %d\n", sum);
+            }
+
+            else {
+                num = num * 10 + ( ch - '0');
+                //printf("num = %d\n", num);
+            }
+        }
+        sum += sign * num;
+
+        return sum;
+    }
+};
+
+string stringToString(string input) {
+    assert(input.length() >= 2);
+    string result;
+    for (int i = 1; i < input.length() -1; i++) {
+        char currentChar = input[i];
+        if (input[i] == '\\') {
+            char nextChar = input[i+1];
+            switch (nextChar) {
+                case '\"': result.push_back('\"'); break;
+                case '/' : result.push_back('/'); break;
+                case '\\': result.push_back('\\'); break;
+                case 'b' : result.push_back('\b'); break;
+                case 'f' : result.push_back('\f'); break;
+                case 'r' : result.push_back('\r'); break;
+                case 'n' : result.push_back('\n'); break;
+                case 't' : result.push_back('\t'); break;
+                default: break;
+            }
+            i++;
+        } else {
+          result.push_back(currentChar);
+        }
+    }
+    return result;
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        string s = stringToString(line);
+        
+        int ret = Solution().calculate(s);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
