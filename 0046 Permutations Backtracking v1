@@ -1,0 +1,38 @@
+class Solution {
+public:
+    vector<vector<int>> ans;
+    vector<int> combination;
+
+    void rightShift(vector<int>& nums, int first, int i) {
+
+        int temp = nums[i], pos;
+        for(pos = i; pos > first; pos--) nums[pos] = nums[pos - 1];
+        nums[pos] = temp;
+    }
+
+    void leftShift(vector<int>& nums, int first, int i) {
+        int temp = nums[first], pos;
+        for(pos = first; pos < i; pos++) nums[pos] = nums[pos + 1];
+        nums[pos] = temp;
+    }
+
+    void backtracking(vector<int>& nums, int first) {
+        if( first == nums.size() ) ans.emplace_back(combination);
+        
+        for(int i = first; i < nums.size(); i++) {
+
+            rightShift(nums, first, i);
+            combination.emplace_back(nums[first]);
+            backtracking(nums, first + 1);
+            leftShift(nums, first, i);
+            combination.pop_back();
+        }
+    }
+    vector<vector<int>> permute(vector<int>& nums) {
+        int n = nums.size();
+        if( !n ) return ans;
+
+        backtracking(nums, 0);
+        return ans;
+    }
+};
