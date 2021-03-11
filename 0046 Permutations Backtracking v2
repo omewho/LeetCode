@@ -1,0 +1,31 @@
+class Solution {
+public:
+    vector<vector<int>> ans;
+    vector<int> combination;
+
+    void backtracking(vector<int>& nums, vector<bool>& visited) {
+        if( combination.size() == nums.size() ) {
+            ans.emplace_back(combination);
+        }
+        
+        for(int i = 0; i < nums.size(); i++) {
+            if(visited[i]) continue;
+
+            combination.emplace_back(nums[i]);
+            visited[i] = true;
+            backtracking(nums, visited);
+            combination.pop_back();
+            visited[i] = false;
+        }
+    }
+
+    vector<vector<int>> permute(vector<int>& nums) {
+        int n = nums.size();
+        if( !n ) return ans;
+
+        vector<bool> visited(n, false);
+        backtracking(nums, visited);
+        
+        return ans;
+    }
+};
