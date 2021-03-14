@@ -1,0 +1,83 @@
+class myHashNode {
+public:
+    int key, val;
+    myHashNode* next;
+public:
+    myHashNode(): key(-1), val(-1), next(nullptr) {};
+    myHashNode(int _key, int _value): key(_key), val(_value), next(nullptr) {};
+};
+
+class MyHashMap {
+private: 
+    static constexpr int TableSize = 1009;
+    vector<myHashNode*> Heads;
+public:
+    int hash(int key) {
+        return key % TableSize;
+    }
+    /** Initialize your data structure here. */
+    MyHashMap() : Heads( vector<myHashNode*>(TableSize, new myHashNode() ) ) {
+
+    }
+    
+    /** value will always be non-negative. */
+    void put(int key, int value) {
+        int pos = hash(key);
+        myHashNode* head = Heads[pos];
+        auto prev = head, curr = prev->next;
+        while(curr && curr->key < key) {
+            
+            prev = curr;
+            curr = curr->next;
+        }
+        if( !curr ) {
+            myHashNode* newNode = new myHashNode(key, value);
+            prev->next = newNode;
+        }
+        else {
+            if( curr->key == key ) curr->val = value;
+            else {
+                myHashNode* newNode = new myHashNode(key, value);
+                newNode->next = curr;
+                prev->next = newNode;
+            }
+        }
+
+    }
+    
+    /** Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key */
+    int get(int key) {
+        int pos = hash(key);
+        myHashNode* prev = Heads[pos], * curr = prev->next;
+        while( curr && curr->key < key ) {
+            prev = curr;
+            curr = curr->next;
+        } 
+        if( !curr ) return -1;
+        else if( curr->key == key) return curr->val;
+        return -1;
+    }
+    
+    /** Removes the mapping of the specified value key if this map contains a mapping for the key */
+    void remove(int key) {
+        int pos = hash(key);
+        myHashNode* prev = Heads[pos], * curr = prev->next;
+        while( curr && curr->key < key) {
+            prev = curr;
+            curr = curr->next;
+        }
+
+        if(curr && curr->key == key) {
+            prev->next = curr->next;
+            delete curr;
+        }
+    }
+};
+
+/**
+ * Your MyHashMap object will be instantiated and called as such:
+ * MyHashMap* obj = new MyHashMap();
+ * obj->put(key,value);
+ * int param_2 = obj->get(key);
+ * obj->remove(key);
+ */
