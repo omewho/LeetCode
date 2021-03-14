@@ -1,0 +1,120 @@
+#define MaxSize 1009
+
+typedef struct LNode* PtrToListNode;
+struct LNode {
+    int key;
+    int val;
+    PtrToListNode next;
+};
+
+typedef struct {
+    int TableSize;
+    PtrToListNode ListHeads;
+} MyHashMap;
+
+/** Initialize your data structure here. */
+
+MyHashMap* myHashMapCreate() {
+    MyHashMap* myHM = (MyHashMap*)malloc(sizeof(MyHashMap));
+    myHM->TableSize = MaxSize;
+    myHM->ListHeads = (PtrToListNode)malloc(myHM->TableSize * sizeof(struct LNode));
+    for( int i = 0; i < myHM->TableSize; i++) {
+        myHM->ListHeads[i].next = NULL;
+    }
+    return myHM;
+}
+
+/** value will always be non-negative. */
+void myHashMapPut(MyHashMap* obj, int key, int value) {
+    int idx = key % obj->TableSize;
+
+    PtrToListNode prev = obj->ListHeads + idx, nxt = prev->next;
+
+    while(nxt && nxt->key < key) {
+        prev = nxt;
+        nxt = nxt->next;
+    }
+
+    if( !nxt ) {
+        //printf("not found\n");
+        PtrToListNode newNode = (PtrToListNode)malloc(sizeof(struct LNode));
+        newNode->key = key;
+        newNode->val = value;
+        newNode->next = nxt;
+        prev->next = newNode;
+    }
+    else {
+        if(nxt->key == key) {
+            //printf("hello, found you!\n");
+            nxt->val = value;
+        }
+        else if( nxt->key > key) {
+            //printf("not exists!\n");
+            PtrToListNode newNode = (PtrToListNode)malloc(sizeof(struct LNode));
+            newNode->key = key;
+            newNode->val = value;
+            newNode->next = nxt;
+            prev->next = newNode;            
+        }
+    }
+    
+}
+
+/** Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key */
+int myHashMapGet(MyHashMap* obj, int key) {
+    int idx = key % obj->TableSize;
+
+    PtrToListNode prev = obj->ListHeads + idx, curr = prev->next;
+
+    while(curr && curr->key < key) {
+        curr = curr->next;
+    }
+    if( !curr ) return -1;
+    if( curr->key == key ) return curr->val;
+    else return -1;
+    
+    //return 0;
+}
+
+/** Removes the mapping of the specified value key if this map contains a mapping for the key */
+void myHashMapRemove(MyHashMap* obj, int key) {
+    int idx = key % obj->TableSize;
+
+    PtrToListNode prev = obj->ListHeads + idx, curr = prev->next;
+    while(curr && curr->key < key) {
+        prev = curr;
+        curr = curr->next;
+    }
+    if(!curr) return;
+    if( curr->key == key ) {
+        prev->next = curr->next;
+        free(curr);
+        return;
+    }
+    return;
+}
+
+void myHashMapFree(MyHashMap* obj) {
+    int tSize = obj->TableSize;
+    for(int i = 0; i < tSize; i++) {
+        PtrToListNode prev = obj->ListHeads[i].next, temp;
+        while(prev) {
+            temp = prev;
+            prev = prev->next;
+            free(temp);
+        }
+    }
+    free(obj);
+}
+
+/**
+ * Your MyHashMap struct will be instantiated and called as such:
+ * MyHashMap* obj = myHashMapCreate();
+ * myHashMapPut(obj, key, value);
+ 
+ * int param_2 = myHashMapGet(obj, key);
+ 
+ * myHashMapRemove(obj, key);
+ 
+ * myHashMapFree(obj);
+*/
