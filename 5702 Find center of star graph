@@ -1,0 +1,17 @@
+class Solution {
+public:
+    int findCenter(vector<vector<int>>& edges) {
+        unordered_map<int, int> numfreq;
+
+        for(auto e: edges) {
+            numfreq[e[0]]++;
+            numfreq[e[1]]++;
+        }
+
+        int ans;
+        for(auto [num, freq] : numfreq) {
+            if(freq == edges.size()) ans = num;
+        }
+        return ans;
+    }
+};
