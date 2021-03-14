@@ -1,0 +1,56 @@
+class Solution {
+public:
+    double maxAverageRatio(vector<vector<int>>& classes, int extraStudents) {
+        /***
+        priority_queue<tuple<double, int, int>> pq;
+        function<double(int, int)> diff = [](int x, int y) {
+            return ( x + 1) * 1.0 / (y + 1) - x * 1.0 / y;
+        };
+
+        double ans = 0;
+        for(auto c: classes) {
+            int x = c[0], y = c[1];
+            ans += x * 1.0 / y;
+            pq.emplace( diff(x, y), x, y );
+        }
+
+        for( int _ = 0; _ < extraStudents; _++ ) {
+            auto [delta, x, y] = pq.top();
+            pq.pop();
+            ans += delta;
+            pq.emplace( diff( x + 1, y + 1), x + 1, y + 1 );
+        }
+
+        return ans / classes.size();
+        ***/
+
+        priority_queue<pair<double, int>> pq;
+
+        int n = classes.size();
+        vector<int> pass(n), total(n);
+
+        for(int i = 0; i < n; i++) pass[i] = classes[i][0], total[i] = classes[i][1];
+
+        function<double(int)> diff = [&](int idx) ->double {
+            return \
+            ( pass[idx] + 1 ) * 1.0 / ( total[idx] + 1 ) - pass[idx] * 1.0 / total[idx];
+        };
+
+        double ans = 0;
+        for(int i = 0; i < n; i++) {
+            ans += pass[i] * 1.0 / total[i];
+            pq.emplace( diff(i), i );
+        }
+
+        for(int _ = 0; _ < extraStudents; _++) {
+            auto [d, idx] = pq.top();
+            pq.pop();
+            ans += d;
+            pass[idx]++;
+            total[idx]++;
+            pq.emplace( diff(idx), idx);
+        }
+
+        return ans / n;
+    }
+};
