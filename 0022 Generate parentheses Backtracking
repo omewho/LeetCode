@@ -1,0 +1,25 @@
+class Solution {
+public:
+    vector<string> ans;
+    string curr = "";
+    void backtracking(int left, int right, int n) {
+        if(left + right == n * 2) ans.emplace_back(curr);
+
+        if( left < n) {
+            curr += '(';
+            backtracking(left + 1, right, n);
+            curr.pop_back();
+        }
+
+        if( right < left) {
+            curr += ')';
+            backtracking( left, right + 1, n);
+            curr.pop_back();
+        }
+        
+    }
+    vector<string> generateParenthesis(int n) {
+        backtracking(0, 0, n);
+        return ans;
+    }
+};
