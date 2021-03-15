@@ -1,0 +1,24 @@
+class Solution {
+public:
+    vector<vector<int>> ans;
+    vector<int> curr;
+
+    void backtracking(vector<int>& candidates, int target, int start_idx) {
+        if( target == 0 ) ans.emplace_back(curr);
+        if( target < 0 || start_idx == candidates.size() ) return;
+
+        for(int i = start_idx; i < candidates.size() && target - candidates[i] >= 0; i++) {
+            curr.emplace_back(candidates[i]);
+            backtracking(candidates, target - candidates[i], i);
+            curr.pop_back();
+        }
+    }
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+
+        sort(candidates.begin(), candidates.end());
+
+        backtracking(candidates, target, 0);
+
+        return ans;
+    }
+};
