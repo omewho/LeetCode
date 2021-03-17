@@ -1,0 +1,35 @@
+class Solution {
+public:
+    int binaryGap(int n) {
+        vector<int> pos;
+        int i = 0;
+        while(n) {
+            if( (n & 1) == 1 ) pos.emplace_back(i);
+            n = (n >> 1);
+            //printf("n = %d, i = %d\n", n, i);
+            i++;
+        }
+
+        int ans = 0;
+        for(int i = 1; i < pos.size(); i++) ans = max(ans, pos[i] - pos[i - 1]);
+
+        return ans;
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int n = stringToInteger(line);
+        
+        int ret = Solution().binaryGap(n);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
