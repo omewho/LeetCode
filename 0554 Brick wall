@@ -1,0 +1,17 @@
+class Solution {
+public:
+    int leastBricks(vector<vector<int>>& wall) {
+        unordered_map<int, int> sumfreq;
+        int maxfreq = 0;
+        for(auto w: wall) {
+            int sum = 0;
+            for(int i = 0; i < w.size() - 1; i++){
+                sum += w[i];
+                sumfreq[sum]++;
+                maxfreq = max(maxfreq, sumfreq[sum]);
+            } 
+        }
+
+        return wall.size() - maxfreq;
+    }
+};
