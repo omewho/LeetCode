@@ -1,0 +1,53 @@
+typedef pair<int, long long> PILL;
+constexpr int MODULA = 1e9 + 7;
+class Solution {
+public:
+    int getNumberOfBacklogOrders(vector<vector<int>>& orders) {
+        priority_queue<PILL> buystack, sellstack;
+
+        for(auto o: orders) {
+            int type = o[2], price = o[0];
+            long long amount = o[1], low, remain;
+            //printf("type = %d, price = %d, amount = %lld\n", type, price, amount);
+            if(type == 1) { //sell   
+                while( !buystack.empty() && buystack.top().first >= price && amount > 0) {
+                    int buyprice = buystack.top().first;
+                    low = min(amount, buystack.top().second);
+                    amount -= low;
+
+                    remain = buystack.top().second - low;
+                    buystack.pop();
+                    //printf("sell remain = %d\n", remain);
+                    if(remain) buystack.emplace(buyprice, remain);
+                }
+                if( amount ) sellstack.emplace(-price, amount);
+            } 
+            else { //buy
+                while( !sellstack.empty() && -sellstack.top().first <= price && amount > 0 ) {
+                    int sellprice = sellstack.top().first;
+                    //printf("sellprice = %d\n", sellprice);
+                    low = min(amount, sellstack.top().second);
+                    //printf("sellprice = %d, origin = %d, low = %d\n", sellprice, sellstack.top().second, low);
+                    amount -= low;
+
+                    remain = sellstack.top().second - low;
+                    sellstack.pop();
+                    //printf("buy remain = %d\n", remain);
+                    if(remain) sellstack.emplace(sellprice, remain);
+                }
+                if( amount ) buystack.emplace(price, amount);
+            }
+        }
+
+        long long rem = 0;
+        while( !buystack.empty() ) {
+            rem += buystack.top().second;
+            buystack.pop();
+        }
+        while( !sellstack.empty() ) {
+            rem += sellstack.top().second;
+            sellstack.pop();
+        }
+        return rem % MODULA;
+    }
+};
