@@ -1,0 +1,75 @@
+class Solution {
+public:
+    int gcd(int x, int y) {
+        return y == 0 ? x : gcd(y, x % y);
+    }
+
+    int maxScore(vector<int>& nums) {
+        int n = nums.size();
+        int g[n][n];
+        
+        for(int row = 0; row < n; row++) {
+            for(int col = 0; col < n; col++) {
+                g[row][col] = gcd(nums[row], nums[col]);
+            }
+        }
+
+        vector<int> dp(1 << n, 0);
+        for(int state = 0; state < (1 << n); state++) {
+            int chosen_ones = __builtin_popcount(state);
+            if( chosen_ones & 1) continue;
+
+            for(int i = 0; i < n - 1; i++) {
+                for(int j = i + 1; j < n; j++) {
+                    if( (state & ( 1 << i)) || (state & ( 1 << j)) ) continue;
+
+                    int curr = chosen_ones / 2 + 1;
+                    int next_state = state | ( 1 << i ) | ( 1 << j );
+                    dp[next_state] = max(dp[next_state], dp[state] + g[i][j] * curr);
+                }
+            }
+        }
+
+        return dp[(1 << n) - 1];
+    }
+};
+
+void trimLeftTrailingSpaces(string &input) {
+    input.erase(input.begin(), find_if(input.begin(), input.end(), [](int ch) {
+        return !isspace(ch);
+    }));
+}
+
+void trimRightTrailingSpaces(string &input) {
+    input.erase(find_if(input.rbegin(), input.rend(), [](int ch) {
+        return !isspace(ch);
+    }).base(), input.end());
+}
+
+vector<int> stringToIntegerVector(string input) {
+    vector<int> output;
+    trimLeftTrailingSpaces(input);
+    trimRightTrailingSpaces(input);
+    input = input.substr(1, input.length() - 2);
+    stringstream ss;
+    ss.str(input);
+    string item;
+    char delim = ',';
+    while (getline(ss, item, delim)) {
+        output.push_back(stoi(item));
+    }
+    return output;
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        vector<int> nums = stringToIntegerVector(line);
+        
+        int ret = Solution().maxScore(nums);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
