@@ -1,0 +1,7 @@
+# Write your MySQL query statement below
+select distinct Num ConsecutiveNums from (
+select Num, count(1) from
+(select Id, Num, 
+    row_number() over (order by Id) - row_number() over (partition by Num order by Id) as subtract
+from Logs) as sub
+group by Num, subtract having count(1) >= 3) as tbl
