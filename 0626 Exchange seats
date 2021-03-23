@@ -1,0 +1,14 @@
+# Write your MySQL query statement below
+select
+    (case
+    when id % 2 = 1 and total != id then id + 1
+    when id % 2 = 1 and total = id then id
+    
+    else id - 1
+    end) id, 
+    student
+
+from seat,
+    (select count(*) as total
+    from seat) seats_count
+order by id asc
