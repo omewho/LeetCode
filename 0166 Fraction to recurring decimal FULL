@@ -1,0 +1,57 @@
+typedef long long ll;
+class Solution {
+public:
+    string fractionToDecimal(int numerator, int denominator) {
+        if(denominator == 0) return "";
+        if(numerator == 0) return "0";
+
+        string ans;
+        ll dividend = static_cast<ll>(numerator);
+        ll divisor = static_cast<ll>(denominator);
+
+        if((dividend > 0) ^ (divisor > 0)) ans += "-";
+
+        dividend = llabs(dividend);
+        divisor = llabs(divisor);
+        ans += to_string(dividend / divisor);
+
+        dividend %= divisor;
+        if( dividend == 0) return ans;
+
+        ans.push_back('.');
+        int decimal_place = ans.size() - 1;
+
+        unordered_map<int, int> numidx;
+        while(dividend && numidx.count(dividend) == 0) {
+            numidx[dividend] = ++ decimal_place;
+            dividend *= 10;
+            ans += to_string(dividend / divisor);
+            dividend %= divisor;
+        }
+        if(numidx.count(dividend) == 1) {
+            ans.insert(numidx[dividend], "(");
+            ans += ")";
+        }
+
+        return ans;
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int numerator = stringToInteger(line);
+        getline(cin, line);
+        int denominator = stringToInteger(line);
+        
+        string ret = Solution().fractionToDecimal(numerator, denominator);
+
+        string out = (ret);
+        cout << out << endl;
+    }
+    return 0;
+}
