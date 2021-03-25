@@ -1,0 +1,27 @@
+class Solution {
+public:
+    vector<string> findRepeatedDnaSequences(string s) {
+        int n = s.length();
+        bitset< 1 << 20 > once, twice;
+
+        int hashval = 0, mask = (1 << 20) - 1, i;
+        unordered_map<char, int> charhash = {{'A', 0}, {'C', 1}, {'G', 2}, {'T', 3}};
+
+        vector<string> ans;
+        for(i = 0; i < 10; i++) hashval = (hashval << 2) | charhash[s[i]];
+        once.set(hashval);
+
+        for(; i < n; i++) {
+            hashval = ( (hashval << 2) & mask ) | charhash[s[i]];
+            if(twice.test(hashval)) continue;
+
+            if(once.test(hashval)) {
+                ans.emplace_back(s.substr(i - 9, 10));
+                twice.set(hashval);
+            }
+            else once.set(hashval);
+        }
+
+        return ans;
+    }
+};
