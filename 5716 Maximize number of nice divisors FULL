@@ -1,0 +1,40 @@
+typedef long long ll;
+
+class Solution {
+public:
+    const int modula = 1e9 + 7;
+    ll quickPow(int x, int n, int modula) {
+        ll a = (ll)x, ans = (ll)1;
+        while(n) {
+            if(n & 1) ans = ( ans * a ) % modula;
+            a = a * a % modula;
+            n = (n >> 1);
+        }
+        return ans;
+    }
+    int maxNiceDivisors(int primeFactors) {
+        if(primeFactors <= 3) return primeFactors;
+
+        int quotient = primeFactors / 3, remainder = primeFactors % 3;
+        if(remainder == 0) return quickPow(3, quotient, modula);
+        else if(remainder == 1) return quickPow(3, quotient - 1, modula) * 4 % modula;
+        else return quickPow(3, quotient, modula) * 2 % modula;
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int primeFactors = stringToInteger(line);
+        
+        int ret = Solution().maxNiceDivisors(primeFactors);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
