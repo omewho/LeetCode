@@ -1,0 +1,66 @@
+class Solution {
+public:
+    const int moudla = 1e9 + 7;
+    int breakfastNumber(vector<int>& staple, vector<int>& drinks, int x) {
+        sort(staple.begin(), staple.end());
+        sort(drinks.begin(), drinks.end());
+
+        int ans = 0, j = drinks.size() - 1;
+        for(int i = 0; i < staple.size(); i++) {
+            
+            while(j >= 0 && drinks[j] > x - staple[i]) j--;
+            if(j < 0) break;
+            ans += j + 1;
+            ans %= moudla;
+        }
+        return ans;
+    }
+};
+
+void trimLeftTrailingSpaces(string &input) {
+    input.erase(input.begin(), find_if(input.begin(), input.end(), [](int ch) {
+        return !isspace(ch);
+    }));
+}
+
+void trimRightTrailingSpaces(string &input) {
+    input.erase(find_if(input.rbegin(), input.rend(), [](int ch) {
+        return !isspace(ch);
+    }).base(), input.end());
+}
+
+vector<int> stringToIntegerVector(string input) {
+    vector<int> output;
+    trimLeftTrailingSpaces(input);
+    trimRightTrailingSpaces(input);
+    input = input.substr(1, input.length() - 2);
+    stringstream ss;
+    ss.str(input);
+    string item;
+    char delim = ',';
+    while (getline(ss, item, delim)) {
+        output.push_back(stoi(item));
+    }
+    return output;
+}
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        vector<int> staple = stringToIntegerVector(line);
+        getline(cin, line);
+        vector<int> drinks = stringToIntegerVector(line);
+        getline(cin, line);
+        int x = stringToInteger(line);
+        
+        int ret = Solution().breakfastNumber(staple, drinks, x);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
