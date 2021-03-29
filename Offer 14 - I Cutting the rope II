@@ -1,0 +1,47 @@
+typedef long long ll;
+
+class Solution {
+public:
+    ll quickPow(int x, int n, int modula) {
+        ll base = (ll)x;
+        ll ans = 1;
+        while(n) {
+            if(n & 1) {
+                ans *= (ll)base % modula;
+                ans %= modula;
+            }
+            base %= modula;
+            base *= base;
+            n >>= 1;    
+        }
+        return ans;
+    }
+    const int modula = 1e9 + 7;
+
+    int cuttingRope(int n) {
+        if( n <= 3 ) return n - 1;
+
+        int quotient = n / 3, remainder = n % 3;
+
+        if(remainder == 0) return quickPow(3, quotient, modula) % modula;
+        else if( remainder == 1 ) return quickPow(3, quotient - 1, modula) * 4 % modula;
+        else return quickPow(3, quotient, modula) * 2 % modula;
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int n = stringToInteger(line);
+        
+        int ret = Solution().cuttingRope(n);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
