@@ -1,0 +1,41 @@
+class Solution {
+public:
+    int quickPow(int x, int n) {
+        n = abs(n);
+        int ans = 1;
+        while(n) {
+            if( n & 1 ) {
+                ans *= x;
+            } 
+            x *= (long long)x;
+            n >>= 1;
+        }
+
+        return ans;
+    }
+    int cuttingRope(int n) {
+        if(n <= 3) return n - 1;
+
+        int quotient = n / 3, remainder = n % 3;
+        if( !remainder ) return quickPow(3, quotient);
+        else if( remainder == 1 ) return quickPow(3, quotient - 1) * 4;
+        else return quickPow(3, quotient) * 2;
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int n = stringToInteger(line);
+        
+        int ret = Solution().cuttingRope(n);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
