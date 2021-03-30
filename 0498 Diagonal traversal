@@ -1,0 +1,45 @@
+class Solution {
+public:
+    vector<int> findDiagonalOrder(vector<vector<int>>& matrix) {
+        int m = matrix.size();
+        
+        vector<int> ans;
+        if( !m ) return ans;
+        int n = matrix[0].size();
+        if( !n ) return ans;
+        int steps = m + n - 1;
+        
+        bool bottomup = true;
+
+        //printf("m = %d, n = %d\n", m, n);
+        int row, col;
+        for(int i = 0; i < steps; i++) {
+            
+            if(bottomup) {
+                row = (i < m) ? i : m - 1;
+                col = i - row;
+                //printf("i = %d, row = %d, col = %d\n", i, row, col);
+
+                while( row >= 0 && col < n) {
+                    ans.emplace_back(matrix[row][col]);
+                    row--;
+                    col++;
+                }
+            }
+            else {
+                
+                col = ( i < n ) ? i : n - 1;
+                row = i - col;
+                //printf("i = %d, row = %d, col = %d\n", i, row, col);
+                
+                while( row < m && col >= 0 ) {
+                    ans.emplace_back(matrix[row][col]);
+                    row++;
+                    col--;
+                }
+            }
+            bottomup = !bottomup;
+        }
+        return ans;
+    }
+};
