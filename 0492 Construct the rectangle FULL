@@ -1,0 +1,58 @@
+class Solution {
+public:
+    vector<int> constructRectangle(int area) {
+        /***
+        vector<int> ans(2);
+        int root = (int)sqrt(area);
+        if(root * root < area) root++;
+        for(int i = root; i <= area; i++) {
+            //printf("i = %d\n", i);
+            if(area % i == 0) {
+                ans[0] = i;
+                ans[1] = area / i;
+                break;
+            }
+        }
+        return ans;
+        ***/
+
+        int W = (int)sqrt(area);
+        while(area % W != 0) W--;
+        return {area / W, W};       
+
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+string integerVectorToString(vector<int> list, int length = -1) {
+    if (length == -1) {
+        length = list.size();
+    }
+
+    if (length == 0) {
+        return "[]";
+    }
+
+    string result;
+    for(int index = 0; index < length; index++) {
+        int number = list[index];
+        result += to_string(number) + ", ";
+    }
+    return "[" + result.substr(0, result.length() - 2) + "]";
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int area = stringToInteger(line);
+        
+        vector<int> ret = Solution().constructRectangle(area);
+
+        string out = integerVectorToString(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
