@@ -1,0 +1,34 @@
+class Solution {
+public:
+
+    int directions[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
+    bool dfs( vector<vector<char>>& board, string word, vector<vector<bool>>& visited, int row, int col, int idx ) {
+        if( board[row][col] != word[idx] ) return false;
+        if( idx == word.length() - 1) return true;
+
+        int m = board.size(), n = board[0].size();
+        visited[row][col] = true;
+        for(int i = 0; i < 4; i++) {
+            int new_row = row + directions[i][0], new_col = col + directions[i][1];
+            if(new_row >= 0 && new_row < m && new_col >= 0 && new_col < n && !visited[new_row][new_col] ) {
+                if( dfs(board, word, visited, new_row, new_col, idx + 1) ) return true;
+            }
+        }
+        visited[row][col] = false;
+        return false;
+    }
+
+    bool exist(vector<vector<char>>& board, string word) {
+        int m = board.size(), n = board[0].size();
+        vector<vector<bool>> visited(m, vector<bool>(n, false));
+
+        for(int row = 0; row < m; row++) {
+            for(int col = 0; col < n; col++) {
+                if( dfs(board, word, visited, row, col, 0) ) return true;
+            }
+        }
+
+        return false;
+    }
+};
