@@ -1,0 +1,40 @@
+class Solution {
+public:
+    vector<vector<int>> ans;
+    vector<int> curr;
+    void backtracking(int k, int n, int curr_num, int curr_sum) {
+        if( curr_sum > n ) return;
+
+        if( curr.size() == k ) {
+            if(curr_sum == n) ans.emplace_back(curr);
+            return;
+        }
+
+        for(int i = curr_num; i <= 9 - curr_num + curr.size() + 1; i++) {
+            curr_sum += i;
+            curr.emplace_back(i);
+            backtracking(k, n, i + 1, curr_sum);
+            curr_sum -= i;
+            curr.pop_back();
+        }
+    }
+    vector<vector<int>> combinationSum3(int k, int n) {
+        backtracking(k, n, 1, 0);
+        
+        // for(int i = 0; i < ( 1 << 9 ); i++) {
+        //     if(__builtin_popcount(i) == k) {
+        //         int sum = 0;
+        //         curr.clear();
+        //         for(int j = 0; j < 9; j++) {
+        //             if( (1 << j) & i ) {
+        //                 sum += j + 1;
+        //                 curr.emplace_back(j + 1);
+        //             }
+        //         }
+        //         if(sum == n) ans.emplace_back(curr);
+        //     }
+        // }
+
+        return ans;
+    }
+};
