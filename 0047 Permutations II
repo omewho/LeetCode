@@ -1,0 +1,32 @@
+class Solution {
+public:
+    vector<vector<int>> ans;
+    vector<int> curr;
+
+    void backtracking(vector<int>& nums, vector<bool>& visited) {
+        if( curr.size() == nums.size() ) ans.emplace_back(curr);
+
+        for(int i = 0; i < nums.size(); i++) {
+            if( i > 0 && nums[i] == nums[i - 1] && !visited[i - 1]) continue;
+            
+            if( !visited[i] ) {
+                curr.emplace_back(nums[i]);
+                visited[i] = true;
+                backtracking(nums, visited);
+                visited[i] = false;
+                curr.pop_back();
+            }
+        }
+    }
+
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+
+        sort(nums.begin(), nums.end());
+        int n = nums.size();
+        vector<bool> visited(n);
+
+        backtracking(nums, visited);
+
+        return ans;
+    }
+};
