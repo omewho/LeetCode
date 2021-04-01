@@ -1,0 +1,44 @@
+class Solution {
+public:
+
+    vector<vector<int>> ans;
+    vector<int> curr;
+
+    void backtracking1(vector<int>& nums, int curr_idx, int last_num) {
+        if(curr_idx == nums.size()) {
+            if(curr.size() >= 2) {
+                ans.emplace_back(curr);
+            } 
+            return;         
+        }
+
+        if(nums[curr_idx] >= last_num) {
+            curr.emplace_back(nums[curr_idx]);
+            backtracking1(nums, curr_idx + 1, nums[curr_idx]);
+            curr.pop_back();
+        }
+        if(nums[curr_idx] != last_num) backtracking1(nums, curr_idx + 1, last_num);
+    }
+
+    void backtracking(vector<int>& nums, int start_idx) {
+        if(curr.size() > 1) ans.emplace_back(curr);
+
+        int seen[201] = {0};
+        for(int i = start_idx; i < nums.size(); i++) {
+            if(seen[nums[i] + 100] || curr.size() && nums[i] < curr.back()) continue;
+
+            seen[nums[i] + 100] = 1;
+            curr.emplace_back(nums[i]);
+            backtracking(nums, i + 1);
+            curr.pop_back();
+        }
+    }
+
+    vector<vector<int>> findSubsequences(vector<int>& nums) {
+
+        //backtracking1(nums, 0, -101);
+        backtracking(nums, 0);
+
+        return ans;
+    }
+};
