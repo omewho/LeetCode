@@ -1,0 +1,70 @@
+class Solution {
+public:
+    void getNextArr(string s, int* next) {
+        int len = s.length();
+        int idx = -1;
+        next[0] = idx;
+        for(int s_pos = 1; s_pos < len; s_pos++) {
+            while(idx >= 0 && s[s_pos] != s[idx + 1]) idx = next[idx];
+            if(s[s_pos] == s[idx + 1]) idx++;
+            next[s_pos] = idx;
+        }
+    }
+
+    void getNextArr1(string s, int* next) {
+        int len = s.length();
+        int idx = 0;
+        next[0] = idx;
+        for(int s_pos = 1; s_pos < len; s_pos++) {
+            while(idx > 0 && s[s_pos] != s[idx]) idx = next[idx - 1];
+            if(s[s_pos] == s[idx]) idx++;
+            next[s_pos] = idx;
+        }
+    }    
+    string longestPrefix(string s) {
+        int len = s.length();
+        int next[len];
+        getNextArr1(s, next);
+
+        return s.substr(0, next[len - 1]);
+    }
+};
+
+string stringToString(string input) {
+    assert(input.length() >= 2);
+    string result;
+    for (int i = 1; i < input.length() -1; i++) {
+        char currentChar = input[i];
+        if (input[i] == '\\') {
+            char nextChar = input[i+1];
+            switch (nextChar) {
+                case '\"': result.push_back('\"'); break;
+                case '/' : result.push_back('/'); break;
+                case '\\': result.push_back('\\'); break;
+                case 'b' : result.push_back('\b'); break;
+                case 'f' : result.push_back('\f'); break;
+                case 'r' : result.push_back('\r'); break;
+                case 'n' : result.push_back('\n'); break;
+                case 't' : result.push_back('\t'); break;
+                default: break;
+            }
+            i++;
+        } else {
+          result.push_back(currentChar);
+        }
+    }
+    return result;
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        string s = stringToString(line);
+        
+        string ret = Solution().longestPrefix(s);
+
+        string out = (ret);
+        cout << out << endl;
+    }
+    return 0;
+}
