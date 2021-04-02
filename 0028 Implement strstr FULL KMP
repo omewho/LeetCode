@@ -1,0 +1,144 @@
+class Solution {
+public:
+    const int NotFound = -1;
+
+    void getNextArr1(string needle, vector<int>& next){
+        int idx, n_pos;
+        next[0] = -1;
+        for(n_pos = 1; n_pos < needle.size(); n_pos++) {
+            idx = next[n_pos - 1];
+            while(idx >= 0 && needle[idx + 1] != needle[n_pos]) idx = next[idx];
+            if(needle[idx + 1] == needle[n_pos]) next[n_pos] = idx + 1;
+            else next[n_pos] = -1;
+        }
+    }
+
+    int kmp1(string haystack, string needle, vector<int>& next1) {
+        
+        int hsk_len = haystack.length(), ndl_len = needle.length();
+        if(ndl_len == 0) return 0;
+        
+        getNextArr1(needle, next1);
+        if(hsk_len < ndl_len) return NotFound;
+        
+        int h_pos = 0, n_pos = 0;
+        while(h_pos < hsk_len && n_pos < ndl_len) {
+            if(haystack[h_pos] == needle[n_pos]) {
+                h_pos++;
+                n_pos++;
+            }
+            else if(n_pos > 0) n_pos = next1[n_pos - 1] + 1;
+            else h_pos++; // n_pos == 0
+        }
+        return (n_pos == ndl_len) ? h_pos - ndl_len : NotFound;
+    }
+
+    void getNextArr2(string needle, vector<int>& next){
+        int idx = -1;
+        next[0] = idx;
+        
+        for(int n_pos = 1; n_pos < needle.length(); n_pos++) {
+            while(idx >= 0 && needle[n_pos] != needle[idx + 1]) idx = next[idx];
+            if(needle[n_pos] == needle[idx + 1]) idx++;
+            next[n_pos] = idx;
+        }
+    }    
+
+    int kmp2(string haystack, string needle, vector<int>& next2) {
+        
+        int hsk_len = haystack.length(), ndl_len = needle.length();
+        if(ndl_len == 0) return 0;
+        getNextArr2(needle, next2);
+        
+        // for(int n: next2) printf(" %d ", n);
+        // printf("\n");
+        int n_pos = -1;
+        for(int h_pos = 0; h_pos < hsk_len; h_pos++) {
+            while(n_pos >= 0 && haystack[h_pos] != needle[n_pos + 1]) n_pos = next2[n_pos]; 
+            if(haystack[h_pos] == needle[n_pos + 1]) n_pos++;
+
+            if(n_pos == ndl_len - 1) return h_pos - ndl_len + 1;
+        }
+
+        return NotFound;
+    }
+
+    void getNextArr3(string needle, vector<int>& next){
+        int idx = 0;
+        next[0] = idx;
+        
+        for(int n_pos = 1; n_pos < needle.length(); n_pos++) {
+            while(idx > 0 && needle[n_pos] != needle[idx]) idx = next[idx - 1];
+            if(needle[n_pos] == needle[idx]) idx++;
+            next[n_pos] = idx;
+        }
+    } 
+
+    int kmp3(string haystack, string needle, vector<int>& next3) {
+        int ndl_len = needle.length();
+        if(!ndl_len) return 0;
+
+        int hsk_len = haystack.length();
+        getNextArr3(needle, next3);
+
+        int n_pos = 0;
+        for(int h_pos = 0; h_pos < hsk_len; h_pos++) {
+            while(n_pos > 0 && haystack[h_pos] != needle[n_pos]) n_pos = next3[n_pos - 1];
+            if(haystack[h_pos] == needle[n_pos]) n_pos++;
+            if(n_pos == ndl_len) return h_pos - ndl_len + 1;
+        }
+        return NotFound;
+    }
+
+    int strStr(string haystack, string needle) {
+        int ndl_len = needle.length();
+        vector<int> next1(ndl_len), next2(ndl_len), next3(ndl_len);
+
+        int ans1 = kmp1(haystack, needle, next1);
+        int ans2 = kmp2(haystack, needle, next2);
+        int ans3 = kmp3(haystack, needle, next3);
+
+        return ans3;
+    }
+};
+
+string stringToString(string input) {
+    assert(input.length() >= 2);
+    string result;
+    for (int i = 1; i < input.length() -1; i++) {
+        char currentChar = input[i];
+        if (input[i] == '\\') {
+            char nextChar = input[i+1];
+            switch (nextChar) {
+                case '\"': result.push_back('\"'); break;
+                case '/' : result.push_back('/'); break;
+                case '\\': result.push_back('\\'); break;
+                case 'b' : result.push_back('\b'); break;
+                case 'f' : result.push_back('\f'); break;
+                case 'r' : result.push_back('\r'); break;
+                case 'n' : result.push_back('\n'); break;
+                case 't' : result.push_back('\t'); break;
+                default: break;
+            }
+            i++;
+        } else {
+          result.push_back(currentChar);
+        }
+    }
+    return result;
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        string haystack = stringToString(line);
+        getline(cin, line);
+        string needle = stringToString(line);
+        
+        int ret = Solution().strStr(haystack, needle);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
