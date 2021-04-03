@@ -4,10 +4,7 @@ public:
         unordered_map<int, int> numfreq;
         
         int ans = 0;
-        for(int n: answers) {
-            if(n) numfreq[n]++;
-            else ans++;
-        }
+        for(int n: answers) numfreq[n]++;
         
         for(auto [k, v] : numfreq) ans += ((v - 1) / (k + 1) + 1) * (k + 1); 
         return ans;
