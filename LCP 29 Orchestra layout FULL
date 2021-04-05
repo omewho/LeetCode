@@ -1,0 +1,51 @@
+class Solution {
+public:
+    typedef long long ll;
+    int orchestraLayout(int num, int xPos, int yPos) {
+        int nthlayer = min(xPos, num - xPos - 1);
+        nthlayer = min(nthlayer, min(yPos, num - 1 - yPos)); 
+        /***
+        number of elements of the nth layer: 4 * (num - 1 - 2 * i)
+        so the number of all the elements before nth layer is 
+        4 * ( num - 1 - 2 * 0 + num - 1 - 2 * 1 + num - 1 - 2 * 2 + ... + num - 1 - 2 * (nthlayer - 1)) = 4 * ( nthlayer * ( num - 1) - nthlayer * (nthlayer - 1));
+
+
+        ***/
+        ll layer = (ll)nthlayer;
+        ll ans = 4 * ( layer  * (num - 1) - layer * (layer - 1)) % 9;
+
+        if(xPos == nthlayer) \
+        ans = ( ans + yPos - nthlayer )% 9;
+
+        else if(nthlayer == num - 1 - yPos) \
+        ans = ( ans + num - 2 * nthlayer + xPos - nthlayer - 1) % 9;
+
+        else if(nthlayer == num - 1 - xPos) \
+        ans = (ans + 2 * (num - 2 * nthlayer) - 1 + num - 2 - nthlayer - yPos) % 9;
+
+        else ans = (ans + 3 * num - 6 * nthlayer - 2 + num - xPos - 2 - nthlayer) % 9;
+
+        return ans + 1;
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int num = stringToInteger(line);
+        getline(cin, line);
+        int xPos = stringToInteger(line);
+        getline(cin, line);
+        int yPos = stringToInteger(line);
+        
+        int ret = Solution().orchestraLayout(num, xPos, yPos);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
