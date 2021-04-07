@@ -1,0 +1,25 @@
+class StockSpanner {
+public:
+    stack<pair<int, int> > monostack;
+    StockSpanner() {
+
+    }
+    
+    int next(int price) {
+        pair<int, int> pricedays(price, 1);
+        
+        while( !monostack.empty() && price >= monostack.top().first) {
+            pair<int, int> curr = monostack.top();
+            pricedays.second += curr.second;
+            monostack.pop();
+        }
+        monostack.emplace(pricedays);
+        return pricedays.second;
+    }
+};
+
+/**
+ * Your StockSpanner object will be instantiated and called as such:
+ * StockSpanner* obj = new StockSpanner();
+ * int param_1 = obj->next(price);
+ */
