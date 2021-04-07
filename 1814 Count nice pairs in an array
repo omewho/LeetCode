@@ -1,0 +1,27 @@
+class Solution {
+public:
+    typedef long long ll;
+    const int modula = 1e9 + 7;
+    //int rev(int num) 
+    int countNicePairs(vector<int>& nums) {
+        int n = nums.size();
+
+        function<int(int)> getrev = [=](int num) {
+            int ans = 0;
+            while(num) {
+                ans = ans * 10 + num % 10;
+                num /= 10;
+            }
+            return ans;
+        };
+        function<int(int)> getsub = [=](int num) {
+            return num - getrev(num);
+        };
+        unordered_map<int, int> subfreq;
+        for(int n : nums) subfreq[getsub(n)]++;
+
+        long long ans = 0;
+        for(auto [_, v] : subfreq) ans = ans % modula + (ll)(v - 1) * v / 2 % modula;
+        return ans % modula;
+    }
+};
