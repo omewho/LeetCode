@@ -1,0 +1,25 @@
+class Solution {
+public:
+    bool areSentencesSimilar(string sentence1, string sentence2) {
+        int len1 = sentence1.length(), len2 = sentence2.length();
+        if(len1 < len2) return areSentencesSimilar(sentence2, sentence1);
+
+        vector<string> strvec1, strvec2;
+        stringstream ss1(sentence1), ss2(sentence2);
+        string word;
+        while(ss1 >> word) strvec1.emplace_back(word);
+        while(ss2 >> word) strvec2.emplace_back(word);
+
+        int size1 = strvec1.size(), size2 = strvec2.size();
+        int head = 0, tail = size2 - 1;
+        while(head < size2 && strvec1[head] == strvec2[head]) head++;
+
+        if(head == size2) return true;
+
+        while(tail >= head && strvec1[size1 - (size2 - tail)] == strvec2[tail]) tail--;
+
+        if(tail == head - 1) return true;
+
+        return false; 
+    }
+};
