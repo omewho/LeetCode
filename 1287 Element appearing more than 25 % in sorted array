@@ -1,0 +1,30 @@
+class Solution {
+public:
+    int findSpecialInteger(vector<int>& arr) {
+        int n = arr.size(), curr = arr[0], ans;
+
+        // unordered_map<int, int> numfreq;
+        // for(int num: arr) {
+        //     numfreq[num]++;
+        //     if(numfreq[num] > n / 4) ans = num;
+        // }
+        // return ans;
+        int times = 0;
+        for(int num: arr) {
+            if(num == curr) {
+                times++;
+                //printf("curr = %d, time = %d\n", curr, times);
+                if(times * 4 > n) {
+                    ans = curr;
+                    break;
+                }    
+            }
+            else {
+                curr = num;
+                times = 1;
+            }    
+        }
+
+        return ans;
+    }
+};
