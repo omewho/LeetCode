@@ -1,0 +1,51 @@
+class Solution {
+public:
+    int divide(int dividend, int divisor) {
+        int ans = 0, sign = 1;
+        if( (dividend ^ divisor) < 0 ) sign = -sign;
+
+        if(divisor == INT_MIN) {
+            if(dividend == INT_MIN) return 1;
+            else return 0; 
+        } 
+        
+        if(dividend == INT_MIN) {
+            if(divisor == -1) return INT_MAX;
+            else if(divisor == 1) return INT_MIN;
+
+            dividend += abs(divisor);
+            ans++;
+        }
+
+        int dividend_abs = abs(dividend), divisor_abs = abs(divisor);
+        while(dividend_abs >= divisor_abs) {
+            int curr = 1, sum = divisor_abs;
+            while( sum < (dividend_abs >> 1) ) {
+                sum += sum;
+                curr += curr;
+            }
+            ans += curr;
+            dividend_abs -= sum;
+        }
+        return sign == 1 ? ans : -ans;
+    }
+};
+
+int stringToInteger(string input) {
+    return stoi(input);
+}
+
+int main() {
+    string line;
+    while (getline(cin, line)) {
+        int dividend = stringToInteger(line);
+        getline(cin, line);
+        int divisor = stringToInteger(line);
+        
+        int ret = Solution().divide(dividend, divisor);
+
+        string out = to_string(ret);
+        cout << out << endl;
+    }
+    return 0;
+}
