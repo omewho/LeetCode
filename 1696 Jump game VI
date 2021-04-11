@@ -1,0 +1,18 @@
+class Solution {
+public:
+    typedef pair<int, int> PII;
+    int maxResult(vector<int>& nums, int k) {
+        deque<PII> dq;
+        dq.emplace_back(nums[0], 0);
+        int ans = nums[0];
+
+        for(int i = 1; i < nums.size(); i++) {
+            while(i - dq.front().second > k) dq.pop_front();
+            ans = dq.front().first + nums[i];
+            //printf("i = %d, ans = %d\n", i, ans);
+            while(!dq.empty() && dq.back().first <= ans) dq.pop_back();
+            dq.emplace_back(ans, i);
+        }
+        return ans;
+    }
+};
