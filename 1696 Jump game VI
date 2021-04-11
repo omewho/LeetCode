@@ -1,7 +1,8 @@
 class Solution {
 public:
     typedef pair<int, int> PII;
-    int maxResult(vector<int>& nums, int k) {
+
+    int monoQueue(vector<int>& nums, int k) {
         deque<PII> dq;
         dq.emplace_back(nums[0], 0);
         int ans = nums[0];
@@ -13,6 +14,25 @@ public:
             while(!dq.empty() && dq.back().first <= ans) dq.pop_back();
             dq.emplace_back(ans, i);
         }
+        return ans;        
+    }
+
+    int priorityQ(vector<int>& nums, int k) {
+        priority_queue<PII> pq;
+        pq.emplace(nums[0], 0);
+
+        int ans = nums[0];
+        for(int i = 1; i < nums.size(); i++) {
+            while(i - pq.top().second > k) pq.pop();
+            ans = pq.top().first + nums[i];
+            pq.emplace(ans, i);
+        }
         return ans;
+    }
+
+    int maxResult(vector<int>& nums, int k) {
+
+        //return monoQueue(nums, k);
+        return priorityQ(nums, k);
     }
 };
