@@ -1,0 +1,41 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* prev = nullptr;
+    int ans = 0x3f3f3f3f;
+
+    void iterate(TreeNode* root) {
+        TreeNode* curr = root;
+        stack<TreeNode*> stk;
+
+        while(curr || !stk.empty()) {
+            while(curr) {
+                stk.emplace(curr);
+                curr = curr->left;
+            }
+            //if(!stk.empty()) 
+            curr = stk.top();
+            stk.pop();
+
+            if(prev) ans = min(ans, curr->val - prev->val);
+            prev = curr;
+
+            curr = curr->right;
+        }
+    }
+
+    int minDiffInBST(TreeNode* root) {
+        iterate(root);
+        return ans;
+    }
+};
