@@ -1,0 +1,24 @@
+class Solution {
+public:
+    int beautySum(string s) {
+        int n = s.length(), ans = 0;
+        for(int start = 0; start < n; start++) {
+            unordered_map<char, int> charfreq;
+            for(int end = start; end < n; end++) {
+                charfreq[s[end]]++;
+                //printf("size = %d\n", charfreq.size());
+                if(charfreq.size() < 1) continue;
+
+                int _min = INT_MAX >> 1, _max = -1;
+
+                for(auto [_, freq] : charfreq) {
+                    _min = min(_min, freq);
+                    _max = max(_max, freq);
+                }
+                ans += _max - _min;
+            }
+        }
+
+        return ans;
+    }
+};
