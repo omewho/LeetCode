@@ -1,0 +1,17 @@
+class WordsFrequency {
+public:
+    unordered_map<string, int> wordfreq;
+    WordsFrequency(vector<string>& book) {
+        for(string word: book) wordfreq[word]++;
+    }
+    
+    int get(string word) {
+        return wordfreq[word];
+    }
+};
+
+/**
+ * Your WordsFrequency object will be instantiated and called as such:
+ * WordsFrequency* obj = new WordsFrequency(book);
+ * int param_1 = obj->get(word);
+ */
