@@ -1,0 +1,23 @@
+class Cashier {
+private:
+    int _n, _discount, customer_id;
+    unordered_map<int, int> price;
+public:
+    Cashier(int n, int discount, vector<int>& products, vector<int>& prices): _n(n), _discount(discount), customer_id(0) {
+        for(int i = 0; i < products.size(); i++) price[products[i]] = prices[i]; 
+    }
+    
+    double getBill(vector<int> product, vector<int> amount) {
+        customer_id++;
+        double payment = 0;
+        for(int i = 0; i < product.size(); i++) payment += price[product[i]] * amount[i];
+        if( customer_id % _n == 0 ) payment -= payment * _discount * 1.0/ 100;
+        return payment;
+    }
+};
+
+/**
+ * Your Cashier object will be instantiated and called as such:
+ * Cashier* obj = new Cashier(n, discount, products, prices);
+ * double param_1 = obj->getBill(product,amount);
+ */
