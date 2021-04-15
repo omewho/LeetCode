@@ -1,0 +1,84 @@
+class Solution {
+public:
+    string reconstructString(string s) {
+        string ans = "^";
+        for(char ch: s) {
+            ans += '#';
+            ans += ch;
+        }
+        ans += "#$";
+        return ans;
+    }
+    
+    string manacher(string s) {
+
+        string str = reconstructString(s);
+        int n = str.length();
+
+        int center = 0, rightmost = 0, maxlen = -1, start = -1, palin[n];
+
+        for(int i = 1; i < n - 1; i++) {
+            int idx_mirror = 2 * center - i;
+            if(rightmost > i) palin[i] = min(rightmost - i, palin[idx_mirror]);
+            else palin[i] = 0;
+
+            while( str[i + 1 + palin[i]] == str[i - 1 - palin[i]] ) palin[i]++;
+            if(palin[i] > maxlen) {
+                maxlen = palin[i];
+                start = (i - palin[i]) / 2;
+            }
+        }
+        for(int i = 1; i < n - 1; i++) printf("%d ", palin[i]);
+
+        return s.substr(start, maxlen);
+    }
+
+    string dynamicprogramming(string s) {
+        int n = s.length();
+        vector<vector<bool>> dp(n, vector<bool>(n, false));
+
+        string ans;
+        int maxlen = -1, start;
+        for(int col = 0; col < n; col++) {
+            for(int row = 0; row <= col; row++) {
+                dp[row][col] = (s[row] == s[col] && (col - row < 3 || dp[row + 1][col - 1]));
+                if(dp[row][col] && col - row + 1 > maxlen) {
+                    start = row;
+                    maxlen = col - row + 1;
+                }
+            }
+        }
+        return s.substr(start, maxlen);
+    }
+
+    string expandaroundcenter(string s) {
+        int n = s.length();
+        if(n < 2) return s;
+
+        int maxlen = 0, start = 0;
+        for(int i = 0; i < n; ) {
+            if(n - i < maxlen / 2) break;
+            int left = i, right = i;
+            while(right < n - 1 && s[right + 1] == s[right]) right++;
+
+            i = right + 1;
+            while(right < n - 1 && left > 0 && s[right + 1] == s[left - 1]) {
+                right++;
+                left--;
+            }
+            
+            if(maxlen < right - left + 1) {
+                maxlen = right - left + 1;
+                start = left; 
+            }
+        }
+        return s.substr(start, maxlen);
+    }
+
+    string longestPalindrome(string s) {
+
+        //return manacher(s);
+        //return dynamicprogramming(s);
+        return expandaroundcenter(s);
+    }
+};
