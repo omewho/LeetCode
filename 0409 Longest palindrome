@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int longestPalindrome(string s) {
+        unordered_map<char, int> charfreq;
+        for(char ch: s) charfreq[ch]++;
+
+        int ans = 0, odd = 0;
+        for(auto [_, freq]: charfreq) {
+            if(freq & 1) {
+                ans += freq - 1;
+                if(!odd) odd = 1;
+            }
+            else ans += freq;
+        }
+        ans += odd;
+
+        return ans;
+    }
+};
