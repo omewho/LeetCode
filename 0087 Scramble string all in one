@@ -1,0 +1,112 @@
+class Solution {
+public:
+
+    bool isSimilar(string s1, string s2) {
+        if(s1 == s2) return true;
+
+        unordered_map<char, int> charfreq;
+        for(char ch: s1) charfreq[ch]++;
+        for(char ch: s2) charfreq[ch]--;
+
+        for(auto [_, freq]: charfreq) {
+            if(freq) return false;
+        }
+        return true;
+    }
+
+    bool recursive(string s1, string s2) {
+
+        if(s1 == s2) return true;
+
+        if(!isSimilar(s1, s2)) return false;
+
+        int n = s1.length();
+
+        for(int i = 1; i < n; i++) {
+            string s10i = s1.substr(0, i), s1in = s1.substr(i);
+
+            string s20i = s2.substr(0, i), s2in = s2.substr(i);
+            string s2nin = s2.substr(0, n - i), s2nii = s2.substr(n - i);
+
+            if( (isScramble(s10i, s20i) && isScramble(s1in, s2in)) || (isScramble(s10i, s2nii) && isScramble(s1in, s2nin)) ) return true;
+        }
+
+        return false;
+    }
+
+
+
+
+    int memo[30][30][31];
+    
+    bool dfs(int idx1, int idx2, int len, string s1, string s2) {
+        if(memo[idx1][idx2][len]) return memo[idx1][idx2][len] == 1;
+
+        string str1 = s1.substr(idx1, len), str2 = s2.substr(idx2, len);
+        if(str1 == str2) {
+            memo[idx1][idx2][len] = 1;
+            return true;
+        }
+
+        unordered_map<char, int> charfreq;
+        for(char ch: str1) charfreq[ch]++;
+        for(char ch: str2) charfreq[ch]--;
+
+        for(auto [_, freq]: charfreq) {
+            if(freq) {
+                memo[idx1][idx2][len] = -1;
+                return false;
+            }
+        }
+
+        for(int i = 1; i < len; i++) {
+            bool case1 = dfs(idx1, idx2, i, s1, s2) && dfs(idx1 + i, idx2 + i, len - i, s1, s2);
+            bool case2 = dfs(idx1, idx2 + len - i, i, s1, s2) && dfs(idx1 + i, idx2, len - i, s1, s2);
+            if(case1 || case2) {
+                memo[idx1][idx2][len] = 1;
+                return true;
+            }
+        }
+
+        memo[idx1][idx2][len] = -1;
+        return false;
+    }
+
+    bool memorization(string s1, string s2) {
+        memset(memo, 0, sizeof(memo));
+        int n = s1.length();
+        return dfs(0, 0, n, s1, s2);
+    }
+
+    bool dynamic(string s1, string s2) {
+        if(s1 == s2) return true;
+
+        int n = s1.length();
+        vector<vector<vector<int>>> dp(n, vector<vector<int>>(n, vector<int>(n + 1, 0)));
+
+        for(int len = 1; len < n + 1; len++) {
+            for(int i = 0; i + len < n + 1; i++) {
+                for(int j = 0; j + len < n + 1; j++) {
+                    if(len == 1) {
+                        if(s1[i] == s2[j]) dp[i][j][len] = 1;
+                        continue;
+                    }
+                    for(int k = 1; k < len; k++) {
+                        bool case1 = dp[i][j][k] && dp[i + k][j + k][len - k];
+                        bool case2 = dp[i][j + len - k][k] && dp[i + k][j][len - k];
+                        if( case1 || case2 ) dp[i][j][len] = 1;
+                    }
+                }
+            }
+        }
+        return dp[0][0][n];
+    }
+
+    bool isScramble(string s1, string s2) {
+
+        //return recursive(s1, s2);
+
+        //return memorization(s1, s2);
+        return dynamic(s1, s2);
+    }
+};
