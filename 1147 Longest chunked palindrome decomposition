@@ -1,0 +1,35 @@
+class Solution {
+public:
+
+    int iterate(string text) {
+        int ans = 0, n = text.length(), prev = 0;
+
+        for(int curr = 0; curr < n / 2; curr++) {
+            string front = text.substr(prev, curr - prev + 1);
+            string tail = text.substr(n - 1 - curr, curr - prev + 1);
+            if(front == tail) {
+                //printf("front: %s, tail: %s\n", front.c_str(), tail.c_str());
+                ans += 2;
+                prev = curr + 1;
+            }
+        }
+        if(n % 2 || prev < n / 2) ans++;
+        return ans; 
+    }
+
+    int recursive(string text, int left, int right) {
+        int n = right - left + 1;
+        if(!n) return 0;
+
+        for(int i = 1; i < n / 2 + 1; i++) {
+            if(text.substr(left, i) == text.substr(right - i + 1, i)) return 2 + recursive(text, left + i, right - i);
+        }
+        
+        return 1;
+    }
+
+    int longestDecomposition(string text) {
+        //return iterate(text);
+        return recursive(text, 0, text.length() - 1);
+    }
+};
