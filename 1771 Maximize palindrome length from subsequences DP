@@ -1,0 +1,26 @@
+class Solution {
+public:
+    int dynamic(string w1, string w2) {
+        string str = w1 + w2;
+        int m = w1.length(), n = w2.length(), len = m + n;
+
+        vector<vector<int>> dp(len, vector<int>(len, 0)); 
+        int ans = 0;
+        for(int row = len - 1; row >= 0; row--) {
+            dp[row][row] = 1;
+            for(int col = row + 1; col < len; col++) {
+                if(str[row] == str[col]) {
+                    dp[row][col] = dp[row + 1][col - 1] + 2;
+                    if(row < m && col >= m) ans = max(ans, dp[row][col]);
+                }
+                else dp[row][col] = max(dp[row + 1][col], dp[row][col - 1]);
+            }
+        }
+
+        return ans;
+    }
+    int longestPalindrome(string word1, string word2) {
+
+        return dynamic(word1, word2);
+    }
+};
