@@ -1,0 +1,21 @@
+class Solution {
+public:
+    vector<vector<int>> shiftGrid(vector<vector<int>>& grid, int k) {
+        int m = grid.size(), n = grid[0].size();
+        k %= (m * n);
+        if(!k) return grid;
+
+        vector<int> flattened(m * n);
+        for(int row = 0; row < m; row++) {
+            for(int col = 0; col < n; col++) {
+                int idx = ( row * n + col + k) % (m * n);
+                flattened[idx] = grid[row][col];
+            }
+        }
+
+        //for(int f: flattened) printf(" %d ", f);
+        for(int idx = 0; idx < m * n; idx++) grid[idx / n][idx % n] = flattened[idx];
+
+        return grid;
+    }
+};
