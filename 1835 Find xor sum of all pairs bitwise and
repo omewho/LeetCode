@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int func1(vector<int>& arr1, vector<int>& arr2) {
+        int sum1 = 0, sum2 = 0;
+        for(int a: arr1) sum1 ^= a;
+        for(int a: arr2) sum2 ^= a;
+        return sum1 & sum2;        
+    }
+
+    int stl(vector<int>& arr1, vector<int>& arr2) {
+        int sum1 = accumulate(arr1.begin(), arr1.end(), 0, bit_xor<int>());
+        int sum2 = accumulate(arr2.begin(), arr2.end(), 0, bit_xor<int>());
+
+        return sum1 & sum2;
+    }
+
+    int getXORSum(vector<int>& arr1, vector<int>& arr2) {
+        //return func1(arr1, arr2);
+
+        return stl(arr1, arr2);
+    }
+};
