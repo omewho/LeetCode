@@ -1,0 +1,91 @@
+class Solution {
+public:
+    int dynamic(string s){
+        int n = s.length();
+
+        string str = '3' + s;
+        vector<int> dp(n + 1, 0);
+        dp[0] = 1;
+        
+        for(int i = 1; i < n + 1; i++) {
+            int num1 = str[i] - '0', num2 = (str[i - 1] - '0') * 10 + str[i] - '0';
+
+            if(num1 >= 1 && num1 <= 9) dp[i] = dp[i - 1];
+
+            if(num2 >= 10 && num2 <= 26) dp[i] += dp[i - 2];
+        }
+
+        return dp[n];
+    }
+
+    int dynamic1(string s) {
+
+        if(s[0] == '0') return 0;
+        int n = s.length();
+        int prev = 1, curr = 1, temp;
+
+        for(int i = 1; i < n; i++) {
+            temp = curr;
+            if(s[i] == '0') {
+                if(s[i - 1] == '1' || s[i - 1] == '2') curr = prev;
+                else return 0;
+            }
+
+            else if(s[i - 1] == '1' || ( s[i - 1] == '2' && s[i] > '0' && s[i] < '7')) curr += prev;
+            prev = temp;
+        }
+        
+        return curr;
+    }
+
+    int recursive(string s, int idx) {
+
+        if(idx >= s.length()) return 1;
+
+        if(s[idx] == '0') return 0;
+
+        int ret = recursive(s, idx + 1);
+
+        if(idx < s.length() - 1 ) {
+            int num = (s[idx] - '0') * 10 + (s[idx + 1] - '0');
+            if(num >= 1 && num <= 26) ret += recursive(s, idx + 2);
+        }
+
+        return ret;
+    }
+
+    vector<int> memo;
+
+    int memorecursive(string s, int idx) {
+        if(memo[idx] != -1) return memo[idx];
+
+        if(idx >= s.length()) {
+            memo[idx] = 1;
+            return 1;
+        }
+
+        if(s[idx] == '0') {
+            memo[idx] = 0;
+            return 0;
+        }
+
+        int ret = memorecursive(s, idx + 1);
+
+        if(idx < s.length() - 1 ) {
+            int num = (s[idx] - '0') * 10 + (s[idx + 1] - '0');
+            if(num >= 1 && num <= 26) ret += memorecursive(s, idx + 2);
+        }
+
+        memo[idx] = ret;
+        return ret;
+    }
+
+    int numDecodings(string s) {
+        //return dynamic(s);
+
+        memo.resize(s.length() + 1, -1);
+        return memorecursive(s, 0);
+
+        //return dynamic1(s);
+    }
+};
