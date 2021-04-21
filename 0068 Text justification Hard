@@ -1,0 +1,42 @@
+class Solution {
+public:
+    string getALine(vector<string>& words, int start_idx, int end_idx, int maxWidth, int occupied, bool isLastLine) {
+        string ret = "";
+        int word_ttl = end_idx - start_idx + 1;
+        int space_leftover = maxWidth + 1 - occupied;
+
+        int space_suffix = 1;
+        int space_avg = (word_ttl == 1 ? 1 : space_leftover / (word_ttl - 1));
+        int space_extra = (word_ttl == 1 ? 0 : space_leftover % (word_ttl - 1));
+
+        for(int i = start_idx; i < end_idx; i++) {
+            ret += words[i];
+            if(!isLastLine) fill_n(back_inserter(ret), space_suffix + space_avg + ( (i - start_idx) < space_extra), ' ');
+            else fill_n(back_inserter(ret), 1, ' ');
+        }
+        ret += words[end_idx];
+        fill_n(back_inserter(ret), maxWidth - ret.length(), ' ');
+
+        return ret;
+    }
+
+    vector<string> fullJustify(vector<string>& words, int maxWidth) {
+        int n = words.size(), start_idx = 0, occupied = 0;
+        
+        vector<string> ans;
+        for(int i = 0; i < n; i++) {
+            occupied += words[i].length() + 1;
+            if( i + 1 == n || occupied + words[i + 1].length() + 1 > maxWidth + 1 ) {
+                string line = getALine(words, start_idx, i, maxWidth, occupied, i + 1 == n);
+                //printf("line = %s\n", line.c_str());
+                ans.emplace_back(line);
+
+                if(i == n - 1) break;
+                start_idx = i + 1;
+                occupied = 0;
+            }
+        }
+
+        return ans;
+    }
+};
