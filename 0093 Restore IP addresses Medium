@@ -1,0 +1,46 @@
+class Solution {
+private:
+    static constexpr int seg_ttl = 4;
+public:
+    vector<string> ans;
+    vector<int> segments = vector<int>(seg_ttl);
+    //vector<string> segstr;
+
+    void dfs1(string s, int seg_idx, int seg_start) {
+        if(seg_idx == seg_ttl) {
+            if(seg_start == s.length()) {
+                string ipAddr = "";
+                for(int i = 0; i < seg_ttl; i++) {
+                    ipAddr += to_string(segments[i]);
+                    if(i != seg_ttl - 1) ipAddr += '.';
+                }
+                ans.emplace_back(move(ipAddr));
+            }
+            return; 
+        }
+
+        if(seg_start == s.length()) return;
+
+        if(s[seg_start] == '0') {
+            segments[seg_idx] = 0;
+            dfs1(s, seg_idx + 1, seg_start + 1);
+        }
+
+        int addr = 0;
+        for(int curr = seg_start; curr < s.length(); curr++) {
+            addr = addr * 10 + (s[curr] - '0');
+            if(addr > 0 && addr < 0xFF + 1) {
+                segments[seg_idx] = addr;
+                dfs1(s, seg_idx + 1, curr + 1);
+            }
+            else break;
+        }
+    }
+
+    vector<string> restoreIpAddresses(string s) {
+
+        dfs1(s, 0, 0);
+
+        return ans;
+    }
+};
