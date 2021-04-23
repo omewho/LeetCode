@@ -1,0 +1,20 @@
+class Solution {
+public:
+
+    int dynamic(vector<int>& nums, int target) {
+        vector<int> dp(target + 1, 0);
+        dp[0] = 1;
+
+        for(int t = 1; t < target + 1; t++) {
+            for(int curr: nums) {
+                if(curr <= t && dp[t] < INT_MAX - dp[t - curr]) \
+                dp[t] += dp[t - curr];
+            }
+        }
+        return dp[target];        
+    }
+    int combinationSum4(vector<int>& nums, int target) {
+
+        return dynamic(nums, target);
+    }
+};
