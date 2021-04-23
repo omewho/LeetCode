@@ -1,0 +1,33 @@
+class Solution {
+public:
+    typedef long long ll;
+    const int mod = 1e9 + 7;
+    int minAbsoluteSumDiff(vector<int>& nums1, vector<int>& nums2) {
+        set<ll> nst;
+
+        int n = nums1.size();
+        ll absdiff = 0; 
+        for(int i = 0; i < n; i++) {
+            nst.insert(nums1[i]);
+            absdiff += abs(nums1[i] - nums2[i]);
+        }
+
+        int prev, curr, maxdiff = -1;
+        for(int i = 0; i < n; i++) {
+            prev = abs(nums1[i] - nums2[i]);
+
+            auto iter = nst.lower_bound(nums2[i]);
+            if(iter != nst.end()) {
+                curr = abs(*iter - nums2[i]);
+                maxdiff = max(maxdiff, prev - curr);
+            }
+            if(iter != nst.begin()) {
+                iter--;
+                curr = abs(*iter - nums2[i]);
+                maxdiff = max(maxdiff, prev - curr);
+            }
+        }
+
+        return (absdiff - maxdiff) % mod;
+    }
+};
