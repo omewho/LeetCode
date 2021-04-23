@@ -1,0 +1,19 @@
+class Solution {
+public:
+    bool isInterleave(string s1, string s2, string s3) {
+        int len1 = s1.length(), len2 = s2.length(), len3 = s3.length();
+
+        if(len1 + len2 != len3) return false;
+        vector<vector<int>> dp(len1 + 1, vector<int> (len2 + 1, 0));
+        dp[0][0] = 1;
+
+        for(int row = 0; row < len1 + 1; row++) {
+            for(int col = 0; col < len2 + 1; col++) {
+                if(row > 0) dp[row][col] |= (s1[row - 1] == s3[row + col - 1] && dp[row - 1][col]);
+                if(col > 0) dp[row][col] |= (s2[col - 1] == s3[row + col - 1] && dp[row][col - 1]);
+            }
+        }
+
+        return dp[len1][len2];
+    }
+};
