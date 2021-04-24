@@ -1,0 +1,41 @@
+class Solution {
+public:
+    int dynamic(vector<int>& coins, int amount) {
+        vector<int> dp(amount + 1, amount + 1);
+        dp[0] = 0;
+
+        for(int target = 1; target < amount + 1; target++) {
+            for(int c: coins) {
+                if(target >= c) dp[target] = min(dp[target], dp[target - c] + 1);
+            }
+        }
+
+        return dp[amount] > amount? -1 : dp[amount];
+    }
+
+    vector<int> memo;
+    int memorization(vector<int>& coins, int amount) {
+
+        if(amount < 0) return -1;
+
+        if(amount == 0) return 0;
+
+        if(memo[amount - 1] != 0) return memo[amount - 1];
+
+        int min = INT_MAX;
+        for(int coin: coins) {
+            int tmp = memorization(coins, amount - coin);
+            if(tmp >= 0 && tmp < min) {
+                min = tmp + 1;
+            }
+        }
+        return memo[amount - 1] = min == INT_MAX ? -1 : min;
+    }
+
+    int coinChange(vector<int>& coins, int amount) {
+
+        return dynamic(coins, amount);
+        // memo.resize(amount);
+        // return memorization(coins, amount);
+    }
+};
