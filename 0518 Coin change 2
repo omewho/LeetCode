@@ -1,0 +1,18 @@
+class Solution {
+public:
+    int dynamic(int amount, vector<int>& coins) {
+        vector<int> dp(amount + 1, 0);
+        dp[0] = 1;
+
+        for(int curr: coins) {
+            for(int target = curr; target < amount + 1; target++) {
+                dp[target] += dp[target - curr];
+            }
+        }
+        return dp[amount];
+    }
+
+    int change(int amount, vector<int>& coins) {
+        return dynamic(amount, coins);
+    }
+};
