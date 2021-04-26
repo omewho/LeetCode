@@ -1,0 +1,49 @@
+class Solution {
+public:
+    int method1(vector<int>& nums, int k) {
+        int n = nums.size();
+        sort(nums.begin(), nums.end());
+
+        int ans = 0, left = 0;
+        long long curr = 0;
+
+        for(int right = 0; right < n; right++) {
+            curr += nums[right];
+            while( (long long) nums[right] * ( right - left + 1) - curr > k ) {
+                
+                curr -= nums[left];
+                left++;
+            };
+            ans = max(ans, right - left + 1);
+        }
+
+        return ans;
+    }
+
+    int method2(vector<int>& nums, int k) {
+
+        int ans = 1, n = nums.size(), left = 0;
+        sort(nums.begin(), nums.end());
+
+        long long changes = 0;
+        for(int right = 1; right < n; right++) {
+            changes += (long long)(nums[right] - nums[right - 1]) * (right - left);
+            //printf("changes = %d\n", changes);
+            while(changes > k) {
+                changes -= nums[right] - nums[left];
+                left++;
+            }
+            ans = max(ans, right - left + 1);
+            //printf("ans = %d\n", ans);
+        }
+        //printf("ans = %d\n", ans);
+        return ans;
+    }
+
+    int maxFrequency(vector<int>& nums, int k) {
+
+        return method1(nums, k);
+
+        //return method2(nums, k);
+    }
+};
