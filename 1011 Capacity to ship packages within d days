@@ -1,0 +1,51 @@
+class Solution {
+public:
+    bool checkifpossible(vector<int>& weights, int D, int limit) {
+
+        int need = 1, curr = 0;
+        for(int w: weights) {
+            if(curr + w > limit) {
+                need++;
+                curr = 0;
+            }
+            curr += w;
+        }
+
+        return need <= D;
+    }
+
+    int binarysearch1(vector<int>& weights, int D) {
+        int left = *max_element(weights.begin(), weights.end());
+        int right = accumulate(weights.begin(), weights.end(), 0);
+        int ans;
+
+        while(left <= right) {
+            int mid = left + (right - left) / 2;
+            if(checkifpossible(weights, D, mid)) {
+                right = mid - 1;
+                ans = mid;
+            }
+            else left = mid + 1;
+        }
+
+        return left;
+    }
+
+    int binarysearch2(vector<int>& weights, int D) {
+        int left = *max_element(weights.begin(), weights.end());
+        int right = accumulate(weights.begin(), weights.end(), 0);
+        int ans;
+
+        while(left < right) {
+            int mid = left + (right - left) / 2;
+            if(checkifpossible(weights, D, mid)) right = mid;
+            else left = mid + 1;
+        }
+
+        return left;        
+    }
+
+    int shipWithinDays(vector<int>& weights, int D) {
+        return binarysearch2(weights, D);
+    }
+};
