@@ -1,0 +1,148 @@
+class DisjointSetUnion {
+private:
+    vector<int> parent;
+
+public:
+    DisjointSetUnion(int n): parent(vector<int>(n, -1)){};
+
+    int findRoot(int x) {
+        if(parent[x] < 0) return x;
+        return parent[x] = findRoot(parent[x]); 
+    }
+
+    void unify(int x, int y) {
+        int rootx = findRoot(x), rooty = findRoot(y);
+        if(rootx != rooty) {
+            if(parent[rootx] < parent[rooty]) {
+                parent[rootx] += parent[rooty];
+                parent[rooty] = rootx;    
+            }
+            else {
+                parent[rooty] += parent[rootx];
+                parent[rootx] = rooty;
+            }
+        }
+    }
+
+    bool isConnected(int x, int y) {
+        return findRoot(x) == findRoot(y);
+    }
+
+    void print() {
+        for(int i = 0; i < parent.size(); i++) printf(" i = %d, %d \n", i, parent[i]);
+        //printf("%d\n", dsu.isConnected(13, 16));
+    }
+};
+
+class Solution {
+public:
+    int m, n;
+    void dfs(vector<vector<char>>& board, int row, int col) {
+        
+        if(row < 0 || row >= m || col < 0 || col >= n || board[row][col] != 'O') return;
+
+        int dir[4][2] = {{1, 0}, {-1, 0}, {0, -1}, {0, 1}};
+        board[row][col] = 'A';
+
+        for(int i = 0; i < 4; i++) {
+            int dx = dir[i][0], dy = dir[i][1];
+            dfs(board, row + dx, col + dy);
+        }
+    }
+
+    void dothething(vector<vector<char>>& board) {
+        m = board.size(), n = board[0].size();
+        if(!m) return;
+
+        for(int col = 0; col < n; col++) {
+            dfs(board, 0, col);
+            dfs(board, m - 1, col);
+        }
+
+        for(int row = 1; row < m - 1; row++) {
+            dfs(board, row, 0);
+            dfs(board, row, n - 1);
+        }
+
+        for(int row = 0; row < m; row++) {
+            for(int col = 0; col < n; col++) {
+                if(board[row][col] == 'O') board[row][col] = 'X';
+                else if(board[row][col] == 'A') board[row][col] = 'O';
+            }
+        }
+
+    }
+
+    void bfs(vector<vector<char>>& board) {
+        int m = board.size(), n = board[0].size();
+
+        int deltax[4] = {-1, 1, 0, 0};
+        int deltay[4] = {0, 0, -1, 1};
+
+        queue<pair<int, int>> q;
+        for(int row = 0; row < m; row++) {
+            if(board[row][0] == 'O') q.emplace(row, 0);
+            if(board[row][n - 1] == 'O') q.emplace(row, n - 1);
+        }
+        for(int col = 1; col < n - 1; col++) {
+            if(board[0][col] == 'O') q.emplace(0, col);
+            if(board[m -1][col] == 'O') q.emplace(m - 1, col);
+        }
+
+        while(!q.empty()) {
+            int row = q.front().first, col = q.front().second;
+            q.pop();
+
+            board[row][col] = 'A';
+            for(int i = 0; i < 4; i++) {
+                int newrow = row + deltax[i];
+                int newcol = col + deltay[i];
+                if(newrow >= 0 && newrow < m && newcol >= 0 && newcol < n && board[newrow][newcol] == 'O') q.emplace(newrow, newcol);
+            }
+        }
+        for(int row = 0; row < m; row++) {
+            for(int col = 0; col < n; col++) {
+                if(board[row][col] == 'O') board[row][col] = 'X';
+                else if(board[row][col] == 'A') board[row][col] = 'O';
+            }
+        }
+        
+    }
+
+    void disjointunion(vector<vector<char>>& board) {
+
+        int m = board.size(), n = board[0].size();
+        DisjointSetUnion dsu(m * n + 1);
+        int dummy = m * n;
+
+        int dir[2][2] = {{0, 1}, {1, 0}};
+        for(int row = 0; row < m; row++) {
+            for(int col = 0; col < n; col++) {
+                if(board[row][col] == 'O') {
+                    if(row == 0 || row == m - 1 || col == 0 || col == n - 1) dsu.unify(row * n + col, dummy);
+                    else {
+                        for(int i = 0; i < 2; i++) {
+                            int newrow = row + dir[i][0];
+                            int newcol = col + dir[i][1];
+                            if(newrow < m && newcol < n && board[newrow][newcol] == 'O') dsu.unify(newrow * n + newcol, row * n + col);
+                        }
+                    }
+                }
+            }
+        }
+
+        //dsu.print();
+
+        for(int row = 0; row < m; row++) {
+            for(int col = 0; col < n; col++) {
+                if( !dsu.isConnected(row * n + col, dummy) ) board[row][col] = 'X';
+            }
+        }
+    }
+
+    void solve(vector<vector<char>>& board) {
+        //dothething(board);
+        disjointunion(board);
+        //bfs(board);
+    }
+};
