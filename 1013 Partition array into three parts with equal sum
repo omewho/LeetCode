@@ -1,0 +1,26 @@
+class Solution {
+public:
+    bool canThreePartsEqualSum(vector<int>& arr) {
+        int sum = accumulate(arr.begin(), arr.end(), 0);
+        //printf("sum = %d\n", sum);
+        if(sum % 3 != 0) return false;
+        
+        int idx = 0, currsum = 0, avg = sum / 3, n = arr.size();
+
+        while(idx < n) {
+            currsum += arr[idx];
+            if(currsum == avg) break;
+            idx++;
+        }
+
+        if(idx == n) return false;
+        idx++;
+        while(idx < n - 1) {
+            currsum += arr[idx];
+            if(currsum == avg * 2) return true;
+            idx++;
+        }
+
+        return false;
+    }
+};
