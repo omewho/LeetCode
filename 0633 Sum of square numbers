@@ -1,0 +1,17 @@
+class Solution {
+public:
+    typedef long long ll;
+    bool binary(int c) {
+        ll left = 0, right = (int) sqrt(c);
+        while(left <= right) {
+            ll sum = left * left + right * right;
+            if(sum == c) return true;
+            else if(sum < c) left++;
+            else right--;
+        }
+        return false;
+    }
+    bool judgeSquareSum(int c) {
+        return binary(c);
+    }
+};
