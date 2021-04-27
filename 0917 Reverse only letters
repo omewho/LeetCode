@@ -1,0 +1,16 @@
+class Solution {
+public:
+    string reverseOnlyLetters(string S) {
+        int n = S.length();
+
+        string ret = "";
+        for(int i = 0; i < n; i++) if(isalpha(S[i])) ret += S[i];
+
+        string ans = S;
+        int rev = ret.length() - 1;
+        for(int i = 0; i < n; i++) {
+            if(isalpha(ans[i])) ans[i] = ret[rev--];
+        }
+        return ans;
+    }
+};
