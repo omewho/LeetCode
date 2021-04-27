@@ -1,0 +1,32 @@
+#define forloop(i, n) for(int i = 0; i < n; i++)
+class Solution {
+public:
+    vector<string> wordSubsets(vector<string>& A, vector<string>& B) {
+        int bcharfreq[26] = {0};
+        for(string b: B) {
+            int chfreq[26] = {0};
+            for(char ch: b) chfreq[ch - 'a']++;
+
+            forloop(i, 26) bcharfreq[i] = max(bcharfreq[i], chfreq[i]);
+        }
+
+        //for(auto [ch, freq]: bcharfreq) printf("ch = %c, freq = %d\n", ch, freq);
+
+        vector<string> ans;
+        for(string str: A) {
+            int acharfreq[26] = {0};
+            for(char ch: str) acharfreq[ch - 'a']++;
+            
+            bool isgeneral = true;
+            forloop(i, 26) {
+                if(bcharfreq[i] > acharfreq[i]) {
+                    isgeneral = false;
+                    break;
+                }
+            } 
+            if(isgeneral) ans.emplace_back(str);
+        }
+
+        return ans;
+    }
+};
