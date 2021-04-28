@@ -1,0 +1,36 @@
+class Solution {
+public:
+    void bitwise(vector<vector<int>>& board) {
+        int dx[8] = {0, 0, -1, 1, -1, 1, 1, -1};
+        int dy[8] = {1, -1, 0, 0, 1, 1, -1, -1};
+
+        int m = board.size(), n = board[0].size();
+        for(int row = 0; row < m; row++) {
+            for(int col = 0; col < n; col++) {
+                int sum = 0;
+
+                for(int i = 0; i < 8; i++) {
+                    int newrow = row + dx[i], newcol = col + dy[i];
+                    if(newrow < 0 || newrow >= m || newcol < 0 || newcol >= n) continue;
+
+                    sum += (board[newrow][newcol] & 1);
+                }
+                //printf("row = %d, col = %d, sum = %d\n", row, col, sum);
+
+                if(board[row][col] == 1) {
+                    if(sum == 2 || sum == 3) board[row][col] |= 2;
+                }
+                else if(sum == 3) board[row][col] |= 2;
+            }
+        }
+
+        for(int row = 0; row < m; row++) {
+            for(int col = 0; col < n; col++) {
+                board[row][col] >>= 1;
+            }
+        }
+    }
+    void gameOfLife(vector<vector<int>>& board) {
+        bitwise(board);
+    }
+};
