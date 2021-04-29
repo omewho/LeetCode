@@ -1,0 +1,42 @@
+class Solution {
+public:
+    int partitionDisjoint(vector<int>& A) {
+        int n = A.size();
+
+        int maxLeft[n], minRight[n];
+        int ma = A[0];
+
+        for(int i = 0; i < n; i++) {
+            ma = max(ma, A[i]);
+            maxLeft[i] = ma;
+        }
+        
+        // for(int i = 0; i < n; i++) {
+        //     if(i) printf(" ");
+        //     printf("%d", maxLeft[i]);
+        // }
+
+        int mi = A[n - 1];
+        for(int i = n - 1; i >= 0; i--) {
+            mi = min(mi, A[i]);
+            minRight[i] = mi;
+        }
+        // printf("\nminRight:\n");
+
+        // for(int i = 0; i < n; i++) {
+        //     if(i) printf(" ");
+        //     printf("%d", minRight[i]);
+        // }        
+
+        int ans = 0;
+        for(int i = 1; i < n; i++) {
+            if(maxLeft[i - 1] <= minRight[i]) {
+                ans = i;
+                //printf("ans = %d\n", ans);
+                break;
+            }
+        }
+
+        return max(ans, 1);
+    }
+};
