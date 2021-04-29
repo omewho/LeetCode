@@ -1,0 +1,34 @@
+class Solution {
+public:
+    void solve(vector<int>& arr) {
+        int n = arr.size() - 1;
+
+        int possibleDups = 0;
+        for(int left = 0; left <= n - possibleDups; left++) {
+            if(arr[left] == 0) {
+                if(left == n - possibleDups) {
+                    arr[n] = 0;
+                    n--;
+                    break;
+                }
+                possibleDups++;
+            }
+            //printf("left = %d\n", left);
+        }
+        int last = n - possibleDups;
+        //printf("right = %d\n", last);
+
+        for(int right = n - possibleDups; right >= 0; right--) {
+            if(arr[right]) arr[right + possibleDups] = arr[right];
+            else {
+                arr[right + possibleDups] = 0;
+                possibleDups--;
+                arr[right + possibleDups] = 0;
+            }
+        }
+    }
+
+    void duplicateZeros(vector<int>& arr) {
+        solve(arr);
+    }
+};
