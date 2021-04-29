@@ -1,0 +1,25 @@
+class Solution {
+public:
+
+    int func1(vector<int>& A, int K) {
+        int ma = *max_element(A.begin(), A.end());
+        int mi = *min_element(A.begin(), A.end());
+
+        return max(0, ma - mi - 2 * K);        
+    }
+
+    int func2(vector<int>& A, int K) {
+        int ma = A[0];
+        int mi = A[0];
+        for(int i = 1; i < A.size(); i++) {
+            ma = max(A[i], ma);
+            mi = min(A[i], mi);
+        }
+
+        return max(0, ma - mi - 2 * K);        
+    }
+    int smallestRangeI(vector<int>& A, int K) {
+        //return func1(A, K);
+        return func2(A, K);
+    }
+};
