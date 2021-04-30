@@ -1,0 +1,37 @@
+class Solution {
+public:
+
+    struct item{
+        int value, label;
+
+        bool operator < (const struct item& other) {
+            return value > other.value;
+        }
+    };
+
+    vector<item> items;
+    int solve(int num_wanted, int use_limit) {
+        int ans = 0;
+        sort(items.begin(), items.end());
+
+        unordered_map<int, int> lblfreq;
+        for(auto i: items) {
+            if(lblfreq[i.label] < use_limit) {
+                ans += i.value;
+                if(--num_wanted == 0) break;
+                lblfreq[i.label]++;
+            }
+        }
+        return ans;
+    }
+    int largestValsFromLabels(vector<int>& values, vector<int>& labels, int num_wanted, int use_limit) {
+        int n = values.size();
+        items.resize(n);
+
+        for(int i = 0; i < n; i++) {
+            items[i] = {values[i], labels[i]};
+        }
+
+        return solve(num_wanted, use_limit);
+    }
+};
