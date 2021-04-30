@@ -1,0 +1,19 @@
+typedef long long ll;
+const int modula = 1e9 + 7;
+
+class Solution {
+public:
+    int sumSubseqWidths(vector<int>& A) {
+        int n = A.size();
+        sort(A.begin(), A.end());
+
+        vector<ll> power(n);
+        power[0] = 1;
+        for(int i = 1; i < n; i++) power[i] = power[i - 1] * 2 % modula;
+
+        ll ans = 0;
+        for(int i = 0; i < n; i++) ans = (ans + A[i] * (power[i] - power[n - 1 - i])) % modula;
+
+        return (ans + modula) % modula;
+    }
+};
