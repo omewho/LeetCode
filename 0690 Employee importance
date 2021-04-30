@@ -1,0 +1,45 @@
+/*
+// Definition for Employee.
+class Employee {
+public:
+    int id;
+    int importance;
+    vector<int> subordinates;
+};
+*/
+
+class Solution {
+public:
+    unordered_map<int, Employee*> idemp;
+    int ans = 0;
+
+    int dfs(int id) {
+        Employee* emp = idemp[id];
+        int ans = emp->importance;
+        for(int subId: emp->subordinates) {
+            ans += dfs(subId);
+        }
+        return ans;
+    }
+
+    int getImportance(vector<Employee*> employees, int id) {
+        int n = employees.size();
+        for(auto emp: employees) idemp[emp->id] = emp;
+
+        //return dfs(id);
+
+        queue<Employee*> q;
+        q.push(idemp[id]);
+
+        int ans = 0;
+        while(!q.empty()) {
+            Employee* emp = q.front();
+            q.pop();
+            ans += emp->importance;
+
+            for(int subId: emp->subordinates) q.push(idemp[subId]);
+        }
+        
+        return ans;
+    }
+};
