@@ -4,15 +4,31 @@ public:
     struct item{
         int value, label;
 
-        bool operator < (const struct item& other) {
-            return value > other.value;
+        // bool operator < (const struct item& other) {
+        //     return value > other.value;
+        // }
+    };
+
+    // static bool cmp(const struct item& one, const struct item& two) {
+    //     return one.value > two.value;
+    // }
+
+    struct comp{
+        bool operator() (const struct item& one, const struct item& two) {
+            return one.value > two.value;
         }
     };
 
-    vector<item> items;
-    int solve(int num_wanted, int use_limit) {
+    int solve(vector<int>& values, vector<int>& labels, int num_wanted, int use_limit) {
+
+        int n = values.size();
+        vector<item> items(n);
+
+        for(int i = 0; i < n; i++) items[i] = {values[i], labels[i]};
+
         int ans = 0;
-        sort(items.begin(), items.end());
+        //sort(items.begin(), items.end(), cmp);
+        sort(items.begin(), items.end(), comp());
 
         unordered_map<int, int> lblfreq;
         for(auto i: items) {
@@ -24,14 +40,54 @@ public:
         }
         return ans;
     }
-    int largestValsFromLabels(vector<int>& values, vector<int>& labels, int num_wanted, int use_limit) {
-        int n = values.size();
-        items.resize(n);
 
-        for(int i = 0; i < n; i++) {
-            items[i] = {values[i], labels[i]};
+    int dothething(vector<int>& values, vector<int>& labels, int num_wanted, int use_limit) {
+        vector<vector<int>> vallbl;
+        int n = values.size(), ans = 0;
+        for(int i = 0; i < n; i++) vallbl.push_back({values[i], labels[i]});
+
+        sort(vallbl.begin(), vallbl.end(), [&](const vector<int>& lhs, const vector<int>& rhs){
+            return lhs[0] > rhs[0];
+        });
+
+        unordered_map<int, int> lblfreq;
+        for(vector<int> vl: vallbl) {
+            if(lblfreq[vl[1]] < use_limit) {
+                ans += vl[0];
+                if(--num_wanted == 0) break;
+                lblfreq[vl[1]]++;
+            }
         }
 
-        return solve(num_wanted, use_limit);
+        return ans;
+    }
+
+    int operate(vector<int>& values, vector<int>& labels, int num_wanted, int use_limit) {
+        
+        int n = values.size(), ans = 0;
+        vector<int> vallbl(n);
+        iota(vallbl.begin(), vallbl.end(), 0);
+
+        sort(vallbl.begin(), vallbl.end(), [&](const int& lhs, const int& rhs){
+            return values[lhs] > values[rhs];
+        });
+
+        unordered_map<int, int> lblfreq;
+        for(int vl: vallbl) {
+            if(lblfreq[labels[vl]] < use_limit) {
+                ans += values[vl];
+                if(--num_wanted == 0) break;
+                lblfreq[labels[vl]]++;
+            }
+        }
+
+        return ans;
+    }
+
+    int largestValsFromLabels(vector<int>& values, vector<int>& labels, int num_wanted, int use_limit) {
+
+        //return solve(values, labels, num_wanted, use_limit);
+        //return dothething(values, labels, num_wanted, use_limit);
+        return operate(values, labels, num_wanted, use_limit);
     }
 };
