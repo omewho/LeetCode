@@ -1,0 +1,32 @@
+class Solution {
+    typedef pair<int, int> PII;
+public:
+    vector<int> solve(vector<int>& barcodes) {
+        unordered_map<int, int> bcdfreq;
+        for(auto bcd: barcodes) bcdfreq[bcd]++;
+
+        //priority_queue<PII, vector<PII>, less<PII>> pq;
+        priority_queue<PII> pq;
+        for(auto [bcd, freq]: bcdfreq) pq.emplace(freq, bcd);
+
+        int i = 0, n = barcodes.size();
+        vector<int> ans(n);
+        while(!pq.empty()) {
+            auto curr = pq.top();
+            pq.pop();
+
+            //printf(" bcd = %d, freq = %d\n", curr.second, curr.first);
+            for(int j = 0; j < curr.first; j++) {
+                if(i >= n) i = 1;
+                ans[i] = curr.second;
+                i += 2;
+            }
+        }
+
+        return ans;
+    }
+
+    vector<int> rearrangeBarcodes(vector<int>& barcodes) {
+        return solve(barcodes);
+    }
+};
