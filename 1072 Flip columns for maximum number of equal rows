@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int solve(vector<vector<int>>& matrix) {
+        unordered_map<string, int> strfreq;
+
+        int ans = 0;
+        for(vector<int> row: matrix) {
+            string str = "";
+            for(int col : row) {
+                if(row[0] == 0) col ^= 1;
+                str += '0' + col;
+            }
+            strfreq[str]++;
+            ans = max(ans, strfreq[str]);
+        }
+
+        return ans;
+    }
+
+    int maxEqualRowsAfterFlips(vector<vector<int>>& matrix) {
+        return solve(matrix);
+    }
+};
