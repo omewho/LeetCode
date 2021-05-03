@@ -1,0 +1,44 @@
+class Solution {
+public:
+    vector<int> solve(vector<vector<int>>& rooms, vector<vector<int>>& queries) {
+        int rsize = rooms.size(), qsize = queries.size();
+
+        vector<int> qindicies(qsize), ans(qsize);
+        iota(qindicies.begin(), qindicies.end(), 0);
+
+        sort(qindicies.begin(), qindicies.end(), [&](int lhs, int rhs) {
+            return queries[lhs][1] > queries[rhs][1];
+        });
+
+        //for(int idx: qindicies) printf(" %d \n", idx);
+
+        sort(rooms.begin(), rooms.end(), [](vector<int>& lhs, vector<int>& rhs) {
+            return lhs[1] > rhs[1] || (lhs[1] == rhs[1] && lhs[0] < rhs[0]);
+        });
+
+        set<int> valid;
+        int idx = 0;
+
+        for(int q: qindicies) {
+            while(idx < rsize && rooms[idx][1] >= queries[q][1]) {
+                valid.emplace(rooms[idx][0]);
+                idx++;
+            }
+
+            if(valid.empty()) ans[q] = -1;
+            else {
+                int query_idx = queries[q][0];
+                auto iter = valid.lower_bound(query_idx); //*iter >= query_idx;
+                if(iter != valid.begin() && (iter == valid.end() || query_idx - *prev(iter) <= *iter - query_idx)) \
+                ans[q] = *prev(iter);
+                else ans[q] = *iter;
+            }
+        }
+
+        return ans;
+    }
+
+    vector<int> closestRoom(vector<vector<int>>& rooms, vector<vector<int>>& queries) {
+        return solve(rooms, queries);
+    }
+};
