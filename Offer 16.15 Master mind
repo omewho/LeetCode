@@ -1,0 +1,16 @@
+class Solution {
+public:
+    vector<int> masterMind(string solution, string guess) {
+        vector<int> ans(2);
+        int n = solution.size();
+
+        unordered_map<char, int> smap, gmap;
+        for(int i = 0; i < n; i++) {
+            if(solution[i] == guess[i]) ans[0]++;
+            else smap[solution[i]]++, gmap[guess[i]]++;
+        }
+        for(auto [ch, freq]: smap) ans[1] += min(freq, gmap[ch]);
+
+        return ans;
+    }
+};
