@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int solve(vector<string>& words, string word1, string word2) {
+        int a = -1, b = -1, n = words.size(), ans = INT_MAX;
+        
+        for(int i = 0; i < n; i++) {
+            if(words[i] == word1) {
+                if(b != -1) ans = min(ans, i - b);
+                a = i;
+            }
+            else if(words[i] == word2) {
+                if(a != -1) ans = min(ans, i - a);
+                b = i;
+            }
+        }
+        return ans;
+    }
+
+    int findClosest(vector<string>& words, string word1, string word2) {
+        return solve(words, word1, word2);
+    }
+};
