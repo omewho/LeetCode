@@ -1,0 +1,35 @@
+class Solution {
+public:
+    int solve(int A, int B) {
+        bitset<32> a(A), b(B);
+        int ans = 0;
+        for(int i = 0; i < 32; i++) {
+            if(a[i] != b[i]) ans++;
+        }
+        return ans;
+    }
+
+    int dothething(int A, int B) {
+        
+        unsigned int xOr = A ^ B;
+        bitset<32> bst(xOr);
+        return bst.count();
+    }
+
+    int solvtheproblem(int A, int B) {
+        int ans = 0;
+        unsigned int xOr = A ^ B;
+        
+        while(xOr) {
+            ans++;
+            xOr &= (xOr - 1);
+        }
+        return ans;
+    }
+
+    int convertInteger(int A, int B) {
+        //return solve(A, B);
+        //return dothething(A, B);
+        return solvtheproblem(A, B);
+    }
+};
