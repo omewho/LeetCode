@@ -1,0 +1,47 @@
+class Solution {
+constexpr static int modula = 1e9 + 7;
+using ll = long long;
+public:
+    int solve(vector<int>& inventory, int orders) {
+        ll ans = 0;
+        priority_queue<int> pq;
+        map<int, int> numfreq;
+        for(auto i: inventory) {
+            if(numfreq[i] == 0) pq.emplace(i);
+            numfreq[i]++;
+        }
+        pq.emplace(0);
+
+        while(orders > 0) {
+            ll first = pq.top(); pq.pop();
+            ll second = pq.top();
+
+            int sell = ( first - second ) * numfreq[first];
+            if(sell <= orders) {
+                ans += (first + second + 1) * sell / 2;
+                ans %= modula;
+                orders -= sell;
+                //printf(" if ans = %d\n", ans);
+            }
+            else {
+                ll quo = orders / numfreq[first], rem = orders % numfreq[first];
+                //printf(" quo = %d, ans = %d\n ", quo, ans);
+                ans += ( first + ( first - quo + 1) ) * numfreq[first] * quo / 2;
+                ans %= modula;
+
+                //printf(" else ans = %d\n", ans);
+                ans += (first - quo) * rem;
+                ans %= modula;
+                orders = 0;
+                //printf(" ans = %d\n", ans);
+            }
+            numfreq[second] += numfreq[first];
+        }
+        return ans;
+    }
+
+    int maxProfit(vector<int>& inventory, int orders) {
+
+        return solve(inventory, orders);
+    }
+};
