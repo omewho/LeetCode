@@ -1,0 +1,29 @@
+class Solution {
+public:
+    int solve(vector<int>& gas, vector<int>& cost) {
+        int n = gas.size();
+
+        int idx = 0, longest;
+        while(idx < n) {
+            int sumGas = 0, sumCost = 0;
+
+            longest = 0;
+            while(longest < n) {
+                int curr_pos = (idx + longest) % n;
+                sumGas += gas[curr_pos];
+                sumCost += cost[curr_pos];
+
+                if(sumCost <= sumGas) longest++;
+                else break;
+            }
+
+            if(longest == n) return idx;
+            else idx = idx + longest + 1;
+        }
+        return -1;
+    }
+
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        return solve(gas, cost);
+    }
+};
