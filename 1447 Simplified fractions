@@ -1,0 +1,34 @@
+class Solution {
+public:
+    vector<string> solve(int n) {
+        vector<string> ans;
+        set<string> st;
+        if(n == 1) return ans;
+
+        for(int dvdn = 1; dvdn < n; dvdn++) {
+            for(int dvsr = dvdn + 1; dvsr < n + 1; dvsr++) {
+                //printf(" dn = %d, sr = %d\n", dvdn, dvsr);
+                int g = gcd(dvdn, dvsr);
+                //printf(" %d / %d g = %d\n", dvdn/g, dvsr/g, g);
+                string str = to_string(dvdn / g) + "/" + to_string(dvsr / g);
+                st.emplace(str);
+            }
+        }
+        for(auto s: st) ans.emplace_back(s);
+        return ans;
+    }
+
+    vector<string> solve1(int n) {
+        vector<string> ans;
+        for(int dvsr = 2; dvsr < n + 1; dvsr++) {
+            for(int dvdn = 1; dvdn < dvsr; dvdn++) {
+                if(gcd(dvdn, dvsr) == 1) ans.emplace_back(to_string(dvdn) + "/" + to_string(dvsr));
+            }
+        }
+        return ans;
+    }
+
+    vector<string> simplifiedFractions(int n) {
+        return solve1(n);
+    }
+};
