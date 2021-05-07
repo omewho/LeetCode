@@ -1,0 +1,134 @@
+using TII = tuple<int, int>;
+class DisjointSetUnion {
+ 
+public:
+    vector<int> parent;
+    int size;
+    vector<bool> island;
+    DisjointSetUnion(int n): parent(vector<int>(n, -1)), size(n), island(vector<bool>(n, false)) {}
+
+    int unionfind(int idx) {
+        if(parent[idx] < 0) return idx;
+        return parent[idx] = unionfind(parent[idx]);
+    }
+
+    void unionmerge(int x, int y) {
+        int rx = unionfind(x), ry = unionfind(y);
+
+        if(rx == ry) return;
+
+        if(parent[rx] < parent[ry]) {
+            parent[rx] += parent[ry];
+            parent[ry] = rx;
+        }
+        else {
+            parent[ry] += parent[rx];
+            parent[rx] = ry;
+        }
+    }
+};
+
+class Solution {
+    static constexpr int dirs[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+public:
+    int row, col;
+
+    int hash(int r, int c) {
+        return r * col + c;
+    }
+
+    int dfshelper(vector<vector<int>>& grid, int x, int y) {
+        if(x < 0 || x >= row || y < 0 || y >= col || grid[x][y] == 0) return 0;
+
+        int ans = 1;
+        grid[x][y] = 0;
+
+        for(int i = 0; i < 4; i++) {
+            int nx = x + dirs[i][0], ny = y + dirs[i][1];
+            ans += dfshelper(grid, nx, ny);
+        }
+        return ans;
+    }
+
+    int solvedfs(vector<vector<int>>& grid) {
+        int ans = 0;
+
+        for(int r = 0; r < row; r++) {
+            for(int c = 0; c < col; c++) {
+                if(grid[r][c] == 1) ans = max(ans, dfshelper(grid, r, c));
+            }
+        } 
+        return ans;
+    }
+
+    int bfshelper(vector<vector<int>>& grid, int x, int y) {
+        queue<TII> q;
+        q.emplace(x, y);
+        grid[x][y] = 2;
+
+        int ans = 1;
+        while(q.size()) {
+            auto [r, c] = q.front(); q.pop();
+            //printf("pop r = %d, c = %d\n", r, c);
+            //grid[r][c] = 2;
+            //ans++;
+            for(int i = 0; i < 4; i++) {
+                int nr = r + dirs[i][0], nc = c + dirs[i][1];
+                
+                if(nr >= 0 && nr < row && nc >= 0 && nc < col && grid[nr][nc] == 1) {
+                    //printf(" nr = %d, nc = %d\n", nr, nc);
+                    ans++;
+                    q.emplace(nr, nc);
+                    grid[nr][nc] = 2;
+                }
+            }
+        }
+
+        return ans;
+    } 
+
+    int solvebfs(vector<vector<int>>& grid) {
+
+        int ans = 0;
+        for(int r = 0; r < row; r++) {
+            for(int c = 0; c < col; c++) {
+                if(grid[r][c] == 1) {
+                    int curr = bfshelper(grid, r, c);
+                    //printf(" r = %d, c = %d, curr = %d\n", r, c, curr);
+                    ans = max(ans, curr);
+                }
+            }
+        }
+
+        return ans;
+    }
+
+    int solveuf(vector<vector<int>>& grid) {
+        int ans = 0;
+        DisjointSetUnion dsu = DisjointSetUnion(row * col + 1);
+
+        for(int r = 0; r < row; r++) {
+            for(int c = 0; c < col; c++) {
+                if(grid[r][c] == 0) dsu.unionmerge(row * col, hash(r, c));
+                else {
+                    dsu.island[hash(r, c)] = true;
+                    if(r > 0 && grid[r - 1][c] == 1) dsu.unionmerge(hash(r - 1, c), hash(r, c));
+                    if(c > 0 && grid[r][c - 1] == 1) dsu.unionmerge(hash(r, c - 1), hash(r, c));
+                }
+            }
+        }
+
+        for(int i = 0; i < row * col; i++) {
+            if(dsu.parent[i] < 0 && dsu.island[i]) ans = max(ans, -dsu.parent[i]);
+        }
+        return ans;
+    }
+
+    int maxAreaOfIsland(vector<vector<int>>& grid) {
+        row = grid.size(), col = grid[0].size();
+
+        return solvedfs(grid);
+        //return solvebfs(grid);
+        //return solveuf(grid);
+    }
+};
