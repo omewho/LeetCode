@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int solve(string s) {
+        int n = s.length(), ptr = 0, last = 0, curr, ans = 0;
+
+        while(ptr < n) {
+            curr = 0;
+            char ch = s[ptr];
+            while(ptr < n && s[ptr] == ch) {
+                ptr++;
+                curr++;
+            }
+            ans += min(last, curr);
+            last = curr;
+        }
+        return ans;
+    }
+
+    int countBinarySubstrings(string s) {
+        return solve(s);
+    }
+};
