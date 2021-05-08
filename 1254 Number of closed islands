@@ -1,0 +1,153 @@
+using TII = tuple<int, int>;
+
+class DisjointSetUnion {
+private:
+    vector<int> parent;
+    int size;
+public: 
+    
+    DisjointSetUnion(int n): parent(vector<int> (n, -1)), size(n) {}
+
+    int unionfind(int idx) {
+        if(parent[idx] < 0) return idx;
+        return parent[idx] = unionfind(parent[idx]);
+    }
+
+    void unionmerge(int x, int y) {
+        int rx = unionfind(x), ry = unionfind(y);
+        if(rx == ry) return;
+
+        if(parent[rx] < parent[ry]) {
+            parent[rx] += parent[ry];
+            parent[ry] = rx;
+        }
+        else {
+            parent[ry] += parent[rx];
+            parent[rx] = ry;
+        }
+    }
+
+    int getsetcount() {
+        int ans = 0;
+        for(int p: parent) if(p < 0) ans++;
+        return ans;
+    }
+
+    void print() {
+        int idx = 0;
+        for(int i : parent) {
+            if(idx) printf(" ");
+            if(idx % 10 == 0) printf("\n");
+            printf("%d", parent[idx++]);
+        }
+        printf("\n");
+    }
+};
+
+class Solution {
+private:
+    int ROW, COL;
+    static constexpr int dirs[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+public:
+    int hash(int x, int y, int col) {
+        return x * col + y;
+    }
+  
+    int solveuf(vector<vector<int>>& grid) {
+        int row = grid.size(), col = grid[0].size();
+        DisjointSetUnion dsu = DisjointSetUnion(row * col);
+
+        for(int r = 0; r < row; r++) {
+            for(int c = 0; c < col; c++) {
+                if(r == 0 || r == row - 1 || c == 0 || c == col - 1) dsu.unionmerge(hash(0, 0, col), hash(r, c, col));
+				
+                if(grid[r][c] == 1) dsu.unionmerge(hash(0, 0, col), hash(r, c, col));
+                else {
+                    if(r > 0 && grid[r - 1][c] == 0) dsu.unionmerge(hash(r - 1, c, col), hash(r, c, col));
+                    if(c > 0 && grid[r][c - 1] == 0) dsu.unionmerge(hash(r, c, col), hash(r, c - 1, col));
+                } 
+            }
+        }
+        //dsu.print();
+
+        return dsu.getsetcount() - 1;
+    }
+
+    bool dfshelper(vector<vector<int>>& grid, int x, int y) {
+        if(x < 0 || x >= ROW || y < 0 || y >= COL) return false;
+
+        if(grid[x][y]) return true;
+
+        grid[x][y] = 2;
+        bool isClosed = true;
+
+        for(int i = 0; i < 4; i++) isClosed &= dfshelper(grid, x + dirs[i][0], y + dirs[i][1]);
+
+        return isClosed;
+    }
+
+    int solvedfs(vector<vector<int>>& grid) {
+        
+        int ans = 0;
+        for(int r = 0; r < ROW; r++) {
+            for(int c = 0; c < COL; c++) {
+                if(grid[r][c] == 0) {
+                    if(dfshelper(grid, r, c)) ans++;
+                }
+            }
+        }
+        return ans;
+    }
+
+    bool bfshelper(vector<vector<int>>& grid, int x, int y) {
+        queue<TII> q;
+        q.emplace(x, y);
+        grid[x][y] = 2;
+
+        bool isClosed = true;
+        while(q.size()) {
+            auto [r, c] = q.front(); q.pop();
+
+            for(int i = 0; i < 4; i++) {
+                int nr = r + dirs[i][0], nc = c + dirs[i][1];
+
+                if(nr < 0 || nr >= ROW || nc < 0 || nc >= COL) isClosed = false; // You can not return the result here, because the marking process has not been finished yet
+                else if(grid[nr][nc] == 0) {
+                    grid[nr][nc] = 2;
+                    q.emplace(nr, nc);
+                }
+            }
+        }
+        return isClosed;
+    } 
+
+    int solvebfs(vector<vector<int>>& grid) {
+        int ans = 0; 
+        
+        for(int r = 0; r < ROW; r++) {
+            for(int c = 0; c < COL; c++) {
+                if(grid[r][c] == 0) {
+                    if(bfshelper(grid, r, c)) {
+                        //printf(" r = %d, c = %d\n", r, c);
+                        ans++;
+                    }
+                }
+            }
+        } 
+        // for(int r = 0; r < ROW; r++) {
+        //     for(int c = 0; c < COL; c++) {
+        //         printf(" %d ", grid[r][c]);
+        //     }
+        //     printf("\n");
+        // }
+
+        return ans;
+    }
+
+    int closedIsland(vector<vector<int>>& grid) {
+        this->ROW = grid.size(), this->COL = grid[0].size();
+        //return solveuf(grid);
+        //return solvedfs(grid);
+        return solvebfs(grid);
+    }
+};
