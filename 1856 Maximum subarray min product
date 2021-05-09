@@ -1,0 +1,39 @@
+class Solution {
+using ll = long long;
+static constexpr int modula = 1e9 + 7;
+
+public:
+    int solve(vector<int>& nums) {
+        nums.insert(nums.begin(), 0);
+        nums.emplace_back(0);
+        int n = nums.size();
+
+        vector<ll> presum(n, 0);
+        for(int i = 1; i < n; i++) presum[i] = nums[i] + presum[i - 1];
+        // for(int i = 0; i < n; i++) {
+        //     if(i) printf(" ");
+        //     printf("%ld", presum[i]);
+        // }
+        // printf("\n");
+
+        ll ans = 0;
+        stack<int> idxstk;
+        for(int i = 0; i < n; i++) {
+            while(!idxstk.empty() && nums[idxstk.top()] > nums[i]) {
+                int curr = nums[idxstk.top()];
+                idxstk.pop();
+
+                int left = idxstk.top() + 1, right = i - 1;
+                ans = max(ans, (ll)(presum[right] - presum[left - 1]) * curr);
+                //printf("i = %d, left = %d, right = %d, ans = %ld\n", i, left, right, ans);
+            }
+            idxstk.emplace(i);
+        }
+
+        return ans % modula;
+    }
+
+    int maxSumMinProduct(vector<int>& nums) {
+        return solve(nums);
+    }
+};
