@@ -1,0 +1,67 @@
+class Solution {
+    using PSI = pair<string, int>;
+
+public:
+
+    vector<string> solveone(vector<string>& words, int k) {
+        unordered_map<string, int> strfreq;
+        for(auto &w: words) strfreq[w]++;
+        
+        vector<PSI> wordfreq(strfreq.begin(), strfreq.end());
+
+        sort(wordfreq.begin(), wordfreq.end(), [](PSI& lhs, PSI& rhs){
+            if(lhs.second == rhs.second) return lhs.first < rhs.first;
+            return lhs.second > rhs.second;
+        });
+
+        vector<string> ans;
+        for(int i = 0; i < k; i++) ans.emplace_back(wordfreq[i].first);
+        
+        return ans;
+    }
+
+    vector<string> solvetwo(vector<string>& words, int k) {
+        unordered_map<string, int> strfreq;
+        for(auto &w: words) strfreq[w]++;
+
+        sort(words.begin(), words.end(), [&](string& lhs, string& rhs) {
+            return (strfreq[lhs] > strfreq[rhs] || (strfreq[lhs] == strfreq[rhs] && lhs < rhs));
+        });
+
+        unique(words.begin(), words.end());
+
+        return vector<string> (words.begin(), words.begin() + k);
+    }
+
+    vector<string> solvethree(vector<string>& words, int k) {
+        struct cmp{
+            bool operator () (const string & a, const string & b) const{
+                return a < b;
+            }
+        };
+
+        map<string, int, cmp> strfreq;
+        
+        for(auto &w: words) strfreq[w]++;
+        
+        vector<PSI> wordfreq(strfreq.begin(), strfreq.end());
+
+        sort(wordfreq.begin(), wordfreq.end(), [](PSI& lhs, PSI& rhs){
+            //if(lhs.second == rhs.second) return lhs.first < rhs.first;
+            return lhs.second > rhs.second;
+        });
+
+        vector<string> ans;
+        for(int i = 0; i < k; i++) ans.emplace_back(wordfreq[i].first);
+        
+        return ans;
+    }
+
+    vector<string> topKFrequent(vector<string>& words, int k) {
+        return solveone(words, k);
+
+        //return solvetwo(words, k); // higher time complexcity
+
+        //return solvethree(words, k); // failed 21/110 test cases 
+    }
+};
