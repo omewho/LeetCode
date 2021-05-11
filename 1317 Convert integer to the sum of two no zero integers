@@ -1,0 +1,15 @@
+class Solution {
+public:
+    vector<int> solve(int n) {
+        for(int first = 1; first < n / 2 + 1; first++) {
+            int second = n - first;
+            string str = to_string(first) + to_string(second);
+            if( str.find('0') == string::npos) return {first, second};
+        }
+        return {};
+    }
+
+    vector<int> getNoZeroIntegers(int n) {
+        return solve(n);
+    }
+};
