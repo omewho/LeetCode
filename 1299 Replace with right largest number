@@ -1,0 +1,33 @@
+class Solution {
+public:
+    vector<int> solve(vector<int>& arr) {
+        int n = arr.size();
+        vector<int> ans(n), peak(n);
+        peak[n - 1] = arr[n - 1];
+
+        ans[n - 1] = -1;
+        for(int i = n - 2; i >= 0; i--) {
+            if(arr[i] > peak[i + 1]) peak[i] = arr[i];
+            else peak[i] = peak[i + 1];
+            
+            ans[i] = peak[i + 1];
+        }
+
+        return ans;
+    } 
+
+    vector<int> dothething(vector<int>& arr) {
+        int n = arr.size();
+        vector<int> ans(n);
+        ans[n - 1] = -1;
+        
+        for(int i = n - 2; i >= 0; i--) ans[i] = max(ans[i + 1], arr[i + 1]);
+
+        return ans;
+    } 
+
+    vector<int> replaceElements(vector<int>& arr) {
+        return solve(arr);
+        //return dothething(arr);
+    }
+};
