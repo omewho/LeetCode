@@ -1,0 +1,21 @@
+class Solution {
+public:
+    vector<string> removeSubfolders(vector<string>& folder) {
+        sort(folder.begin(), folder.end());
+
+        int n = folder.size();
+        vector<string> ans({folder[0]});
+        int left = 0, right;
+
+        while(left < n) {
+            right = left + 1;
+            while(right < n && folder[right].find(folder[left] + '/') == 0) right++;
+            if(right < n) {
+                ans.emplace_back(folder[right]);
+            }
+            left = right;
+        }
+        
+        return ans;
+    }
+};
