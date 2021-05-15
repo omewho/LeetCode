@@ -1,0 +1,30 @@
+class Solution {
+public:
+    string solve(vector<int>& arr) {
+
+        int maxtime = -1, hour, minute;
+
+        for(int i = 0; i < 4; i ++) {
+            for(int j = 0; j < 4; j++) {
+                if(j != i) {
+                    for(int k = 0; k < 4; k++) {
+                        if(k != i && k != j) {
+                            int l = 6 - i - j - k;
+                            hour = arr[i] * 10 + arr[j], minute = arr[k] * 10 + arr[l];
+                            if(hour <= 23 && minute <= 59) {
+                                maxtime = max(maxtime, hour * 60 + minute);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        //printf("%d %d %d %d\n", maxtime / (10 * 60 ), maxtime / 60 % 10, maxtime % 60 / 10, maxtime % 60 % 10 );
+        return maxtime != -1? to_string(maxtime / (10 * 60 )) + to_string(maxtime / 60 % 10 ) + ":" + to_string(maxtime % 60 / 10 ) + to_string(maxtime % 60 % 10) : "";
+
+    }
+
+    string largestTimeFromDigits(vector<int>& arr) {
+        return solve(arr);
+    }
+};
