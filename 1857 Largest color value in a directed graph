@@ -1,0 +1,48 @@
+class Solution {
+public:
+    int solve(string colors, vector<vector<int>>& edges) {
+        int n = colors.length();
+
+        vector<vector<int>> graph(n);
+        vector<int> indeg(n);
+
+        for(auto& e: edges) {
+            int u = e[0], v = e[1];
+            graph[u].emplace_back(v);
+            indeg[v]++;
+        }
+
+        queue<int> q;
+        for(int u = 0; u < n; u++) if(!indeg[u]) q.emplace(u);
+
+        vector<vector<int>> dp(n, vector<int>(26, 0));
+        int visited = 0;
+
+        while(q.size()) {
+            visited++;
+
+            int u = q.front(); q.pop();
+            dp[u][colors[u] - 'a']++;
+            for(auto v: graph[u]){
+                indeg[v]--;
+                if(!indeg[v]) q.emplace(v);
+                for(int i = 0; i < 26; i++) {
+                    dp[v][i] = max(dp[u][i], dp[v][i]);
+                }
+            }
+        }
+
+        if(visited != n) return -1;
+
+        int ans = 0;
+        for(int i = 0; i < n; i++) {
+            ans = max(ans, *max_element(dp[i].begin(), dp[i].end()));
+        }
+
+        return ans;
+    }
+
+    int largestPathValue(string colors, vector<vector<int>>& edges) {
+        return solve(colors, edges);
+    }
+};
