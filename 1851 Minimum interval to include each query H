@@ -1,0 +1,43 @@
+class Solution {
+    using PII = pair<int, int>;
+public:
+    vector<int> solve(vector<vector<int>>& intervals, vector<int>& queries) {
+        int isize = intervals.size(), qsize = queries.size();
+
+        vector<int> ans(qsize, -1), qidx(qsize);
+        
+        iota(qidx.begin(), qidx.end(), 0);
+        sort(qidx.begin(), qidx.end(), [&](int a, int b) {
+            return queries[a] < queries[b];
+        });
+
+        sort(intervals.begin(), intervals.end());
+        //for(auto v: intervals) printf(" %d %d\n", v[0], v[1]);
+
+        set<PII> valid;
+
+        int ptr = -1;
+
+        for(int idx : qidx) {
+            int qi = queries[idx];
+            //printf("qi = %d\n", qi);
+            while(ptr + 1 < isize && intervals[ptr + 1][0] <= qi) {
+                ptr++;
+                int len = intervals[ptr][1] - intervals[ptr][0] + 1;
+                valid.emplace(len, intervals[ptr][1]);
+            }
+
+            while( !valid.empty() && valid.begin()->second < qi) valid.erase(valid.begin());
+            //printf(" size = %d\n", valid.size());
+
+            if(valid.empty()) ans[idx] = -1;
+            else ans[idx] = valid.begin()->first;
+        }
+
+        return ans;
+    }
+
+    vector<int> minInterval(vector<vector<int>>& intervals, vector<int>& queries) {
+        return solve(intervals, queries);
+    }
+};
