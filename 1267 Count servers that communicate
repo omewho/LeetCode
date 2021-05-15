@@ -1,0 +1,30 @@
+class Solution {
+static constexpr int dirs[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+public:
+    int m, n;
+
+    int solve(vector<vector<int>>& grid) {
+        int m = grid.size(), n = grid[0].size(), ttl = 0;
+        vector<int> rowcount(m), colcount(n);
+
+        for(int x = 0; x < m; x++) {
+            for(int y = 0; y < n; y++) {
+                if(grid[x][y]) {
+                    rowcount[x]++, colcount[y]++;
+                }
+            }
+        }
+
+        for(int x = 0; x < m; x++) {
+            for(int y = 0; y < n; y++) {
+                if(grid[x][y] && (rowcount[x] > 1 || colcount[y] > 1)) ttl++;
+            }
+        }
+
+        return ttl;
+    }
+
+    int countServers(vector<vector<int>>& grid) {
+        return solve(grid);
+    }
+};
