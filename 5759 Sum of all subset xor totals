@@ -1,0 +1,43 @@
+class Solution {
+public:
+    int n;
+    int solve(vector<int>& nums) {
+        int ans = 0;
+        for(int i = 0; i < (1 << n); i++) {
+            int curr = 0;
+            for(int j = 0; j < n; j++) {
+                if(i & (1 << j)) curr ^= nums[j];
+                //if((i >> j) == 0) break;
+            }
+            ans += curr;
+        }
+        return ans;
+    }
+    // int solvetwo(vector<int>& nums) {
+    //     int n = nums.size();
+    //     for( subset = n; subset; subset = (subset - 1) & n) {
+            
+    //     }
+    // }
+    void dfshelper(vector<int>& nums, int curr_idx, int currxor, int &xorsum) {
+        if(curr_idx >= n) {
+            xorsum += currxor;
+            return;
+        }
+
+        dfshelper(nums, curr_idx + 1, currxor, xorsum);
+        dfshelper(nums, curr_idx + 1, currxor ^ nums[curr_idx], xorsum);
+    }
+
+    int solvetwo(vector<int>& nums) {
+        int ans = 0;
+        dfshelper(nums, 0, 0, ans);
+        return ans;
+    }
+
+    int subsetXORSum(vector<int>& nums) {
+        n = nums.size();
+        //return solve(nums);
+        return solvetwo(nums);
+    }    
+};
