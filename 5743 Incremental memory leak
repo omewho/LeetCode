@@ -1,0 +1,16 @@
+class Solution {
+public:
+    vector<int> solve(int memory1, int memory2) {
+
+        int t = 1;
+        while(memory1 >= t || memory2>= t) {
+            if(memory2 > memory1) memory2 -= t;
+            else memory1 -= t;
+            t++;
+        }
+        return {t, memory1, memory2};
+    }
+    vector<int> memLeak(int memory1, int memory2) {
+        return solve(memory1, memory2);
+    }
+};
