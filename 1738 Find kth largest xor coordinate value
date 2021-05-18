@@ -1,0 +1,24 @@
+class Solution {
+public:
+    int solve(vector<vector<int>>& matrix, int k) {
+        int m = matrix.size(), n = matrix[0].size();
+
+        vector<vector<int>> prexor(m + 1, vector<int>(n + 1));
+        vector<int> resvec;
+
+        for(int r = 1; r < m + 1; r++) {
+            for(int c = 1; c < n + 1; c++) {
+                prexor[r][c] = prexor[r - 1][c] ^ prexor[r][c - 1] ^ prexor[r - 1][c - 1] ^ matrix[r - 1][c - 1];
+                resvec.emplace_back(prexor[r][c]);
+            }
+        }
+        
+        sort(resvec.begin(), resvec.end(), greater<int>());
+
+        return resvec[k - 1];
+    }
+
+    int kthLargestValue(vector<vector<int>>& matrix, int k) {
+        return solve(matrix, k);
+    }
+};
