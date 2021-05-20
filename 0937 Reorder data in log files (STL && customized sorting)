@@ -1,0 +1,20 @@
+class Solution {
+public:
+    vector<string> solve(vector<string>& logs) {
+        stable_sort(logs.begin(), logs.end(), [&](string stra, string strb){
+            int posa = stra.find(' '), posb = strb.find(' ');
+            bool isalploga = isalpha(stra[posa + 1]), isalplogb = isalpha(strb[posb + 1]);
+
+            if(isalploga && !isalplogb) return true;
+            if(isalploga && isalplogb) return pair(stra.substr(posa + 1), stra.substr(0, posa)) < pair(strb.substr(posb + 1), strb.substr(0, posb));
+
+            return false;
+        });
+
+        return logs;
+    }
+
+    vector<string> reorderLogFiles(vector<string>& logs) {
+        return solve(logs);
+    }    
+};
