@@ -1,0 +1,9 @@
+class Solution {
+public:
+    int multiply(int A, int B) {
+        bool arr[A][B];
+        int x = 0;
+        x = sizeof(arr);
+        return x;
+    }
+};
