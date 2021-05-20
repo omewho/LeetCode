@@ -1,0 +1,15 @@
+class Solution {
+public:
+    vector<int> relativeSortArray(vector<int>& arr1, vector<int>& arr2) {
+        unordered_map<int, int> numidx;
+        for(int i = 0; i < arr2.size(); i++) numidx[arr2[i]] = i;
+
+        sort(arr1.begin(), arr1.end(), [&](int a, int b) {
+            if(numidx.count(a) && numidx.count(b)) return numidx[a] < numidx[b];
+            if(numidx.count(a) && !numidx.count(b)) return true;
+            if(!numidx.count(a) && numidx.count(b)) return false;
+            return a < b;
+        });
+        return arr1;
+    }
+};
