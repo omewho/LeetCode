@@ -1,0 +1,46 @@
+class Solution {
+using PCI = pair<char, int>;
+public:
+    bool check(vector<PCI>& scharvec, vector<PCI>& wcharvec) {
+        int m = scharvec.size(), n = wcharvec.size();
+        if(m != n) return false;
+
+        for(int i = 0; i < m; i++) {
+            if(scharvec[i].first != wcharvec[i].first ) return false;
+
+            if(scharvec[i].second < wcharvec[i].second) return false;
+            if(scharvec[i].second < 3 && scharvec[i].second != wcharvec[i].second) return false;
+        }
+        return true;
+    }
+    vector<PCI> getcharvec(string s) {
+        vector<PCI> ans;
+        int slow = 0, fast = 0;
+        while(fast < s.length()) {
+            char ch = s[slow];
+            while(fast < s.length() && s[fast] == ch) fast++;
+            ans.emplace_back(ch, fast - slow);
+            slow = fast;
+        }
+
+        //for(auto [ch, freq]: ans) printf("%c %d\n", ch, freq);
+        return ans;
+    }
+
+    int solve(string s, vector<string>& words) {
+        int ans = 0;
+        vector<PCI> scharvec;
+        scharvec = getcharvec(s);
+
+        for(string word: words) {
+            vector<PCI> wcharvec = getcharvec(word);
+            if(check(scharvec, wcharvec)) ans++;
+        }
+
+        return ans;
+    }
+
+    int expressiveWords(string s, vector<string>& words) {
+        return solve(s, words);
+    }
+};
