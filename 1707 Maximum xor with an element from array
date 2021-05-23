@@ -32,6 +32,43 @@ public:
     }
 };
 
+class TrieNode {
+private:
+    int minimum = INT_MAX;
+    TrieNode* children[2] = {nullptr};
+
+public:
+    TrieNode(){};
+
+    void insert(int val) {
+        TrieNode* tn = this;
+        tn->minimum = min(tn->minimum, val);
+
+        for(int i = L - 1; i >= 0; i--) {
+            int bit = (val >> i) & 1;
+            if(tn->children[bit] == nullptr) tn->children[bit] = new TrieNode();
+            tn = tn->children[bit];
+            tn->minimum = min(tn->minimum, val);
+        }
+    }
+    
+    int getMaxXor(int val, int curb) {
+        TrieNode* tn = this;
+        if(tn->minimum > curb) return -1;
+
+        int ans = 0;
+        for(int i = L - 1; i >= 0; i--) {
+            int bit = (val >> i) & 1;
+            if(tn->children[bit ^ 1] != nullptr && tn->children[bit ^ 1]->minimum <= curb) {
+                ans |= (1 << i);
+                bit ^= 1;
+            }
+            tn = tn->children[bit];
+        }
+        return ans;
+    }
+};
+
 class Solution {
 public:
     vector<int> solveoffline(vector<int>& nums, vector<vector<int>>& queries) {
@@ -62,8 +99,22 @@ public:
 
         return ans;
     }
+
+    vector<int> solveonline(vector<int>& nums, vector<vector<int>>& queries) {
+
+        TrieNode* tn = new TrieNode();
+        for(int n: nums) tn->insert(n);
+
+        vector<int> ans;
+        int n = queries.size();
+        for(int i = 0; i < n; i++) ans.emplace_back(tn->getMaxXor(queries[i][0], queries[i][1]));
+        
+        return ans;
+    }
+
     vector<int> maximizeXor(vector<int>& nums, vector<vector<int>>& queries) {
 
-        return solveoffline(nums, queries);
+        //return solveoffline(nums, queries);
+        return solveonline(nums, queries);
     }
 };
