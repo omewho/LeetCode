@@ -1,0 +1,28 @@
+class Solution {
+public:
+    vector<vector<int>> solve(vector<vector<int>>& img) {
+        int m = img.size(), n = img[0].size();
+        vector<vector<int>> ans(m, vector<int> (n));
+
+        for(int r = 0; r < m; r++) {
+            for(int c = 0; c < n; c++) {
+                int ttl = 0;
+                for(int nr = r - 1; nr <= r + 1; nr++) {
+                    for(int nc = c - 1; nc <= c + 1; nc++) {
+                        if(nr >= 0 && nr < m && nc >= 0 && nc < n) {
+                            ans[r][c] += img[nr][nc];
+                            ttl++;
+                        }
+                    }
+                }
+                ans[r][c] /= ttl;
+            }
+        }
+
+        return ans;
+    } 
+
+    vector<vector<int>> imageSmoother(vector<vector<int>>& img) {
+        return solve(img);
+    }
+};
