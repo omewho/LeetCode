@@ -1,0 +1,27 @@
+class Solution {
+public:
+    string solve(string number) {
+        string ans = "", temp = "";
+        for(char ch: number) {
+            if(isdigit(ch)) temp += ch;
+        }
+        
+        int n = temp.length();
+
+        ans += temp[0];
+        for(int i = 1; i < n; i++) {
+            if(i % 3 == 0) ans += "-";
+            ans += temp[i];
+        }
+
+        int pos = ans.length() - 2;
+        if(ans[pos] == '-') swap(ans[pos], ans[pos - 1]);
+
+        //printf("%s\n", ans.c_str());
+
+        return ans;
+    } 
+    string reformatNumber(string number) {
+        return solve(number);
+    }
+};
