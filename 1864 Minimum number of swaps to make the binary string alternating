@@ -1,0 +1,35 @@
+class Solution {
+public:
+    int solve(string s) {
+        int n = s.length();
+
+        int n0 = count(s.begin(), s.end(), '0');
+        int n1 = count(s.begin(), s.end(), '1');
+
+        int ans = INT_MAX;
+
+        if(n0 == (n + 1) / 2 && n1 == n / 2) {
+            int diff1 = 0;
+            for(int i = 0; i < n; i++) {
+                if(s[i] - '0' != i % 2) diff1++;
+            }
+            ans = min(ans, diff1 / 2);
+        }
+
+        if(n1 == (n + 1) / 2 && n0 == n / 2) {
+            int diff2 = 0;
+            for(int i = 0; i < n; i++) {
+                if(s[i] - '0' == i % 2) diff2++;
+            }
+            ans = min(ans, diff2 / 2);
+        }
+
+        if(ans == INT_MAX) return -1;
+        else return ans;
+
+    }
+
+    int minSwaps(string s) {
+        return solve(s);
+    }
+};
