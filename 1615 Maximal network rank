@@ -1,0 +1,80 @@
+class Solution {
+public:
+    int solve(int n, vector<vector<int>>& roads) {
+        vector<int> indegr(n, 0);
+        vector<unordered_set<int>> adj(n);
+        for(vector<int>& r: roads) {
+            indegr[r[0]]++, indegr[r[1]]++;
+            adj[r[0]].emplace(r[1]);
+            adj[r[1]].emplace(r[0]);
+        }
+
+        int ans = 0;
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < n; j++) {
+                if(i != j) {
+                    if(adj[i].count(j)) ans = max(ans, indegr[i] + indegr[j] - 1);
+                    else ans = max(ans, indegr[i] + indegr[j]);
+                }
+            }
+        }
+        return ans;
+    }
+
+    int solvetwo(int n, vector<vector<int>>& roads) {
+        vector<int> indegr(n, 0);
+        vector<unordered_set<int>> edges(n);
+
+        for(const auto& r: roads) {
+            edges[r[0]].emplace(r[1]);
+            edges[r[1]].emplace(r[0]);
+            indegr[r[0]]++;
+            indegr[r[1]]++;
+        }
+
+        int first = -1, second = -2;
+        for(int i = 0; i < n; i++) {
+            if(indegr[i] > first) {
+                second = first;
+                first = indegr[i];
+            }
+            else if(indegr[i] > second) second = indegr[i];
+        }
+        //printf(" first = %d, second = %d\n", first, second);
+
+        vector<int> firstvec, secondvec;
+        for(int i = 0; i < n; i++) {
+            if(indegr[i] == first) firstvec.emplace_back(i);
+            else if(indegr[i] == second) secondvec.emplace_back(i);
+        }
+
+        // for(int f: firstvec) printf(" %d ", f);
+        // printf("\n %d\n", firstvec.size());
+        // for(int s: secondvec) printf(" %d ", s);
+        // printf("\n %d\n", secondvec.size());
+
+        if(firstvec.size() == 1) {
+            int u = firstvec[0];
+            for(int v: secondvec) {
+                if(!edges[u].count(v)) return first + second;
+            }
+            return first + second - 1;
+        }
+        else {
+            int roadsize = roads.size(), firstsize = firstvec.size() * ( firstvec.size() - 1 ) / 2;
+            if(roadsize < firstsize) return first * 2;
+
+            for(int u: firstvec) {
+                for(int v: firstvec) { // Look out! It's not secondvec here, should be firstvec
+                    if(u != v && !edges[u].count(v)) return first * 2;
+                }
+            }
+            return first * 2 - 1;
+        }
+    } 
+
+    int maximalNetworkRank(int n, vector<vector<int>>& roads) {
+        //return solve(n, roads);
+        return solvetwo(n, roads);
+    }
+};
