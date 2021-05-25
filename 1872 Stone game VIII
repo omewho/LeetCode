@@ -1,0 +1,25 @@
+class Solution {
+public:
+    int solve(vector<int>& stones) {
+
+        int n = stones.size();
+        vector<int> presum;
+
+        partial_sum(stones.begin(), stones.end(), back_inserter(presum));
+        //for(int p: presum) printf("%d ", p);
+
+        int f[n];
+        memset(f, 0, sizeof(f));
+        f[n - 1] = presum[n - 1];
+
+        for(int i = n - 2; i > 0; i--) {
+            f[i] = max(f[i + 1], presum[i] - f[i + 1]);
+        }
+
+        return f[1];
+    } 
+
+    int stoneGameVIII(vector<int>& stones) {
+        return solve(stones);
+    }
+};
