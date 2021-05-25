@@ -1,0 +1,43 @@
+class Solution {
+public:
+    bool solve(string s, int minJump, int maxJump) {
+        int n = s.length();
+        if(s[n - 1] == '1') return false;
+
+        int idx = 0;
+        s[idx] = '2';
+        for(int i = 0; i < n; i++) {
+            if(s[i] == '2') {
+                for(idx = max(idx, i + minJump); idx <= min(n - 1, i + maxJump); idx++) {
+                    if(s[idx] == '0') {
+                        if(idx == n - 1) return true;
+                        s[idx] = '2';
+                    }
+                }    
+            }
+        }
+        return false;
+    }
+
+    bool solveone(string s, int minJump, int maxJump) {
+        int n = s.length();
+
+        vector<int> f(n, 0), presum(n + 1, 0);
+        f[0] = 1, presum[1] = 1;
+
+        for(int i = 1; i < n; i++) {
+            int left = max(0, i - maxJump), right = i - minJump;
+            if(s[i] == '0') {
+                if(right >= left) f[i] = (presum[right + 1] - presum[left] > 0);
+            }
+            presum[i + 1] = presum[i] + f[i];
+        }
+
+        return f[n - 1];
+    }
+
+    bool canReach(string s, int minJump, int maxJump) {
+        return solve(s, minJump, maxJump);
+        //return solveone(s, minJump, maxJump);
+    }
+};
