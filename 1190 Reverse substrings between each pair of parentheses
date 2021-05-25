@@ -1,0 +1,34 @@
+class Solution {
+public:
+    string solve(string s) {
+        int n = s.length();
+        stack<int> stk;
+        vector<int> pair(n);
+
+        for(int i = 0; i < n; i++) {
+            if(s[i] == '(') stk.emplace(i);
+            else if(s[i] == ')') {
+                int curr = stk.top(); stk.pop();
+                pair[curr] = i, pair[i] = curr;
+            }
+        }
+        
+        string ans;
+        int idx = 0, step = 1;
+
+        while(idx < n) {
+            if(s[idx] == '(' || s[idx] == ')') {
+                idx = pair[idx];
+                step = -step;
+            }
+            else ans.push_back(s[idx]);
+            idx += step;
+        }
+
+        return ans;
+    }
+
+    string reverseParentheses(string s) {
+        return solve(s);
+    }
+};
