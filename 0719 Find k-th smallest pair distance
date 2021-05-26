@@ -1,0 +1,53 @@
+class Solution {
+using PII = pair<int, int>;
+public:
+    int solveminheap(vector<int>& nums, int k) {
+        sort(nums.begin(), nums.end());
+        auto cmp = [&](PII& a, PII& b) {
+            return nums[a.second] - nums[a.first] > nums[b.second] - nums[b.first];
+        };
+
+        priority_queue<PII, vector<PII>, decltype(cmp) > minheap(cmp);
+
+        int n = nums.size();
+        for(int i = 0; i < n - 1; i++) minheap.emplace(i, i + 1);
+
+        PII pii;
+        for(int i = 0; i < k; i++) {
+            pii = minheap.top(); minheap.pop();
+            if(pii.second < n - 1) minheap.emplace(pii.first, pii.second + 1);
+        }
+
+        return nums[pii.second] - nums[pii.first];
+    }
+
+    int getcount(vector<int>& nums, int guess) {
+        int ans = 0, n = nums.size();
+
+        int left = 0, right = 0;
+        while(right < n) {
+            while(left < n && nums[right] - nums[left] > guess) left++;
+            ans += right - left;
+            right++;
+        }
+        return ans;
+    }
+
+    int solvebs(vector<int>& nums, int k) {
+        sort(nums.begin(), nums.end());
+        
+        int left = 0, n = nums.size(), right = nums[n - 1] - nums[0];
+
+        while(left < right) {
+            int mid = left + (right - left) / 2;
+            if(getcount(nums, mid) >= k) right = mid;
+            else left = mid + 1;
+        }
+        return left;
+    }
+
+    int smallestDistancePair(vector<int>& nums, int k) {
+        //return solveminheap(nums, k);
+        return solvebs(nums, k);
+    }
+};
