@@ -1,0 +1,66 @@
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    vector<Node*> neighbors;
+    Node() {
+        val = 0;
+        neighbors = vector<Node*>();
+    }
+    Node(int _val) {
+        val = _val;
+        neighbors = vector<Node*>();
+    }
+    Node(int _val, vector<Node*> _neighbors) {
+        val = _val;
+        neighbors = _neighbors;
+    }
+};
+*/
+
+class Solution {
+public:
+    unordered_map<Node*, Node*> source2clone;
+
+    Node* solvedfs(Node*& node) {
+        if(!node) return node;
+
+        if(source2clone.find(node) != source2clone.end()) return source2clone[node];
+
+        Node* newnode = new Node(node->val);
+        source2clone[node] = newnode;
+
+        for(Node* nbr: node->neighbors) {
+            newnode->neighbors.emplace_back(solvedfs(nbr));
+        }
+
+        return newnode;
+    }
+
+    Node* solvebfs(Node* node) {
+
+        if(!node) return node;
+        queue<Node*> q({node});
+        source2clone[node] = new Node(node->val);
+        
+        while(!q.empty()) {
+            Node* curr = q.front(); q.pop();
+
+            for(Node* nbr: curr->neighbors) {
+                if(source2clone.find(nbr) == source2clone.end()) {
+                    q.emplace(nbr);
+                    source2clone[nbr] = new Node(nbr->val);
+                }
+                source2clone[curr]->neighbors.emplace_back(source2clone[nbr]);
+            }
+        }
+
+        return source2clone[node];
+    }
+
+    Node* cloneGraph(Node* node) {
+        //return solvedfs(node);
+        return solvebfs(node);
+    }
+};
