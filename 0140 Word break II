@@ -1,0 +1,37 @@
+class Solution {
+public:
+    unordered_map<int, vector<string>> idx2wordvec;
+    unordered_set<string> dict;
+
+    void dfshelper(string s, int idx) {
+
+        if(!idx2wordvec.count(idx)) {
+            if(idx == s.length()) {
+                idx2wordvec[idx] = {""};
+                return;
+            }
+
+            for(int i = idx + 1; i <= s.length(); i++) {
+                string word = s.substr(idx, i - idx);
+                if(dict.count(word)) {
+                    dfshelper(s, i);
+                    for(const string& successor: idx2wordvec[i]) {
+                        idx2wordvec[idx].emplace_back(successor.empty()? word : word + " " + successor);
+                    }
+                }
+            }
+        }
+    }
+
+    vector<string> solvedfs(string& s, vector<string>& wordDict) {
+        dict = unordered_set<string>{wordDict.begin(), wordDict.end()};
+        
+        dfshelper(s, 0);
+        return idx2wordvec[0];
+    }
+
+    vector<string> wordBreak(string s, vector<string>& wordDict) {
+        
+        return solvedfs(s, wordDict);
+    }
+};
