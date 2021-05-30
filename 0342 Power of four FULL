@@ -1,6 +1,7 @@
 class Solution {
 public:
-    bool isPowerOfFour(int n) {
+
+    bool solveone(int n) {
         /***
         if( !n ) return false;
         while( n % 4 == 0 ) {
@@ -22,6 +23,37 @@ public:
         }
 
         return true;
+    }
+
+    bool solvetwo(int n) {
+        if(n <= 0 || ( n & (n - 1)) != 0) return false;
+
+        for(int i = 0; i < 32; i += 2) {
+            if(n == ( 1 << i) ) return true;
+        }
+
+        return false;
+    }
+
+    bool solvethree(int n) {
+
+        return n > 0 && (n & (n - 1)) == 0 && (n & (0x2AAAAAAA)) == 0;
+    }
+
+    bool solvefour(int n) {
+
+        return n > 0 && (n & (n - 1)) == 0 && n % 3 == 1 ;
+    }
+
+    bool isPowerOfFour(int n) {
+
+        //return solveone(n);
+
+        //return solvetwo(n);
+
+        //return solvethree(n);
+
+        return solveone(n);
     }
 };
 
