@@ -1,0 +1,40 @@
+class Solution {
+public:
+    static constexpr int dirs[4][2] = {{1, -1}, {1, 1}, {-1, 1}, {-1, -1}};
+
+    vector<int> solve(vector<vector<int>>& grid) {
+        int row = grid.size(), col = grid[0].size();
+
+        set<int> res;
+
+        for(int i = 0; i < row; i++) {
+            for(int j = 0; j < col; j++) {
+                res.emplace(grid[i][j]);
+                for(int len = 1; len <= max(row, col); len++) {
+                    if(i - len < 0 || i + len >= row || j - len < 0 || j + len >= col) break;
+
+                    int x = i - len, y = j;
+
+                    int ttl = 0;
+                    for(int k = 0; k < 4; k++) {
+                        int step = len;
+                        while(step--) {
+                            x += dirs[k][0];
+                            y += dirs[k][1];
+                            ttl += grid[x][y];
+                        }
+                    }
+                    res.emplace(ttl);   
+                }
+            }
+        }
+
+        while(res.size() > 3) res.erase(res.begin());
+        
+        return vector<int>{res.rbegin(), res.rend()};
+    }
+
+    vector<int> getBiggestThree(vector<vector<int>>& grid) {
+        return solve(grid);
+    }
+};
