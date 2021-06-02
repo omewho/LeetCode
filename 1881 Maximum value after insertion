@@ -1,0 +1,23 @@
+class Solution {
+public:
+    string solve(string n, int x) {
+        string ans = "";
+        int idx = 0, len = n.length();
+        
+        if(n[0] == '-') {
+            idx = 1;
+            while(idx < len && x >= n[idx] - '0') idx++;        
+        }
+        
+        else {
+            while(idx < len && x <= n[idx] - '0') idx++;
+            
+        }
+        ans = n.substr(0, idx) + to_string(x) + n.substr(idx);
+        return ans;
+    }
+    
+    string maxValue(string n, int x) {
+        return solve(n, x);
+    }
+};
