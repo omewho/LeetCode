@@ -1,0 +1,50 @@
+class Solution {
+    using PII = pair<int, int>;
+    using PLI = pair<long long, int>;
+public:
+    vector<int> solve(vector<int>& servers, vector<int>& tasks) {
+        int snum = servers.size(), tnum = tasks.size();
+
+        vector<int> ans(tnum);
+
+        priority_queue<PII, vector<PII>, greater<PII>> idleservers;
+        for(int i = 0; i < snum; i++) idleservers.emplace(servers[i], i);
+        
+        priority_queue<PLI, vector<PLI>, greater<PLI>> busyservers;
+
+
+        // while(!idleservers.empty()) {
+        //     auto [svr, idx] = idleservers.top(); idleservers.pop();
+        //     printf("%d %d\n", svr, idx);
+        // }
+
+        long long timestamp = 0;
+
+        auto release = [&]() {
+            while(!busyservers.empty() && busyservers.top().first <= timestamp) {
+                auto [_, idx] = busyservers.top(); busyservers.pop();
+                idleservers.emplace(servers[idx], idx);
+            }
+        };
+
+        for(int i = 0; i < tnum; i++) {
+            timestamp = max(timestamp, static_cast<long long>(i));
+            release();
+
+            if(idleservers.empty()) {
+                timestamp = busyservers.top().first;
+                release();
+            }
+            
+            auto [_, idx] = idleservers.top();idleservers.pop();
+            ans[i] = idx;
+            busyservers.emplace(timestamp + tasks[i], idx);
+        }
+
+        return ans;
+        
+    }
+    vector<int> assignTasks(vector<int>& servers, vector<int>& tasks) {
+        return solve(servers, tasks);
+    }
+};
