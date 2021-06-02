@@ -1,0 +1,43 @@
+class Solution {
+public:
+    int solve(vector<int>& nums) {
+        int n = nums.size();
+        unordered_map<int, int> presum_1stidx{{0, -1}};
+
+        int presum = 0, ans = 0;
+        for(int i = 0; i < n; i++) {
+            if(nums[i]) presum++;
+            else presum--;
+
+            if(presum_1stidx.count(presum)) ans = max(ans, i - presum_1stidx[presum]);
+            else presum_1stidx[presum] = i;
+        }
+
+        return ans;
+    }
+
+    int solveone(vector<int>& nums) {
+        size_t sz = nums.size();
+        if (sz == 0) return 0;
+
+        vector<int> vec(sz * 2 + 1, 0);
+        fill(vec.begin(), vec.end(), -2);
+        vec[sz] = -1;
+        int maxLen = 0, cnt = 0;
+        for (int i = 0; i < sz; ++i) {
+            cnt = cnt + (nums[i] == 0 ? -1 : 1);
+            if (vec[cnt + sz] >= -1) {
+                maxLen = max(maxLen, i - vec[cnt + sz]);
+            }
+            else {
+                vec[cnt + sz] = i;
+            }
+        }
+        return maxLen;
+    }
+
+    int findMaxLength(vector<int>& nums) {
+        //return solve(nums);
+        return solveone(nums);
+    }
+};
