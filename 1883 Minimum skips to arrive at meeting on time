@@ -1,0 +1,28 @@
+class Solution {
+    using ll = long long;
+public:
+    int solvedp(vector<int>& dist, int speed, int hoursBefore) {
+        int n = dist.size();
+
+        vector<vector<ll>> dp(n + 1, vector<ll>( n + 1, LLONG_MAX / 2));
+        dp[0][0] = 0;
+
+        for(int i = 1; i < n + 1; i++) {
+
+            for(int j = 0; j <= i; j++) {
+                if(j != i) dp[i][j] = min(dp[i][j], ( (dp[i - 1][j] + dist[i - 1] - 1) / speed + 1 ) * speed  );
+                if(j != 0) dp[i][j] = min(dp[i][j], dp[i - 1][j - 1] + dist[i - 1]);
+            }
+        }
+
+        for(int i = 0; i < n + 1; i++) {
+            if( dp[n][i] <= (ll) hoursBefore * speed ) return i;
+        }
+
+        return -1;
+    }
+
+    int minSkips(vector<int>& dist, int speed, int hoursBefore) {
+        return solvedp(dist, speed, hoursBefore);
+    }
+};
