@@ -1,0 +1,81 @@
+class Solution {
+    static constexpr int modula = 1e9 + 7;
+    using PII = pair<int, int>;
+    static constexpr int dirs[3][2] = {{1, 0}, {0, 1}, {1, 1}};
+public:
+    int row;
+    vector<vector<PII>> dp;
+
+    void update(int i, int j) {
+        //printf("updating %d, %d\n", i, j);
+        for(int k = 0; k < 3; k++) {
+            int prei = i + dirs[k][0], prej = j + dirs[k][1];
+            if(prei >= row || prej >= row || dp[prei][prej].first == -1) continue;
+
+            if(dp[prei][prej].first > dp[i][j].first) dp[i][j] = dp[prei][prej];
+            else if(dp[i][j].first == dp[prei][prej].first) {
+                dp[i][j].second += dp[prei][prej].second;
+                if(dp[i][j].second >= modula) dp[i][j].second -= modula;
+            }
+        }
+        //printf("updating completed, dp[%d][%d] now is %d %d\n", i, j, dp[i][j].first, dp[i][j].second);
+    } 
+
+    vector<int> solvedp(vector<string>& board) {
+        row = board.size();
+        dp = vector<vector<PII>>(row, vector<PII>(row, {-1, 0}));
+        dp[row - 1][row - 1] = {0, 1};
+        
+        for(int i = row - 1; i >= 0; i--) {
+            for(int j = row - 1; j >= 0; j--) {
+                if( !(i == row - 1 && j == row - 1 ) && board[i][j] != 'X' ) {
+                    update(i, j);
+                    if(dp[i][j].first != -1) dp[i][j].first += (board[i][j] == 'E'? 0: board[i][j] - '0');
+                }
+            }
+        }
+
+        // for(int i = 0; i < row; i++) {
+        //     for(int j = 0; j < row; j++) {
+        //         auto& [f, s] = dp[i][j];
+        //         printf("%d, %d, f = %d, s = %d\n", i, j, f, s);
+        //     }
+        // }
+
+        return dp[0][0].first == -1? vector<int>{0, 0} : vector<int>{dp[0][0].first, dp[0][0].second};
+    }
+
+    void updateone(int i, int j, int prei, int prej) {
+        if(prei >= row || prej >= row || dp[prei][prej].first == -1) return;
+
+        if(dp[prei][prej].first > dp[i][j].first) dp[i][j] = dp[prei][prej];
+        else if(dp[i][j].first == dp[prei][prej].first) { 
+            dp[i][j].second += dp[prei][prej].second;
+            if(dp[i][j].second >= modula) dp[i][j].second -= modula;
+        }
+    }
+
+    vector<int> solvedpone(vector<string>& board) {
+        row = board.size();
+        dp = vector<vector<PII>>(row, vector<PII>(row, {-1, 0}));
+        dp[row - 1][row - 1] = {0, 1};
+        
+        for(int i = row - 1; i >= 0; i--) {
+            for(int j = row - 1; j >= 0; j--) {
+                if( !(i == row - 1 && j == row - 1 ) && board[i][j] != 'X' ) {
+                    updateone(i, j, i + 1, j);
+                    updateone(i, j, i, j + 1);
+                    updateone(i, j, i + 1, j + 1);
+                    if(dp[i][j].first != -1) dp[i][j].first += (board[i][j] == 'E'? 0: board[i][j] - '0');
+                }
+            }
+        }
+
+        return dp[0][0].first == -1? vector<int>{0, 0} : vector<int>{dp[0][0].first, dp[0][0].second};
+    }
+
+    vector<int> pathsWithMaxScore(vector<string>& board) {
+        //return solvedp(board);
+        return solvedpone(board);
+    }
+};
