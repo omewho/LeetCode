@@ -1,0 +1,47 @@
+class Solution {
+public:
+    int n;
+
+    string solvedpone(vector<int>& stoneValue) {
+        vector<int> suffix_sum(n);
+        suffix_sum[n - 1] = stoneValue[n - 1];
+        for(int i = n - 2; i >= 0; i--) suffix_sum[i] = suffix_sum[i + 1] + stoneValue[i];
+
+        vector<int> dp(n + 1);
+
+        for(int i = n - 1; i >= 0; i--) {
+            int minimumj = dp[i + 1];
+            for(int j = i + 2; j < i + 4 && j < n + 1; j++) minimumj = min(minimumj, dp[j]);
+            dp[i] = suffix_sum[i] - minimumj;
+        }
+
+        if(dp[0] * 2 == suffix_sum[0]) return "Tie";
+
+        if(dp[0] * 2 > suffix_sum[0]) return "Alice";
+        return "Bob";
+    }
+
+    string solvedptwo(vector<int>& stoneValue) {
+        vector<int> dp(n + 1, INT_MIN);
+        dp[n] = 0;
+
+        for(int i = n - 1; i >= 0; i--) {
+            int val = 0;
+            for(int j = i + 1; j < i + 4 && j <= n; j++) {
+                val += stoneValue[j - 1];
+                dp[i] = max(dp[i], val - dp[j]);
+            }
+        }
+
+        if(!dp[0]) return "Tie";
+        if(dp[0] > 0) return "Alice";
+        return "Bob";
+    }
+
+    string stoneGameIII(vector<int>& stoneValue) {
+        n = stoneValue.size();
+
+        return solvedpone(stoneValue);
+        return solvedptwo(stoneValue);
+    }
+};
