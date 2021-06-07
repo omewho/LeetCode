@@ -1,0 +1,15 @@
+class Solution {
+public:
+    int solve(vector<string>& logs) {
+        int ans = 0;
+        for(string log: logs) {
+            if(log == "../") ans = max(0, ans - 1);
+            else if(log != "./") ans++;
+        }
+        return ans;
+    }
+
+    int minOperations(vector<string>& logs) {
+        return solve(logs);
+    }
+};
