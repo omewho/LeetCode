@@ -1,0 +1,42 @@
+class Solution {
+public:
+    size_t n;
+    int solvedp(vector<int>& nums, int target) {
+
+        int sum = accumulate(nums.begin(), nums.end(), 0);
+        int diff = sum - target;
+        if(diff < 0 || diff % 2 != 0) return 0;
+
+        int negs = diff / 2;
+        vector<vector<int>> dp(n + 1, vector<int>(negs + 1));
+        dp[0][0] = 1;
+
+        for(int i = 1; i < n + 1; i++) {
+            int num = nums[i - 1];
+            for(int j = 0; j < negs + 1; j++) {
+                dp[i][j] = dp[i - 1][j];
+                if(j >= num) dp[i][j] += dp[i - 1][j - num];
+            }
+        }
+
+        return dp[n][negs];
+    }
+
+    int solvedpone(vector<int>& nums, int target) {
+        
+        int sum = accumulate(nums.begin(), nums.end(), 0);
+        int diff = sum - target;
+        if(diff < 0 || diff % 2) return 0;
+
+        int negs = diff / 2;
+        int dp[negs + 1];
+        memset(dp, 0, sizeof(int) * (negs + 1));
+        
+    }
+
+    int findTargetSumWays(vector<int>& nums, int target) {
+        n = nums.size();
+        //return solvedp(nums, target);
+        return solvedpone(nums, target);
+    }
+};
