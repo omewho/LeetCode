@@ -1,0 +1,45 @@
+class Solution {
+    using ll = long long;
+    static const int modula = 1e9 + 7;
+public:
+    int solve(vector<int>& packages, vector<vector<int>>& boxes) {
+        int pnum = packages.size(), bnum = boxes.size();
+        sort(packages.begin(), packages.end());
+
+        vector<ll> presum(pnum + 1);
+        for(int i = 1; i < pnum + 1; i++) presum[i] = presum[i - 1] + packages[i - 1];
+
+        function<ll(ll, ll)> getinterval = [&](int left, int right) {
+            return presum[right + 1] - presum[left];
+        };
+
+        ll ans = LLONG_MAX, curr;
+        for(auto& box: boxes) {
+            sort(box.begin(), box.end());
+
+            if(packages.back() > box.back()) continue;
+
+            curr = 0;
+            auto left_iter = packages.begin();
+
+            for(int capacity: box) {
+                if(capacity < *left_iter) continue;
+
+                auto right_iter = prev(upper_bound(left_iter, packages.end(), capacity));
+                curr += (ll)(right_iter - left_iter + 1) * capacity - getinterval(left_iter - packages.begin(), right_iter - packages.begin());
+
+                left_iter = next(right_iter);
+
+                if(left_iter == packages.end()) break;
+            }
+            ans = min(ans, curr);
+
+        }
+
+        return (ans == LLONG_MAX? -1: ans % modula);
+    }
+
+    int minWastedSpace(vector<int>& packages, vector<vector<int>>& boxes) {
+        return solve(packages, boxes);
+    }
+};
