@@ -1,0 +1,48 @@
+class Solution {
+public:
+    int len;
+
+    int solvedpone(vector<string>& strs, int m, int n) {
+        vector<vector<vector<int>>> dp(len + 1, vector<vector<int>>(m + 1, vector<int>(n + 1)));
+
+        for(int i = 1; i < len + 1; i++) {
+            int zeros = 0, ones = 0;
+            for(char& ch: strs[i - 1]) {
+                if(ch == '0') zeros++;
+                else ones++;
+            }
+
+            for(int j = 0; j < m + 1; j++) {
+                for(int k = 0; k < n + 1; k++) {
+                    dp[i][j][k] = dp[i - 1][j][k];
+                    if(zeros <= j && ones <= k ) dp[i][j][k] = max(dp[i][j][k], dp[i - 1][j - zeros][k - ones] + 1);
+                }
+            }
+        }
+
+        return dp[len][m][n];
+    }
+
+    int solvedptwo(vector<string>& strs, int m, int n) {
+        int dp[101][101] = {0};
+        int counts[2];
+
+        for(int i = 0; i < len; i++) {
+            counts[0] = 0, counts[1] = 0;
+            for(char& ch: strs[i]) counts[ch - '0']++;
+            
+            int zeros = counts[0], ones = counts[1];
+            for(int j = m; j >= zeros; j--) {
+                for(int k = n; k >= ones; k--) dp[j][k] = max(dp[j][k], dp[j - zeros][k - ones] + 1);
+            }
+        }
+        return dp[m][n];
+    }
+
+    int findMaxForm(vector<string>& strs, int m, int n) {
+        len = strs.size();
+
+        //return solvedpone(strs, m, n);
+        return solvedptwo(strs, m, n);
+    }
+};
