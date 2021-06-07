@@ -1,0 +1,23 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool solverecursive(TreeNode* root, long long lower, long long upper) {
+        if(!root) return true;
+        if(root->val >= upper || root->val <= lower) return false;
+
+        return solverecursive(root->left, lower, root->val) && solverecursive(root->right, root->val, upper);
+    }
+
+    bool isValidBST(TreeNode* root) {
+
+        return solverecursive(root, LLONG_MIN, LLONG_MAX);
+    }
+};
