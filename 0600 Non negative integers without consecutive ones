@@ -1,0 +1,31 @@
+class Solution {
+public:
+    int solve(int num) {
+        int dp[31];
+        dp[0] = 1;
+        dp[1] = 2;
+
+        for(int i = 2; i < 31; i++) dp[i] = dp[i - 1] + dp[i - 2];
+
+        int ans = 0, pre_one = 0, idx = 30;
+        while(idx >= 0) {
+            if( num & (1 << idx) ) {
+                ans += dp[idx];
+                if(pre_one == 1) {
+                    ans--;
+                    break;
+                }
+                pre_one = 1;
+            }
+            else pre_one = 0;
+            
+            idx--;
+        }
+
+        return ans + 1;
+    }
+
+    int findIntegers(int num) {
+        return solve(num);
+    }
+};
