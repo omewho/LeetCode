@@ -16,8 +16,44 @@ public:
         return solverecursive(root->left, lower, root->val) && solverecursive(root->right, root->val, upper);
     }
 
+    TreeNode* prev = NULL;
+    bool solveinorder(TreeNode* root) {
+        if(!root) return true;
+
+        bool L = solveinorder(root->left);
+        
+        if(prev && prev->val >= root->val) return false;
+        prev = root;
+
+        bool R = solveinorder(root->right);
+
+        return L && R;
+    }
+
+    bool solvenonrecursive(TreeNode* root) {
+        stack<TreeNode*> stk;
+
+        while(!stk.empty() || root ) {
+            while(root) {
+                stk.emplace(root);
+                root = root->left;
+            }
+
+            root = stk.top();
+            stk.pop();
+
+            if(prev && prev->val >= root->val) return false;
+            prev = root;
+
+            root = root->right;
+        }
+        return true;
+    }
+
     bool isValidBST(TreeNode* root) {
 
-        return solverecursive(root, LLONG_MIN, LLONG_MAX);
+        //return solverecursive(root, LLONG_MIN, LLONG_MAX);
+        //return solveinorder(root);
+        return solvenonrecursive(root);
     }
 };
