@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int solve(vector<int>& piles) {
+        int n = piles.size();
+        sort(piles.begin(), piles.end());
+        int ans = 0, idx = n - 2, rounds = n / 3;
+
+        for(int r = 0; r < rounds; r++) {
+            ans += piles[idx];
+            idx -= 2;
+        }
+
+        return ans;
+    }
+
+    int maxCoins(vector<int>& piles) {
+        return solve(piles);
+    }
+};
