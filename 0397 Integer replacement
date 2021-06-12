@@ -1,0 +1,54 @@
+class Solution {
+    using ll = long long;
+public:
+    int solveiteration(ll n) {
+        int ans = 0;
+
+        while(n > 1) {
+            int remainder = n % 2;
+
+            if(!remainder) n /= 2;
+            else {
+                if( (n & 0x3) == 0x1 || n == 3 ) n--;
+                else n++;
+            }
+            ans++;
+        }
+        return ans;
+    }
+
+    int solverecursive(ll n) {
+        if(n == 1) return 0;
+
+        if(n % 2) return min(solverecursive(n + 1), solverecursive(n - 1)) + 1;
+
+        return solverecursive(n / 2) + 1;
+    }
+
+    unordered_map<ll, ll> memo;
+    
+    int helper(ll n) {
+        if(n == 1) return 0;
+
+        if(memo.count(n)) return memo[n];
+
+        ll ret = 0, rem = n % 2;
+
+        if(rem) ret = 1 + min(helper(n + 1), helper(n - 1));
+        else ret = 1 + helper(n / 2);
+        memo[n] = ret; 
+        return ret;
+    }
+
+    int solvememorization(int n) {
+
+        return helper(n);
+    }
+
+    int integerReplacement(int n) {
+
+        return solveiteration(n);
+        //return solverecursive(n);
+        //return solvememorization(n);
+    }
+};
