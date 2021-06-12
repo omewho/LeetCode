@@ -1,0 +1,19 @@
+class Solution {
+public:
+    vector<int> solve(int candies, int num_people) {
+
+        vector<int> ans(num_people);
+        int idx = 0;
+        while(candies > 0) {
+            ans[idx % num_people] += min(idx + 1, candies);
+            candies -= min(idx + 1, candies);
+            idx++;
+        }
+
+        return ans;
+    }
+
+    vector<int> distributeCandies(int candies, int num_people) {
+        return solve(candies, num_people);
+    }
+};
