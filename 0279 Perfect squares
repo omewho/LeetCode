@@ -1,0 +1,21 @@
+class Solution {
+public:
+    int solvedp(int n) {
+        int dp[n + 1];
+        memset(dp, 0, sizeof(dp));
+
+        for(int i = 1; i < n + 1; i++) {
+            int prev_min = 0x3f3f3f3f;
+
+            for(int prev = 1; prev * prev <= i; prev++) {
+                prev_min = min(prev_min, dp[i - prev * prev]);
+            }
+            dp[i] = prev_min + 1;
+        }
+
+        return dp[n];
+    }
+    int numSquares(int n) {
+        return solvedp(n);
+    }
+};
