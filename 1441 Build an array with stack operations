@@ -1,0 +1,41 @@
+class Solution {
+public:
+    vector<string> solve(vector<int>& target, int n) {
+        vector<string> ans;
+        vector<int> nums(n);
+        iota(nums.begin(), nums.end(), 1);
+
+        int idxn = 0, idxt = 0, len = target.size();
+        while(idxt < len) {
+            ans.emplace_back("Push");
+            if(nums[idxn++] != target[idxt]) {
+                ans.emplace_back("Pop");
+                continue;
+            }
+            idxt++;
+        }
+
+        return ans;
+    }
+
+    vector<string> solveone(vector<int>& target, int n) {
+        vector<string> ans;
+        
+        int num = 1, idxt = 0, len = target.size();
+        while(idxt < len) {
+            ans.emplace_back("Push");
+            if(num++ != target[idxt]) {
+                ans.emplace_back("Pop");
+                continue;
+            }
+            idxt++;
+        }
+
+        return ans;
+    }
+
+    vector<string> buildArray(vector<int>& target, int n) {
+        //return solve(target, n);
+        return solveone(target, n);
+    }
+};
