@@ -1,0 +1,19 @@
+class Solution {
+public:
+    vector<string> solve(int turnedOn) {
+        int hour, minute;
+        vector<string> ans;
+        for(hour = 0; hour < 12; hour++) {
+            int h = __builtin_popcount(hour);
+            for(minute = 0; minute < 60; minute++) {
+                int m = __builtin_popcount(minute);
+                if(h + m == turnedOn) ans.emplace_back(to_string(hour) + ":" + (minute < 10 ? "0" : "") + to_string(minute));
+            }
+        }
+        return ans;
+    }
+
+    vector<string> readBinaryWatch(int turnedOn) {
+        return solve(turnedOn);
+    }
+};
