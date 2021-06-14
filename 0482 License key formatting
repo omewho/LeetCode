@@ -1,0 +1,44 @@
+class Solution {
+public:
+    string solveone(string& s, int k) {
+        int len = s.length(), n;
+
+        string str, ans;
+        for(int i = 0; i < len; i++) {
+            if(isalnum(s[i])) str += toupper(s[i]);
+        }
+
+        n = str.length();
+        for(int i = n - k; i > 0; i -= k) {
+            str.insert(str.begin() + i, '-');
+        }
+
+        return str;
+    }
+
+    string solvetwo(string& s, int k) {
+        int len = s.length(), n;
+
+        string str, ans;
+        for(int i = 0; i < len; i++) {
+            if(s[i] != '-') str += toupper(s[i]);
+        }
+
+        n = str.length();
+        
+        for(int i = 0; i < n % k; i++) ans += str[i];
+
+        for(int i = 0; i < n / k; i++) {
+            if(ans.size()) ans += '-';
+            for(int j = n % k + i * k; j < n % k + (i + 1) * k; j++) {
+                ans += str[j];
+            }
+        }
+        return ans;
+    }
+
+    string licenseKeyFormatting(string s, int k) {
+        //return solveone(s, k);
+        return solvetwo(s, k);
+    }
+};
