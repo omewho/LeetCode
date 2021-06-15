@@ -1,0 +1,38 @@
+class Solution {
+public:
+    bool asubofb(string& a, string& b) {
+        int ia = 0, ib = 0;
+
+        while(ia < a.length() && ib < b.length()) {
+            if(a[ia] == b[ib]) ia++;
+            ib++;
+        }
+
+        return ia == a.length();
+    }
+
+    int solve(vector<string>& strs) {
+        sort(strs.begin(), strs.end(), [](string& a, string& b) {
+            return a.length() > b.length(); 
+        });
+
+        int n = strs.size();
+
+        for(int i = 0; i < n; i++) {
+            int j = 0;
+            for(; j < n; j++) {
+                if(i == j) continue;
+
+                if(strs[i].length() > strs[j].length()) return strs[i].length();
+
+                if(asubofb(strs[i], strs[j])) break;
+            }
+            if(j == n) return strs[i].length();
+        }
+        return -1;
+    }
+
+    int findLUSlength(vector<string>& strs) {
+        return solve(strs);
+    }
+};
