@@ -1,0 +1,52 @@
+class ThroneInheritance {
+public:
+    unordered_map<string, vector<string>> parchi;
+    unordered_set<string> deceased;
+    string king;
+
+    ThroneInheritance(string kingName) {
+        king = kingName;
+    }
+    
+    void birth(string parentName, string childName) {
+        parchi[parentName].emplace_back(childName);
+    }
+    
+    void death(string name) {
+        deceased.insert(name);
+    }
+
+    void preorder(string& name, vector<string>& ans) {
+        if(!deceased.count(name)) ans.emplace_back(name);
+
+        if(parchi.count(name)) {
+            for(string child: parchi[name]) preorder(child, ans);
+        }
+    }
+    
+    vector<string> getInheritanceOrder() {
+        vector<string> ans;
+        preorder(king, ans);
+
+        function<void(const string&)> preorder = [&](const string& name) {
+            if(deceased.count(name) == 0) ans.emplace_back(name);
+
+            if(parchi.count(name)) {
+                for(string child: parchi[name]) preorder(child);
+            }
+        };
+        //preorder(king);
+        return ans;
+
+    }
+
+
+};
+
+/**
+ * Your ThroneInheritance object will be instantiated and called as such:
+ * ThroneInheritance* obj = new ThroneInheritance(kingName);
+ * obj->birth(parentName,childName);
+ * obj->death(name);
+ * vector<string> param_3 = obj->getInheritanceOrder();
+ */
