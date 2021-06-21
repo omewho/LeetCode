@@ -1,0 +1,19 @@
+class Solution {
+public:
+    string solve(string& num) {
+        int len = num.length();
+
+        string ans = "";
+        for(int i = len - 1; i >= 0; i--) {
+            if((num[i] - '0') % 2 != 0) {
+                
+                ans = num.substr(0, i + 1);
+                break;
+            }
+        }
+        return ans;
+    }
+    string largestOddNumber(string num) {
+        return solve(num);
+    }
+};
