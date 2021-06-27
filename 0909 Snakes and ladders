@@ -1,0 +1,53 @@
+class Solution {
+    using PII = pair<int, int>;
+public:
+    int n;
+
+    PII getpii(int idx) {
+        int row = (idx - 1) / n, col = (idx - 1) % n;
+        if(row % 2 != 0) col = n - 1 - col;
+
+        return {n - 1 - row, col};
+    }
+
+    int solvebfs(vector<vector<int>>& board) {
+
+        int visited[n * n + 1];
+        memset(visited, 0, sizeof(int) * (n * n + 1));
+
+        queue<PII> q;
+        q.emplace(1, 0);
+
+        while(!q.empty()) {
+            PII p = q.front(); q.pop();
+
+            for(int i = 1; i < 7; i++) {
+                int next_idx = p.first + i;
+                if(next_idx > n * n) break;
+
+                PII rowcol = getpii(next_idx);
+                if(board[rowcol.first][rowcol.second] > 0) next_idx = board[rowcol.first][rowcol.second];
+
+                if(next_idx == n * n) return p.second + 1;
+
+                if(!visited[next_idx]) {
+                    visited[next_idx] = 1;
+                    q.emplace(next_idx, p.second + 1);
+                }
+            }
+
+            
+
+
+        
+        }
+
+        return -1;
+    }
+
+    int snakesAndLadders(vector<vector<int>>& board) {
+        n = board.size();
+
+        return solvebfs(board);
+    }
+};
