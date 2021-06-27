@@ -1,0 +1,45 @@
+class Solution {
+public:
+    int solvebfs(vector<vector<int>>& routes, int source, int target) {
+        
+        if(source == target) return 0;
+
+        int steps = 0, n = routes.size();
+        int visited[n];
+        memset(visited, 0, sizeof(visited));
+
+        unordered_map<int, vector<int>> stop2bus;
+
+        for(int i = 0; i < n; i++) {
+            for(int s: routes[i]) stop2bus[s].emplace_back(i);
+        }
+
+        queue<int> q{{source}};
+
+        while(q.size()) {
+            steps++; 
+            int size = q.size();
+            for(int i = 0; i < size; i++) {
+                int stop = q.front(); q.pop();
+
+                auto busvec = stop2bus[stop];
+                for(int bus: busvec) {
+                    if(!visited[bus]) {
+                        visited[bus] = 1;
+                        for(int nextstop: routes[bus]) {
+                            if(nextstop == target) return steps;
+                            else q.emplace(nextstop);
+                        }
+                    }
+                }
+            }
+                       
+        }
+
+        return -1;
+    }
+
+    int numBusesToDestination(vector<vector<int>>& routes, int source, int target) {
+        return solvebfs(routes, source, target);
+    }
+};
