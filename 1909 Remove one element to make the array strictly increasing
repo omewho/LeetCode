@@ -1,0 +1,26 @@
+class Solution {
+public:
+    bool solve(vector<int>& nums) {
+        int n = nums.size();
+
+        function<bool(int)> check = [&](int idx) -> bool {
+            for(int i = 1; i < n - 1; i++) {
+                int prev = i - 1, curr = i;
+                if(prev >= idx) prev++;
+                if(curr >= idx) curr++;
+
+                if(nums[prev] >= nums[curr]) return false;
+            }
+            return true;
+        };
+
+        for(int i = 1; i < n; i++) {
+            if(nums[i - 1] >= nums[i]) return check(i - 1) || check(i);
+        }
+
+        return true;
+    }
+    bool canBeIncreasing(vector<int>& nums) {
+        return solve(nums);
+    }
+};
