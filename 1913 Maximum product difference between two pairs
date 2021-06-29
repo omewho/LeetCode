@@ -1,0 +1,34 @@
+class Solution {
+public:
+    int solveone(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        int n = nums.size();
+        return nums[n - 1] * nums[n - 2] - nums[0] * nums[1];
+    }
+
+    int solvetwo(vector<int>& nums) {
+        int ma1 = max(nums[0], nums[1]), ma2 = min(nums[0], nums[1]);
+        int mi1 = min(nums[0], nums[1]), mi2 = max(nums[0], nums[1]);
+
+        for(int i = 2; i < nums.size(); i++) {
+            int num = nums[i];
+            if(num > ma1) {
+                ma2 = ma1;
+                ma1 = num;
+            }
+            else if(num > ma2) ma2 = num;
+
+            if(num < mi1) {
+                mi2 = mi1;
+                mi1 = num;
+            }
+            else if(num < mi2) mi2 = num;
+        }
+        return ma1 * ma2 - mi1 * mi2;
+    }
+
+    int maxProductDifference(vector<int>& nums) {
+        //return solveone(nums);
+        return solvetwo(nums);
+    }
+};
