@@ -1,0 +1,17 @@
+class Solution {
+public:
+    int solvedp(int n, vector<vector<int>>& relation, int k) {
+        int dp[k + 1][n];
+        memset(dp, 0, sizeof(dp));
+        dp[0][0] = 1;
+
+        for(int i = 0; i < k; i++) {
+            for(auto r: relation) dp[i + 1][r[1]] += dp[i][r[0]];
+        }
+
+        return dp[k][n - 1];
+    }
+    int numWays(int n, vector<vector<int>>& relation, int k) {
+        return solvedp(n, relation, k);
+    }
+};
