@@ -11,7 +11,78 @@ public:
 
         return dp[k][n - 1];
     }
+
+    int solvedfs(int n, vector<vector<int>>& relation, int k) {
+        vector<vector<int>> edges(n);
+
+        for(vector<int>& r: relation) {
+            int from = r[0], to = r[1];
+            edges[r[0]].emplace_back(r[1]);
+        }
+
+        // for(auto& e: edges) {
+        //     for(int nbr: e) printf(" %d ", nbr);
+        //     printf("\n");
+        // }
+        
+        int ways = 0;
+
+        function<void(int, int)> dfs = [&](int idx, int curr) -> void {
+            if(curr == k) {
+                if(idx == n - 1) {
+                    ways++;    
+                }
+                return;
+            }
+
+            for(int nbr: edges[idx]) dfs(nbr, curr + 1);
+        };
+
+        dfs(0, 0);
+
+        return ways;
+    }
+
+    int solvebfs(int n, vector<vector<int>>& relation, int k) {
+        vector<vector<int>> edges(n);
+
+        for(vector<int>& r: relation) {
+            int from = r[0], to = r[1];
+            edges[r[0]].emplace_back(r[1]);
+        }
+        
+        int steps = 0;
+
+        queue<int> q;
+        q.emplace(0);
+
+        while(!q.empty() && steps < k) {
+            steps++;
+            int qty = q.size();
+
+            for(int i = 0; i < qty; i++) {
+                int idx = q.front();
+                q.pop();
+
+                for(int &nbr: edges[idx]) q.emplace(nbr);
+            }
+        }
+
+        int ways = 0;
+
+        if(steps == k) {
+            while(!q.empty()) {
+                if(q.front() == n - 1) ways++;
+                q.pop();
+            }
+        }
+
+        return ways;
+    }
+
     int numWays(int n, vector<vector<int>>& relation, int k) {
         return solvedp(n, relation, k);
+        //return solvedfs(n, relation, k);
+        //return solvebfs(n, relation, k);
     }
 };
