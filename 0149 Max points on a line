@@ -1,0 +1,44 @@
+class Solution {
+public:
+    int solve(vector<vector<int>>& points) {
+        int n = points.size();
+
+        if(n < 3) return n;
+
+        int ans = 0;
+
+        for(int i = 0; i < n; i++) {
+            if( ans > n - i || ans > n / 2) break;
+
+            unordered_map<int, int> hashfreq;
+            for(int j = i + 1; j < n; j++) {
+                int deltax = points[i][0] - points[j][0], deltay = points[i][1] - points[j][1];
+
+                if(deltax == 0) deltay = 1;
+                else if(deltay == 0) deltax = 1;
+                else {
+                    if(deltay < 0) {
+                        deltax = -deltax;
+                        deltay = - deltay;
+                    }
+                    int gcdxy = gcd(abs(deltax), abs(deltay)); 
+                    deltax = deltax / gcdxy;
+                    deltay = deltay / gcdxy;
+                }
+                
+                hashfreq[deltay + deltax * 20001]++;
+            }
+
+            int curr = 0;
+
+            for(auto& [_, freq]: hashfreq) curr = max(curr, freq + 1);
+            ans = max(ans, curr);
+        }
+
+        return ans;
+    }
+
+    int maxPoints(vector<vector<int>>& points) {
+        return solve(points);
+    }
+};
