@@ -1,0 +1,74 @@
+class Solution {
+public:
+    unordered_map<string, int> word2idx;
+    vector<vector<int>> edges;
+    int nodeidx = 0;
+
+    void addword(string& word) {
+        if(word2idx.count(word) == 0) {
+            word2idx[word] = nodeidx++;
+            edges.emplace_back();
+        }
+    }
+
+    void addedge(string& word) {
+        addword(word);
+
+        int idx1 = word2idx[word];
+
+        for(char& ch: word) {
+            char temp = ch;
+            ch = '*';
+            //printf("word = %s\n", word.c_str());
+            addword(word);
+
+            int idx2 = word2idx[word];
+            edges[idx1].emplace_back(idx2);
+            edges[idx2].emplace_back(idx1);
+
+            ch = temp;
+        }
+    }
+
+    int solve(string beginWord, string endWord, vector<string>& wordList) {
+        for(string& word: wordList) addedge(word);
+        addedge(beginWord);
+
+        if(word2idx.count(endWord) == 0) return 0;
+
+        // for(auto& e: edges) {
+        //     for(int idx: e) printf(" %d ", idx);
+        //     printf("\n");
+        // }
+
+        vector<int> dist(nodeidx, INT_MAX / 2);
+
+        int beginidx = word2idx[beginWord], endidx = word2idx[endWord];
+        dist[beginidx] = 0;
+
+        queue<int> q;
+        q.emplace(beginidx);
+
+        while(!q.empty()) {
+            int curridx = q.front(); q.pop();
+
+            if(curridx == endidx) {
+                //printf("Hello!\n");
+                return dist[endidx] / 2 + 1;
+            }
+
+            for(int& nbr: edges[curridx]) {
+                if(dist[nbr] == INT_MAX / 2) {
+                    dist[nbr] = dist[curridx] + 1;
+                    q.emplace(nbr);
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+        return solve(beginWord, endWord, wordList);
+    }
+};
