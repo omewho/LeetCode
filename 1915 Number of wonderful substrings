@@ -1,0 +1,77 @@
+class Solution {
+    using ll = long long;
+    static constexpr int K = 10;
+public:
+    long long solvethree(string word) {
+        int n = word.size();
+        int state = 0;
+        vector<int> cnt(1 << K);
+        cnt[0] = 1;
+        vector<int> good{0};
+        for (int i = 0; i < K; ++i)
+            good.emplace_back(1 << i);
+        
+        long long ans = 0;
+        for (char c : word) {
+            int t = 1 << (c - 'a');
+            state ^= t;
+            for (int g : good)
+                ans += cnt[state ^ g];
+            cnt[state]++;
+        }
+        
+        return ans;
+    }
+    
+    long long solvetwo(string word) {
+        constexpr int N = 10;
+        int MV = 1 << N;
+        vector<long long> arr(MV);
+        arr[0]++;
+        for (int i = 0, n = word.size(), cnt = 0; i < n; ++i) {
+            cnt ^= 1 << (word[i] - 'a');
+            arr[cnt]++;
+        }
+        long long ret = 0;
+        for (int i = 0; i < MV; ++i) {
+            if (arr[i] == 0) {
+                continue;
+            }
+            ret += arr[i] * (arr[i] - 1) / 2;
+            for (int j = 0; j < N; ++j) {
+                if (i & (1 << j)) {
+                    continue;
+                }
+                ret += arr[i] * arr[i + (1 << j)];
+            }
+        }
+        return ret;
+    }
+    long long solve(string word) {
+        ll ans = 0;
+        int mask = 0;
+
+        unordered_map<int, int> maskfreq{{0, 1}};
+
+        for(char ch: word) {
+            int curr = ch - 'a';
+            mask ^= ( 1 << curr);
+
+            ans += maskfreq[mask];
+
+            for(int i = 0; i < 10; i++) {
+                int pre_mask = mask ^ ( 1 << i);
+                if(maskfreq.count(pre_mask)) ans += maskfreq[pre_mask];
+            }
+            maskfreq[mask]++;
+        }
+
+        return ans;
+    }
+
+    long long wonderfulSubstrings(string word) {
+        //return solve(word);
+        return solvetwo(word);
+        //return solvethree(word);
+    }
+};
