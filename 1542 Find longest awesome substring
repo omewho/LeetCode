@@ -1,0 +1,25 @@
+class Solution {
+public:
+    int solve(string s) {
+        unordered_map<int, int> mask_1sti{{0, -1}};
+
+        int mask = 0, ans = 0, n = s.size();
+        for(int i = 0; i < n; i++) {
+            int hash = s[i] - '0';
+
+            mask ^= (1 << hash);
+            if(mask_1sti.count(mask)) ans = max(ans, i - mask_1sti[mask]);
+            else mask_1sti[mask] = i;
+
+            for(int j = 0; j < 10; j++) {
+                int pre_mask = mask ^ ( 1 << j );
+                if(mask_1sti.count(pre_mask)) ans = max(ans, i - mask_1sti[pre_mask]);
+            }
+            //printf("i = %d, ans = %d\n", i, ans);
+        }
+        return ans;
+    }
+    int longestAwesome(string s) {
+        return solve(s);
+    }
+};
