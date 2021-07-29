@@ -1,0 +1,27 @@
+class Solution {
+public:
+    vector<int> solve(int label) {
+        vector<int> ans;
+
+        while(label) {
+            ans.emplace_back(label);
+            label >>= 1;
+        }
+        reverse(ans.begin(), ans.end());
+
+        int left, right, depth = ans.size();
+        for(int d = 0; d < depth; d++) {
+            if((d & 1) != (depth & 1)) continue;
+
+            left = (1 << d);
+            right = (1 << (d + 1)) - 1;
+            ans[d] = left + right - ans[d];
+        }
+
+        return ans;
+    }
+
+    vector<int> pathInZigZagTree(int label) {
+        return solve(label);
+    }
+};
